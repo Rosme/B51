@@ -3,7 +3,7 @@ B51 --> LE projet fabuleux --> extraordinaire, fantastique, prodigieux
 
 Les Collaborateurs:
 --------------------
-Jean-Sébastien
+Jean-Sï¿½bastien
 
 Marc
 
@@ -21,4 +21,4 @@ David
 
 Gabriel
 
-###Test avec git###
+
