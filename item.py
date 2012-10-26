@@ -80,14 +80,3 @@ class Inventaire():
 		if item in self.items:
 			del self.items[item]
 			self.poids -= item.poids
-
-
-
-inv = Inventaire(50)
-
-inv.ajouterItem(Upgradable(1, "Batterie", "Batterie d'energie"))
-inv.ajouterItem(Divers(2, 5, "F", "SO MUCH FFF", 5))
-if inv.ajouterItem(Divers(2, 50, "B", "SO MUCH BBB", 5)):
-	print(len(inv.items))
-else:
-	print(len(inv.items))
