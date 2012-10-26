@@ -78,5 +78,5 @@ class Inventaire():
 	'''
 	def retirerItem(self, item):
 		if item in self.items:
-			del self.items[item]
+			self.items.remove(item)
 			self.poids -= item.poids
