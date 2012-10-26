@@ -31,4 +31,5 @@ class Application():
         b10.grid(column=1, row=3)
         b11.grid(column=2, row=3)
         
-        
+        self.root.bind("<KeyPress-q>", self.parent.autoSoin)
+            

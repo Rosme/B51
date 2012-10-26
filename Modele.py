@@ -68,6 +68,10 @@ class Jeu():
             self.joueur = Popamu(self, self.nbId)
             self.joueur = self.joueur.chargerPersonnage(nom)
             
+        elif race == "Atarix":
+            self.joueur = Atarix(self, self.nbId)
+            self.joueur = self.joueur.chargerPersonnage(nom)
+            
         self.nbId += 1
         
         '''Tout ça peut être enlevé plus tard'''

@@ -23,6 +23,9 @@ class Controleur():
     def sauvegardeJoueur(self):
         self.jeu.sauvegardeJoueur()
         
+    def autoSoin(self,Event):
+        self.jeu.joueur.autoSoin()
+        
     def addMetal(self):
         self.jeu.addMetal()
         
