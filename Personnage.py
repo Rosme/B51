@@ -73,9 +73,27 @@ class Zeborf(Personnage):
         self.attaque = 3
         self.defense = 7    
     
+class Irki(Personnage):
+    def __init__(self, parent, id):
+        Personnage.__init__(self, id)
+        
+    def nouveauPersonnage(self, nom):
+        Personnage.nouveauPersonnage(self, nom)
+        self.race = "Irki"
+        self.vie = 300
+        self.attaque = 5
+        self.defense = 5      
     
-    
-    
+class Popamu(Personnage):
+    def __init__(self, parent, id):
+        Personnage.__init__(self, id)
+        
+    def nouveauPersonnage(self, nom):
+        Personnage.nouveauPersonnage(self, nom)
+        self.race = "Popamu"
+        self.vie = 300
+        self.attaque = 5
+        self.defense = 5      
     
     
     

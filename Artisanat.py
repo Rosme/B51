@@ -21,10 +21,10 @@ class Artisanat():
             itemASupprimer = list()
             
             for i in self.parent.joueur.inventaire.items:
-                if i.id == 0:
+                if i.id == 0 and self.nbMetal+2 != a:
                     itemASupprimer.append(i)
                     self.nbMetal-=1
-                elif i.id == 1:
+                elif i.id == 1 and self.nbElectro+2 != b:
                     itemASupprimer.append(i)
                     self.nbElectro-=1
                 
@@ -55,10 +55,10 @@ class Artisanat():
             itemASupprimer = list()
             
             for i in self.parent.joueur.inventaire.items:
-                if i.id == 0:
+                if i.id == 0 and self.nbMetal+2 != a:
                     itemASupprimer.append(i)
                     self.nbMetal-=1
-                elif i.id == 2:
+                elif i.id == 2 and self.nbBatterie+2 != b:
                     itemASupprimer.append(i)
                     self.nbBatterie-=1
                 
@@ -89,10 +89,10 @@ class Artisanat():
             itemASupprimer = list()
             
             for i in self.parent.joueur.inventaire.items:
-                if i.id == 2:
+                if i.id == 2 and self.nbBatterie+2 != a:
                     itemASupprimer.append(i)
                     self.nbBatterie-=1
-                elif i.id == 1:
+                elif i.id == 1 and self.nbElectro+2 != b:
                     itemASupprimer.append(i)
                     self.nbElectro-=1
                 

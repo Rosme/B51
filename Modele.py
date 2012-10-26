@@ -10,8 +10,6 @@ class Jeu():
         self.nbId = 0
         self.joueur = ""
         self.artisanat = Artisanat.Artisanat(self)
-        self.nbMetal = 0
-        self.nbElectro = 0
         
     def nouveauJoueur(self, race):
         nom = "Marco"
@@ -20,16 +18,25 @@ class Jeu():
             self.joueur = Humain(self, self.nbId)
             self.joueur.nouveauPersonnage(nom)
             
-        if race == "Wohawk":
+        elif race == "Wohawk":
             self.joueur = Wohawk(self, self.nbId)
             self.joueur.nouveauPersonnage(nom)
             
-        if race == "Zeborf":
+        elif race == "Zeborf":
             self.joueur = Zeborf(self, self.nbId)
+            self.joueur.nouveauPersonnage(nom)
+        
+        elif race == "Irki":
+            self.joueur = Irki(self, self.nbId)
+            self.joueur.nouveauPersonnage(nom)
+            
+        elif race == "Popamu":
+            self.joueur = Popamu(self, self.nbId)
             self.joueur.nouveauPersonnage(nom)
             
         self.nbId+=1
         
+        '''Tout ça peut être enlevé plus tard'''
         print("Nom : " + str(self.joueur.nom))
         print("Race : " + str(self.joueur.race))
         print("Vie : " + str(self.joueur.vie))
@@ -45,15 +52,25 @@ class Jeu():
             self.joueur = Humain(self, self.nbId)
             self.joueur = self.joueur.chargerPersonnage(nom)
             
-        if race == "Wohawk":
+        elif race == "Wohawk":
             self.joueur = Wohawk(self, self.nbId)
             self.joueur = self.joueur.chargerPersonnage(nom)
             
-        if race == "Zeborf":
+        elif race == "Zeborf":
             self.joueur = Zeborf(self, self.nbId)
             self.joueur = self.joueur.chargerPersonnage(nom)
+        
+        elif race == "Irki":
+            self.joueur = Irki(self, self.nbId)
+            self.joueur = self.joueur.chargerPersonnage(nom)
+        
+        elif race == "Popamu":
+            self.joueur = Popamu(self, self.nbId)
+            self.joueur = self.joueur.chargerPersonnage(nom)
+            
         self.nbId += 1
         
+        '''Tout ça peut être enlevé plus tard'''
         print("Nom : " + str(self.joueur.nom))
         print("Race : " + str(self.joueur.race))
         print("Vie : " + str(self.joueur.vie))
@@ -70,7 +87,6 @@ class Jeu():
                 self.nbElectro+=1
             elif i.id == 2:
                 self.nbBatterie +=1
-                
         
         print("Nb Metal: " + str(self.nbMetal))
         print("Nb Electro: " + str(self.nbElectro))
