@@ -1,5 +1,6 @@
 # -*- coding: ISO-8859-1 -*-
 from Personnage import *
+import Race
 import Vue
 import Item
 import Artisanat
@@ -14,25 +15,25 @@ class Jeu():
     def nouveauJoueur(self, race):
         nom = "Marco"
         
+        self.joueur = Personnage(self.nbId)
+        
         if race == "Humain":
-            self.joueur = Humain(self, self.nbId)
-            self.joueur.nouveauPersonnage(nom)
+            self.joueur.nouveauPersonnage(nom, Race.Humain())
             
         elif race == "Wohawk":
-            self.joueur = Wohawk(self, self.nbId)
-            self.joueur.nouveauPersonnage(nom)
+            self.joueur.nouveauPersonnage(nom, Race.Wohawk())
             
         elif race == "Zeborf":
-            self.joueur = Zeborf(self, self.nbId)
-            self.joueur.nouveauPersonnage(nom)
+            self.joueur.nouveauPersonnage(nom, Race.Zeborf())
         
         elif race == "Irki":
-            self.joueur = Irki(self, self.nbId)
-            self.joueur.nouveauPersonnage(nom)
+            self.joueur.nouveauPersonnage(nom, Race.Irki())
             
         elif race == "Popamu":
-            self.joueur = Popamu(self, self.nbId)
-            self.joueur.nouveauPersonnage(nom)
+            self.joueur.nouveauPersonnage(nom, Race.Popamu())
+            
+        elif race == "Atarix":
+            self.joueur.nouveauPersonnage(nom, Race.Atarix())
             
         self.nbId+=1
         
@@ -45,32 +46,10 @@ class Jeu():
         print("Poids limite : " + str(self.joueur.inventaire.poidsLimite))
 
     def chargerJoueur(self):
-        race = "Zeborf"
         nom = "Marco"
-            
-        if race == "Humain":
-            self.joueur = Humain(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
-            
-        elif race == "Wohawk":
-            self.joueur = Wohawk(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
-            
-        elif race == "Zeborf":
-            self.joueur = Zeborf(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
         
-        elif race == "Irki":
-            self.joueur = Irki(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
-        
-        elif race == "Popamu":
-            self.joueur = Popamu(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
-            
-        elif race == "Atarix":
-            self.joueur = Atarix(self, self.nbId)
-            self.joueur = self.joueur.chargerPersonnage(nom)
+        self.joueur = Personnage(self.nbId)
+        self.joueur = self.joueur.chargerPersonnage(nom)
             
         self.nbId += 1
         
