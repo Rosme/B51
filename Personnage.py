@@ -14,6 +14,7 @@ class Personnage():
         self.attaque = race.attaque
         self.defense = race.defense
         self.poidsLimite = race.poidsLimite
+        self.description = race.description
         self.x = 0
         self.y = 0
         self.inventaire = Item.Inventaire(self.poidsLimite)

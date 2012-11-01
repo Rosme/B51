@@ -44,6 +44,7 @@ class Jeu():
         print("Attaque : " + str(self.joueur.attaque))
         print("Defense : " + str(self.joueur.defense))
         print("Poids limite : " + str(self.joueur.inventaire.poidsLimite))
+        print("Description : " + self.joueur.description)
 
     def chargerJoueur(self):
         nom = "Marco"
@@ -60,6 +61,7 @@ class Jeu():
         print("Attaque : " + str(self.joueur.attaque))
         print("Defense : " + str(self.joueur.defense))
         print("Poids limite : " + str(self.joueur.inventaire.poidsLimite))
+        print("Description : " + self.joueur.description)
         self.nbMetal = 0
         self.nbElectro = 0
         self.nbBatterie = 0

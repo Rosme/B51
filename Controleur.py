@@ -16,6 +16,15 @@ class Controleur():
     
     def nouveauZeborf(self):
         self.jeu.nouveauJoueur("Zeborf")
+    
+    def nouveauIrki(self):
+        self.jeu.nouveauJoueur("Irki")
+    
+    def nouveauPopamu(self):
+        self.jeu.nouveauJoueur("Popamu")
+    
+    def nouveauAtarix(self):
+        self.jeu.nouveauJoueur("Atarix")
         
     def chargerJoueur(self):
         self.jeu.chargerJoueur()
