@@ -3,14 +3,16 @@ from Personnage import *
 import Race
 import Vue
 import Item
+import Carte
 import Artisanat
 
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
+        self.carte = Carte.Carte()
+        self.artisanat = Artisanat.Artisanat(self)
         self.nbId = 0
         self.joueur = ""
-        self.artisanat = Artisanat.Artisanat(self)
         
     def info(self, race):
         if race == "Humain":
@@ -94,17 +96,17 @@ class Jeu():
     def sauvegardeJoueur(self):
         self.joueur.sauvegardePersonnage()
         
-    def addMetal(self):
+    def rajoutMetal(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(0, "Metal", "Metal Scrap used to craft Guns and Armors"))
         self.nbMetal+=1
         print("Nb Metal: " + str(self.nbMetal))
         
-    def addElectro(self):
+    def rajoutElectro(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(1, "Electronique", "Electronic parts used to craft Armors and Dematerializator"))
         self.nbElectro+=1
         print("Nb Electro: " + str(self.nbElectro))
         
-    def addBattery(self):
+    def rajoutBatterie(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(2, "Batterie", "Battery used to craft Guns and Dematerializator"))
         self.nbBatterie +=1
         print("Nb Batterie: " + str(self.nbBatterie))

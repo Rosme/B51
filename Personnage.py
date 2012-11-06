@@ -22,6 +22,21 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
     
+    def bouge(self, mouvement):
+        tempx = 0
+        tempy = 0
+        
+        if mouvement[0]:
+            tempy-=4
+        if mouvement[1]:
+            tempx+=4
+        if mouvement[2]:
+            tempy+=4
+        if mouvement[3]:
+            tempx-=4
+            
+        return tempx, tempy
+    
     def chargerPersonnage(self, nom):
         nomFichier = nom + '.plr'
         with open(nomFichier,'rb') as fichier:
