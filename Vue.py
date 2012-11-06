@@ -186,35 +186,48 @@ class Application(tkinter.Frame):
         self.mouvement[3]=True
     def relacheGauche(self,event):
         self.mouvement[3]=False
+
+
+'''# -*- coding: ISO-8859-1 -*-
+from tkinter import *
+
+class Application():
+    def __init__(self, parent, master=None):
+        self.parent = parent
+        self.root=Tk()
+        self.root.config(width=800, height=600)
+        self.root.title("Area B51")
         
-    def actualiser(self):
-        tempx=0
-        tempy=0
+        b1 = Button(master, text="New Humain", command=self.parent.nouveauHumain)
+        b2 = Button(master, text="New Wohawk", command=self.parent.nouveauWohawk)
+        b3 = Button(master, text="New Zeborf", command=self.parent.nouveauZeborf)
+        b4 = Button(master, text="New Irki", command=self.parent.nouveauIrki)
+        b5 = Button(master, text="New Popamu", command=self.parent.nouveauPopamu)
+        b6 = Button(master, text="New Atarix", command=self.parent.nouveauAtarix)
+        b7 = Button(master, text="Load Player", command=self.parent.chargerJoueur)
+        b8 = Button(master, text="Save Player", command=self.parent.sauvegardeJoueur)
+        b9 = Button(master, text="Add Metal Scrap", command=self.parent.addMetal)
+        b10 = Button(master, text="Add Electronic", command=self.parent.addElectro)
+        b11 = Button(master, text="Add Battery", command=self.parent.addBattery)
+        b12= Button(master, text="Craft Armor", command=self.parent.fabricationArmure)
+        b13 = Button(master, text="Craft Gun", command=self.parent.fabricationFusil)
+        b14 = Button(master, text="Craft Dematerializator", command=self.parent.fabricationDematerialisateur)
+        b15 = Button(master, text="get Humain info", command=self.parent.infoHumain)
+        b1.grid(column=0, row=0)
+        b2.grid(column=1, row=0)
+        b3.grid(column=2, row=0)
+        b4.grid(column=0, row=1)
+        b5.grid(column=1, row=1)
+        b6.grid(column=2, row=1)
+        b7.grid(column=0, row=2)
+        b8.grid(column=1, row=2)
+        b9.grid(column=0, row=3)
+        b10.grid(column=1, row=3)
+        b11.grid(column=2, row=3)
+        b12.grid(column=0, row=4)
+        b13.grid(column=1, row=4)
+        b14.grid(column=2, row=4)
+        b15.grid(column=0, row=5)
         
-        if self.mouvement[0]:
-            tempy-=4
-        if self.mouvement[1]:
-            tempx+=4
-        if self.mouvement[2]:
-            tempy+=4
-        if self.mouvement[3]:
-            tempx-=4
-        
-        
-        tempMatX,tempMatY=self.coord(self.posEcranX+(tempx)*2,self.posEcranY+(tempy)*2)
-        if self.laListe[tempMatX][tempMatY]=='2':
-            self.posX=tempMatX
-            self.posY=tempMatY
-            self.posDepartX-=tempx
-            self.posDepartY-=tempy
-              
-        if True in self.mouvement:
-            self.map.delete("image")
-            self.map.delete("perso")
-            self.persoAff=True
-            self.map.delete("text")
-            self.affichageMap()
-        
-        
-           
-        
+        self.root.bind("<KeyPress-q>", self.parent.autoSoin)
+            '''
