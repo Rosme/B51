@@ -39,7 +39,8 @@ class Application(tkinter.Frame):
         #position des premiers blocs
         self.posDepartX=self.largeurJeu/2
         self.posDepartY=100
-
+        
+        self.persoAff=True
         #importation des images
         self.roche=tkinter.PhotoImage(file="Image/rock1.gif")
         self.gazon=tkinter.PhotoImage(file="Image/grass.gif")
@@ -75,7 +76,7 @@ class Application(tkinter.Frame):
     def affichageMap(self):      
         self.posInitX=self.posDepartX
         self.posInitY=self.posDepartY
-        
+        ch=0
         #affichage de toutes les tuiles de la map ainsi que le personnage
         #passe toutes les lignes de la map
         for i in range(len(self.laListe)):
@@ -84,20 +85,25 @@ class Application(tkinter.Frame):
             self.posTempY=self.posInitY
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(self.laListe[i])-1,-1,-1):
+                                 
+                
                 #affichage de la roche (mur)
                 if self.laListe[i][k]=='1':
                     self.map.create_image(self.posTempX,self.posTempY-16,image=self.roche,tags="image")
-                    self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
-               
-                #affichage du personnage
-                if self.posX<i and self.posY<k:
-                    self.map.create_image(self.posEcranX,self.posEcranY-30,image=self.perso,tags="perso")
+                    #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
                 
+                #affichage du personnage
+                if self.persoAff==True:
+                    if self.posX<i and self.posY<k:
+                        self.map.create_image(self.posEcranX,self.posEcranY-32,image=self.perso,tags="perso")
+                        self.persoAff=False
+                    
                 #affichage du gazon
                 if self.laListe[i][k]=='0' or self.laListe[i][k]=='3':
                     self.map.create_image(self.posTempX,self.posTempY,image=self.gazon,tags="image")
-                    self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
-                
+                    #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
+                    
+                   
                 #apres chaque affichage, on se dirige dans l'ecran en bas à gauche
                 self.posTempX-=(self.largeurTuile/2)
                 self.posTempY+=(self.hauteurTuile/2)
@@ -196,7 +202,7 @@ class Application(tkinter.Frame):
         tempMatX,tempMatY=self.coord(self.posEcranX+(tempx)*2,self.posEcranY+(tempy)*2)
         
         #si la case ou le joueur se dirige est du gazon il avance
-        if self.laListe[tempMatX][tempMatY]=='0':
+        if self.laListe[tempMatX][tempMatY]=='0' and self.laListe[tempMatX+1][tempMatY-1]!='1':
             self.posX=tempMatX
             self.posY=tempMatY
             self.posDepartX-=tempx
@@ -207,7 +213,8 @@ class Application(tkinter.Frame):
             #supprime toutes les images
             self.map.delete("image")
             self.map.delete("perso")
-            self.map.delete("text")
+            self.persoAff=True
+            #self.map.delete("text")
             #on reaffiche la map
             self.affichageMap()
         
