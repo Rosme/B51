@@ -1,6 +1,6 @@
 class Carte():
     def __init__(self):
-        self.nomMap = "Map/map1.mp"
+        self.nomMap = "Map/MainRoom.mp"
         self.s = Salle()
         self.s.chargeCarte(self.nomMap)
 

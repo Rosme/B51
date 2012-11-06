@@ -1,8 +1,11 @@
 # -*- coding: ISO-8859-1 -*-
+import Carte
+
 
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
+        self.carte = Carte.Carte()
         self.nbId = 0
         self.joueur = ""
         
