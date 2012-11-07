@@ -22,7 +22,6 @@ class Application(tkinter.Frame):
         self.hauteurTuile=32 
         
         self.root=tkinter.Tk()
-        self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
 
         #position du joueur centre dans l'ecran
         self.posEcranX=self.largeurJeu/2
@@ -62,6 +61,10 @@ class Application(tkinter.Frame):
         #self.initMap()
         
     def initMap(self):
+        self.root.destroy()
+        self.root=tkinter.Tk()
+        self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
+        self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
         #position des premiers blocs
         self.posDepartX=self.largeurJeu/2
         self.posDepartY=100
@@ -77,7 +80,7 @@ class Application(tkinter.Frame):
         
         self.posMilieuDiagoX=self.posDepartX-(len(self.laListe[1])-1)*32
         self.posMilieuDiagoY=self.posDepartY+(len(self.laListe)-1)*16
-        self.posX,self.posY=self.coord(self.posEcranX, self.posEcranY)
+        self.parent.jeu.joueur.x,self.parent.jeu.joueur.y=self.coord(self.posEcranX, self.posEcranY)
         
         #création du fond noir derriere la map
         self.map=tkinter.Canvas(self.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
@@ -103,7 +106,7 @@ class Application(tkinter.Frame):
     def affichageMap(self):      
         self.posInitX=self.posDepartX
         self.posInitY=self.posDepartY
-        ch=0
+        
         #affichage de toutes les tuiles de la map ainsi que le personnage
         #passe toutes les lignes de la map
         for i in range(len(self.laListe)):
@@ -121,7 +124,7 @@ class Application(tkinter.Frame):
                 
                 #affichage du personnage
                 if self.persoAff==True:
-                    if self.posX<i and self.posY<k:
+                    if self.parent.jeu.joueur.x<i and self.parent.jeu.joueur.y<k:
                         self.map.create_image(self.posEcranX,self.posEcranY-32,image=self.perso,tags="perso")
                         self.persoAff=False
                     
