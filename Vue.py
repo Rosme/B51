@@ -149,11 +149,21 @@ class Application(tkinter.Frame):
         self.root.bind("<KeyPress-w>",self.parent.peseHaut)
         self.root.bind("<KeyPress-s>",self.parent.peseBas)
         self.root.bind("<KeyPress-a>",self.parent.peseGauche)
+        self.root.bind("<KeyPress-D>",self.parent.peseDroit)
+        self.root.bind("<KeyPress-W>",self.parent.peseHaut)
+        self.root.bind("<KeyPress-S>",self.parent.peseBas)
+        self.root.bind("<KeyPress-A>",self.parent.peseGauche)
         
         self.root.bind("<KeyRelease-d>",self.parent.relacheDroit)
         self.root.bind("<KeyRelease-w>",self.parent.relacheHaut)
         self.root.bind("<KeyRelease-s>",self.parent.relacheBas)
         self.root.bind("<KeyRelease-a>",self.parent.relacheGauche)
+        self.root.bind("<KeyRelease-D>",self.parent.relacheDroit)
+        self.root.bind("<KeyRelease-W>",self.parent.relacheHaut)
+        self.root.bind("<KeyRelease-S>",self.parent.relacheBas)
+        self.root.bind("<KeyRelease-A>",self.parent.relacheGauche)
+        
+        self.root.bind("<Button-1>", self.parent.tire)
         #calcul les coordonnees du personnage dans la matrice selon sa position x,y dans l'écran
         #x1 est la position du joueur sur l'axe des X
         #y1 est la position du joueuru sur l'axe des Y

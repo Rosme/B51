@@ -18,7 +18,7 @@ class Controleur():
         self.app.map.after(10,self.miseAJour)
     
     def actualiser(self):
-        
+        self.jeu.joueur.recharge()
         self.app.laListe=self.jeu.carte.s.salle
         
         tempx=0
@@ -113,6 +113,9 @@ class Controleur():
         self.mouvement[3]=True
     def relacheGauche(self,event):
         self.mouvement[3]=False
+        
+    def tire(self,event):
+        self.jeu.joueur.tire()
 
 if __name__ == '__main__':
     c = Controleur()
