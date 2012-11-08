@@ -17,8 +17,11 @@ class Controleur():
         self.actualiser()
         self.app.map.after(10,self.miseAJour)
     
-    def actualiser(self):
+    def rechargement(self):
         self.jeu.joueur.recharge()
+        self.app.map.after(100,self.rechargement)
+    
+    def actualiser(self):
         self.app.laListe=self.jeu.carte.s.salle
         
         tempx=0
@@ -28,10 +31,10 @@ class Controleur():
         
         tempMatX,tempMatY=self.app.coord(self.app.posEcranX+(tempx)*2,self.app.posEcranY+(tempy)*2)
         if self.app.laListe[tempMatX][tempMatY]=='0' and self.app.laListe[tempMatX+1][tempMatY-1]!='1':
-            self.app.posX=tempMatX
-            self.app.posY=tempMatY
-            self.app.posDepartX-=tempx
-            self.app.posDepartY-=tempy
+            self.jeu.joueur.x=tempMatX
+            self.jeu.joueur.y=tempMatY
+            self.jeu.joueur.posDepartX-=tempx
+            self.jeu.joueur.posDepartY-=tempy
               
         if True in self.mouvement:
             self.app.map.delete("image")
@@ -45,27 +48,21 @@ class Controleur():
         
     def nouveauHumain(self):
         self.jeu.nouveauJoueur("Humain")
-        self.app.initMap()
     
     def nouveauWohawk(self):
         self.jeu.nouveauJoueur("Wohawk")
-        self.app.initMap()
     
     def nouveauZeborf(self):
         self.jeu.nouveauJoueur("Zeborf")
-        self.app.initMap()
     
     def nouveauIrki(self):
         self.jeu.nouveauJoueur("Irki")
-        self.app.initMap()
     
     def nouveauPopamu(self):
         self.jeu.nouveauJoueur("Popamu")
-        self.app.initMap()
         
     def nouveauAtarix(self):
         self.jeu.nouveauJoueur("Atarix")
-        self.app.initMap()
         
     def chargerJoueur(self):
         self.jeu.chargerJoueur()
@@ -116,6 +113,7 @@ class Controleur():
         
     def tire(self,event):
         self.jeu.joueur.tire()
+        
 
 if __name__ == '__main__':
     c = Controleur()

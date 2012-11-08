@@ -64,10 +64,9 @@ class Application(tkinter.Frame):
         self.root.destroy()
         self.root=tkinter.Tk()
         self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
-        self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
         #position des premiers blocs
-        self.posDepartX=self.largeurJeu/2
-        self.posDepartY=100
+        self.parent.jeu.joueur.posDepartX=self.largeurJeu/2
+        self.parent.jeu.joueur.posDepartY=100
         
         self.persoAff=True
         #importation des images
@@ -78,8 +77,8 @@ class Application(tkinter.Frame):
         #importation de la matrice de la map
         self.laListe=self.parent.jeu.carte.s.salle
         
-        self.posMilieuDiagoX=self.posDepartX-(len(self.laListe[1])-1)*32
-        self.posMilieuDiagoY=self.posDepartY+(len(self.laListe)-1)*16
+        self.posMilieuDiagoX=self.parent.jeu.joueur.posDepartX-(len(self.laListe[1])-1)*32
+        self.posMilieuDiagoY=self.parent.jeu.joueur.posDepartY+(len(self.laListe)-1)*16
         self.parent.jeu.joueur.x,self.parent.jeu.joueur.y=self.coord(self.posEcranX, self.posEcranY)
         
         #création du fond noir derriere la map
@@ -102,10 +101,11 @@ class Application(tkinter.Frame):
         #ajout des ecouteurs pour effectuer des actions en jeu
         self.ajoutEcouteur()
         self.parent.miseAJour()
+        self.parent.rechargement()
     
     def affichageMap(self):      
-        self.posInitX=self.posDepartX
-        self.posInitY=self.posDepartY
+        self.posInitX=self.parent.jeu.joueur.posDepartX
+        self.posInitY=self.parent.jeu.joueur.posDepartY
         
         #affichage de toutes les tuiles de la map ainsi que le personnage
         #passe toutes les lignes de la map
@@ -143,8 +143,8 @@ class Application(tkinter.Frame):
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
-        self.posMilieuDiagoX=self.posDepartX-(len(self.laListe[1])-1)*32
-        self.posMilieuDiagoY=self.posDepartY+(len(self.laListe)-1)*16
+        self.posMilieuDiagoX=self.parent.jeu.joueur.posDepartX-(len(self.laListe[1])-1)*32
+        self.posMilieuDiagoY=self.parent.jeu.joueur.posDepartY+(len(self.laListe)-1)*16
     
     def ajoutEcouteur(self):        
         #input du clavier        

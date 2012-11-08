@@ -60,6 +60,7 @@ class Jeu():
         print("Defense : " + str(self.joueur.defense))
         print("Poids limite : " + str(self.joueur.inventaire.poidsLimite))
         print("Description : " + self.joueur.description)
+        self.parent.app.initMap()
 
     def chargerJoueur(self):
         nom = "Marco"

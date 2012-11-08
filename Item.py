@@ -38,16 +38,33 @@ class Arme(Item):
 	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge):
 		Item.__init__(self, id, poids, nom, description)
 		self.force = force
+		self.MAX_ENERGIE = energie
 		self.energie = energie
 		self.cout = cout
 		self.vitesseRecharge = vitesseRecharge
 
-	def use(self):
+	def utiliser(self):
 		self.energie -= self.cout
 
 	def recharge(self):
 		self.energie += self.vitesseRecharge
 
+'''
+Armure
+'''
+class Armure(Item):
+	def __init__(self, id, poids, nom, description, defense, energie, vitesseRecharge):
+		Item.__init__(self, id, poids, nom, description)
+		self.defense = defense
+		self.MAX_ENERGIE = energie
+		self.energie = energie
+		self.vitesseRecharge = vitesseRecharge
+
+	def subit(self, degat):
+		self.energie -= degat
+
+	def recharge(self):
+		self.energie += self.vitesseRecharge
 
 '''
 Classe d'Inventaire
