@@ -7,7 +7,7 @@ class Balle():
         self.velocite = 5
         self.entreDeux = math.sqrt((finX-departX)^2+(finY-departY)^2)
         self.veloX = (self.velocite * finX - departX)/self.entreDeux
-        self.veloY = (self.velocite * finX - departX)/self.entreDeux
+        self.veloY = (self.velocite * finY - departY)/self.entreDeux
         
     def bouge(self):
         self.x += self.veloX

@@ -38,7 +38,7 @@ class Arme(Item):
 	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge):
 		Item.__init__(self, id, poids, nom, description)
 		self.force = force
-		self.MAX_ENERGIE = energie
+		self.max_energie = energie
 		self.energie = energie
 		self.cout = cout
 		self.vitesseRecharge = vitesseRecharge
@@ -56,7 +56,7 @@ class Armure(Item):
 	def __init__(self, id, poids, nom, description, defense, energie, vitesseRecharge):
 		Item.__init__(self, id, poids, nom, description)
 		self.defense = defense
-		self.MAX_ENERGIE = energie
+		self.max_energie = energie
 		self.energie = energie
 		self.vitesseRecharge = vitesseRecharge
 

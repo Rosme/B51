@@ -74,19 +74,19 @@ class Personnage():
         #Recharge l'arme
         for i in self.inventaire.items:
             if i.id == 7: 
-                if i.energie + i.vitesseRecharge < i.MAX_ENERGIE:
+                if i.energie + i.vitesseRecharge < i.max_energie:
                     i.recharge()
                     print(i.energie)
                 else:
-                    i.energie = i.MAX_ENERGIE
+                    i.energie = i.max_energie
                 break
         #Recharge l'armure
         for i in self.inventaire.items:
             if i.id == 8:
-                if i.energie + i.vitesseRecharge < i.MAX_ENERGIE:
+                if i.energie + i.vitesseRecharge < i.max_energie:
                     i.recharge()
                 else:
-                    i.energie = i.MAX_ENERGIE
+                    i.energie = i.max_energie
                 break
          
     def subit(self, degat):

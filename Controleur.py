@@ -46,14 +46,17 @@ class Controleur():
     def infoHumain(self):
         self.jeu.info("Humain")
         
+    def infoPopamu(self):
+        self.jeu.info("Popamu")
+        
+    def infoIrki(self):
+        self.jeu.info("Irki")
+        
+    def infoAtarix(self):
+        self.jeu.info("Atarix")
+        
     def nouveauHumain(self):
         self.jeu.nouveauJoueur("Humain")
-    
-    def nouveauWohawk(self):
-        self.jeu.nouveauJoueur("Wohawk")
-    
-    def nouveauZeborf(self):
-        self.jeu.nouveauJoueur("Zeborf")
     
     def nouveauIrki(self):
         self.jeu.nouveauJoueur("Irki")
