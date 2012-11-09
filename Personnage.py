@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import pickle
 import Item
+from Balle import *
         
 class Personnage():
     def __init__(self, id):
@@ -20,7 +21,7 @@ class Personnage():
         self.posDepartX = 0
         self.posDepartY = 0
         self.inventaire = Item.Inventaire(self.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 20.0, 2, 0.5))
+        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
@@ -62,12 +63,15 @@ class Personnage():
                     self.subit(reste)
                     break
     
-    def tire(self):
+    def tire(self, listeBalle, x, y):
+        print(x)
+        print(y)
         for i in self.inventaire.items:
             #ID de l'armure = 7
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
+                    listeBalle.append(Balle(512, 350, x, y, i.force+self.attaque))
                     break
             
     def recharge(self):
@@ -76,7 +80,6 @@ class Personnage():
             if i.id == 7: 
                 if i.energie + i.vitesseRecharge < i.max_energie:
                     i.recharge()
-                    print(i.energie)
                 else:
                     i.energie = i.max_energie
                 break
@@ -118,5 +121,7 @@ class Personnage():
                 self.inventaire.retirerItem(i)
                 break
     
-    def getBound(self):
-        return [self.x, self.y+65],[self.x+52, self.y+65],[self.x, self.y+85],[self.x+52, self.y+85]
+    def obtenirLimite(self):
+        #return [self.x, self.y+65, self.x+52, self.y+85]
+        return [self.x, self.y, self.x+100, self.y+100]
+    

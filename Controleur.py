@@ -20,6 +20,20 @@ class Controleur():
     def rechargement(self):
         self.jeu.joueur.recharge()
         self.app.map.after(100,self.rechargement)
+        
+    def balle(self):
+        temp = self.jeu.listeBalle
+        
+        for i in self.jeu.listeBalle:
+            i.bouge()
+            if i.collision(self.jeu.listePersonnage):
+                temp.remove(i)
+                
+        self.jeu.listeBalle = temp
+              
+        self.app.map.delete("balle")
+        self.app.tire()
+        self.app.map.after(100, self.balle)
     
     def actualiser(self):
         self.app.laListe=self.jeu.carte.s.salle
@@ -35,7 +49,7 @@ class Controleur():
             self.jeu.joueur.y=tempMatY
             self.jeu.joueur.posDepartX-=tempx
             self.jeu.joueur.posDepartY-=tempy
-              
+            
         if True in self.mouvement:
             self.app.map.delete("image")
             self.app.map.delete("perso")
@@ -115,7 +129,7 @@ class Controleur():
         self.mouvement[3]=False
         
     def tire(self,event):
-        self.jeu.joueur.tire()
+        self.jeu.joueur.tire(self.jeu.listeBalle, event.x, event.y)
         
 
 if __name__ == '__main__':

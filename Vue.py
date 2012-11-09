@@ -98,6 +98,7 @@ class Application(tkinter.Frame):
         self.ajoutEcouteur()
         self.parent.miseAJour()
         self.parent.rechargement()
+        self.parent.balle()
     
     def affichageMap(self):      
         self.posInitX=self.parent.jeu.joueur.posDepartX
@@ -123,7 +124,7 @@ class Application(tkinter.Frame):
                     if self.parent.jeu.joueur.x<i and self.parent.jeu.joueur.y<k:
                         self.map.create_image(self.posEcranX,self.posEcranY-32,image=self.perso,tags="perso")
                         self.persoAff=False
-                    
+                                            
                 #affichage du gazon
                 if self.laListe[i][k]=='0' or self.laListe[i][k]=='3':
                     self.map.create_image(self.posTempX,self.posTempY,image=self.gazon,tags="image")
@@ -141,7 +142,13 @@ class Application(tkinter.Frame):
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
         self.posMilieuDiagoX=self.parent.jeu.joueur.posDepartX-(len(self.laListe[1])-1)*32
         self.posMilieuDiagoY=self.parent.jeu.joueur.posDepartY+(len(self.laListe)-1)*16
-    
+        if self.parent.jeu.listePersonnage:
+            self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
+            
+    def tire(self):  
+        for i in self.parent.jeu.listeBalle:
+            self.map.create_oval(i.x-5, i.y-5, i.x, i.y, fill='red', tags="balle")
+               
     def ajoutEcouteur(self):        
         #input du clavier        
         self.root.bind("<KeyPress-d>",self.parent.peseDroit)
@@ -161,6 +168,9 @@ class Application(tkinter.Frame):
         self.root.bind("<KeyRelease-W>",self.parent.relacheHaut)
         self.root.bind("<KeyRelease-S>",self.parent.relacheBas)
         self.root.bind("<KeyRelease-A>",self.parent.relacheGauche)
+		
+        self.root.bind("<KeyPress-q>",self.parent.autoSoin)
+        self.root.bind("<KeyPress-Q>",self.parent.autoSoin)
         
         self.root.bind("<Button-1>", self.parent.tire)
         #calcul les coordonnees du personnage dans la matrice selon sa position x,y dans l'écran
@@ -171,9 +181,7 @@ class Application(tkinter.Frame):
         #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
         tempX=self.posMilieuDiagoX
         tempY=self.posMilieuDiagoY
-        
-        y=(y1-self.posMilieuDiagoY)/16
-            
+        y=(y1-self.posMilieuDiagoY)/16   
         if y<0:
             y*=-1
                     
@@ -195,48 +203,3 @@ class Application(tkinter.Frame):
             x=y
             y=temp
         return x,y
-
-
-'''# -*- coding: ISO-8859-1 -*-
-from tkinter import *
-
-class Application():
-    def __init__(self, parent, master=None):
-        self.parent = parent
-        self.root=Tk()
-        self.root.config(width=800, height=600)
-        self.root.title("Area B51")
-        
-        b1 = Button(master, text="New Humain", command=self.parent.nouveauHumain)
-        b2 = Button(master, text="New Wohawk", command=self.parent.nouveauWohawk)
-        b3 = Button(master, text="New Zeborf", command=self.parent.nouveauZeborf)
-        b4 = Button(master, text="New Irki", command=self.parent.nouveauIrki)
-        b5 = Button(master, text="New Popamu", command=self.parent.nouveauPopamu)
-        b6 = Button(master, text="New Atarix", command=self.parent.nouveauAtarix)
-        b7 = Button(master, text="Load Player", command=self.parent.chargerJoueur)
-        b8 = Button(master, text="Save Player", command=self.parent.sauvegardeJoueur)
-        b9 = Button(master, text="Add Metal Scrap", command=self.parent.rajoutMetal)
-        b10 = Button(master, text="Add Electronic", command=self.parent.rajoutElectro)
-        b11 = Button(master, text="Add Battery", command=self.parent.rajoutBatterie)
-        b12= Button(master, text="Craft Armor", command=self.parent.fabricationArmure)
-        b13 = Button(master, text="Craft Gun", command=self.parent.fabricationFusil)
-        b14 = Button(master, text="Craft Dematerializator", command=self.parent.fabricationDematerialisateur)
-        b15 = Button(master, text="get Humain info", command=self.parent.infoHumain)
-        b1.grid(column=0, row=0)
-        b2.grid(column=1, row=0)
-        b3.grid(column=2, row=0)
-        b4.grid(column=0, row=1)
-        b5.grid(column=1, row=1)
-        b6.grid(column=2, row=1)
-        b7.grid(column=0, row=2)
-        b8.grid(column=1, row=2)
-        b9.grid(column=0, row=3)
-        b10.grid(column=1, row=3)
-        b11.grid(column=2, row=3)
-        b12.grid(column=0, row=4)
-        b13.grid(column=1, row=4)
-        b14.grid(column=2, row=4)
-        b15.grid(column=0, row=5)
-        
-        self.root.bind("<KeyPress-q>", self.parent.autoSoin)
-            '''

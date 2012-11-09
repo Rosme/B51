@@ -11,6 +11,8 @@ class Jeu():
         self.parent = parent
         self.carte = Carte.Carte()
         self.artisanat = Artisanat.Artisanat(self)
+        self.listePersonnage = list()
+        self.listeBalle = list()
         self.nbId = 0
         self.joueur = ""
         
@@ -37,6 +39,13 @@ class Jeu():
         elif race == "Atarix":
             self.joueur.nouveauPersonnage(nom, Race.Atarix())
             
+        self.nbId+=1
+        
+        pers = Personnage(self.nbId+1)
+        pers.nouveauPersonnage("Kevin", Race.Atarix())
+        
+        self.listePersonnage.append(pers)
+        
         self.nbId+=1
         
         self.parent.app.initMap()
