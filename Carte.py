@@ -3,13 +3,6 @@ class Carte():
         self.nomMap = "Map/MainRoom.mp"
         self.s = Salle()
         self.s.chargeCarte(self.nomMap)
-
-        """Les deux prochaines lignes sont ici pour donner l'exemple seulement"""
-        #self.changement(1,2)
-        #self.s.chargeCarte(self.nomMap)
-
-    #def changement(self, numEnigme, numSalle):
-        #self.nomMap = "assets/map/F_E"+ str(numEnigme) + "S" + str(numSalle) + ".txt"
     
 class Salle():
     def __init__(self):
@@ -28,8 +21,4 @@ class Salle():
         for i in ligne.splitlines():
             i.split('\n')
             self.salle.append(i)
-
-        
-        
-        
     
