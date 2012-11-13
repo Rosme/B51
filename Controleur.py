@@ -65,6 +65,7 @@ class Controleur():
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")
             self.app.frameJeu.map.delete("perso")
+            self.app.frameJeu.map.delete("p")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)

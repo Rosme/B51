@@ -106,8 +106,8 @@ class FrameJeu():
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             #self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
-            self.map.create_rectangle(temp[0], temp[1], temp[2], temp[3], fill='blue')
-            self.map.create_image((self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),((self.parent.parent.jeu.listePersonnage[0].posMapY-32)- self.perso.posMapY), image=self.pers)
+            self.map.create_rectangle(temp[0]- self.perso.posMapX, temp[1]- self.perso.posMapY, temp[2]- self.perso.posMapX, temp[3]- self.perso.posMapY, fill='blue', tags="p")
+            self.map.create_image((self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),((self.parent.parent.jeu.listePersonnage[0].posMapY-32)- self.perso.posMapY), image=self.pers, tags="p")
     
     def ajoutEcouteur(self):
         #input du clavier        
