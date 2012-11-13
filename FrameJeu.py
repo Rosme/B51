@@ -19,8 +19,8 @@ class FrameJeu():
         self.perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=self.largeurJeu/2
-        self.posDepartY=100
+        self.posDepartX=((21 * self.largeurTuile)/2) - (self.perso.posMapX-self.perso.posEcranX)
+        self.posDepartY=-32 -(self.perso.posMapY-self.perso.posEcranY)
         
         self.persoAff=True
         #importation des images
@@ -31,7 +31,7 @@ class FrameJeu():
         self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
         self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
 
-        self.perso.x,self.perso.y=self.coord(self.perso.posEcranX,self.perso.posEcranX)
+        self.perso.posMatX,self.perso.posMatY=self.coord(self.perso.posEcranX,self.perso.posEcranX)
         
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
@@ -50,7 +50,7 @@ class FrameJeu():
         #self.inv.place(x=724,y=0)
                 
         self.affichageMap(self.perso,map)
-        print(self.perso.posEcranX,self.perso.posEcranY,self.perso.x,self.perso.y)
+        #print(self.perso.posEcranX,self.perso.posEcranY,self.perso.x,self.perso.y)
         #ajout des ecouteurs pour effectuer des actions en jeu
         
         return self.perso
@@ -58,7 +58,8 @@ class FrameJeu():
     def ajoutEcouteuretBoucle(self):
         self.ajoutEcouteur()
         self.parent.parent.miseAJour()
-        #self.parent.rechargement()
+        self.parent.parent.rechargement()
+        self.parent.parent.balle()
     
     def affichageMap(self,perso,map):
         self.perso=perso  
@@ -80,7 +81,7 @@ class FrameJeu():
                 
                 #affichage du personnage
                 if self.persoAff==True:
-                    if self.perso.x<i and self.perso.y<k:
+                    if self.perso.posMatX<i and self.perso.posMatY<k:
                         self.map.create_image(self.perso.posEcranX,self.perso.posEcranY-32,image=self.pers,tags="perso")
                         self.persoAff=False
                     
@@ -99,8 +100,14 @@ class FrameJeu():
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
-        self.posMilieuDiagoX=self.perso.posEcranX-(len(map[1])-1)*32
-        self.posMilieuDiagoY=self.perso.posEcranY+(len(map)-1)*16
+        self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
+        self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
+        
+        if self.parent.parent.jeu.listePersonnage:
+            temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
+            #self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
+            self.map.create_rectangle(temp[0], temp[1], temp[2], temp[3], fill='blue')
+            self.map.create_image((self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),((self.parent.parent.jeu.listePersonnage[0].posMapY-32)- self.perso.posMapY), image=self.pers)
     
     def ajoutEcouteur(self):
         #input du clavier        
@@ -122,16 +129,23 @@ class FrameJeu():
         self.parent.root.bind("<KeyRelease-S>",self.parent.parent.relacheBas)
         self.parent.root.bind("<KeyRelease-A>",self.parent.parent.relacheGauche)
         
+        self.parent.root.bind("<KeyPress-q>",self.parent.parent.autoSoin)
+        self.parent.root.bind("<KeyPress-Q>",self.parent.parent.autoSoin)
+        
         self.parent.root.bind("<Button-1>", self.parent.parent.tire)
         #calcul les coordonnees du personnage dans la matrice selon sa position x,y dans l'ecran
         #x1 est la position du joueur sur l'axe des X
         #y1 est la position du joueuru sur l'axe des Y
     
+    def tire(self):  
+        for i in self.parent.parent.jeu.listeBalle:
+            self.map.create_oval(i.x-5, i.y-5, i.x, i.y, fill='red', tags="balle")
+    
     def coord(self,x1,y1):
         #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
         tempX=self.posMilieuDiagoX
         tempY=self.posMilieuDiagoY
-        print("coord",self.posMilieuDiagoY)
+        #print("coord",self.posMilieuDiagoY)
         y=(y1-self.posMilieuDiagoY)/16  
         if y<0:
             y*=-1

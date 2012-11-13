@@ -2,7 +2,7 @@
 import tkinter
 import MenuPrincipal
 import MenuNouvellePartie
-import Jeu
+import FrameJeu
 
 class Application():
     def __init__(self, parent):
@@ -26,4 +26,4 @@ class Application():
         self.menuN=MenuNouvellePartie.MenuNouvellePartie(self)
     
     def jeu(self,perso,map):
-        self.frameJeu=Jeu.FrameJeu(self,perso,map)
+        self.frameJeu=FrameJeu.FrameJeu(self,perso,map)

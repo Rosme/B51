@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import pickle
 import Item
+from Balle import *
         
 class Personnage():
     def __init__(self, id):
@@ -15,16 +16,20 @@ class Personnage():
         self.defense = race.defense
         self.poidsLimite = race.poidsLimite
         self.description = race.description
-        self.x = 0
-        self.y = 0
+        self.x = 200
+        self.y = 100
+        self.posMatX = 11
+        self.posMatY = 11
         self.posEcranX = 0
         self.posEcranY = 0
+        self.posMapX = 672
+        self.posMapY = 336
         self.inventaire = Item.Inventaire(self.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 20.0, 2, 0.5))
+        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
-        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
-        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
-        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Une seringue qui soigne de 100 de vies", 100))
+        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
+        self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
+        self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
     
     def bouge(self, mouvement):
         tempx = 0
@@ -62,31 +67,31 @@ class Personnage():
                     self.subit(reste)
                     break
     
-    def tire(self):
+    def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:
             #ID de l'armure = 7
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
+                    listeBalle.append(Balle(512, 350, x, y, i.force+self.attaque))
                     break
             
     def recharge(self):
         #Recharge l'arme
         for i in self.inventaire.items:
             if i.id == 7: 
-                if i.energie + i.vitesseRecharge < i.MAX_ENERGIE:
+                if i.energie + i.vitesseRecharge < i.max_energie:
                     i.recharge()
-                    print(i.energie)
                 else:
-                    i.energie = i.MAX_ENERGIE
+                    i.energie = i.max_energie
                 break
         #Recharge l'armure
         for i in self.inventaire.items:
             if i.id == 8:
-                if i.energie + i.vitesseRecharge < i.MAX_ENERGIE:
+                if i.energie + i.vitesseRecharge < i.max_energie:
                     i.recharge()
                 else:
-                    i.energie = i.MAX_ENERGIE
+                    i.energie = i.max_energie
                 break
          
     def subit(self, degat):
@@ -118,5 +123,6 @@ class Personnage():
                 self.inventaire.retirerItem(i)
                 break
     
-    def getBound(self):
-        return [self.x, self.y+65],[self.x+52, self.y+65],[self.x, self.y+85],[self.x+52, self.y+85]
+    def obtenirLimite(self):
+        return [self.posMapX-26, self.posMapY-35, self.posMapX+26, self.posMapY+10]
+    

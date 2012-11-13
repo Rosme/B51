@@ -1,3 +1,4 @@
+# -*- coding: ISO-8859-1 -*-
 '''
 Classe de base pour les items
 '''
@@ -38,7 +39,7 @@ class Arme(Item):
 	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge):
 		Item.__init__(self, id, poids, nom, description)
 		self.force = force
-		self.MAX_ENERGIE = energie
+		self.max_energie = energie
 		self.energie = energie
 		self.cout = cout
 		self.vitesseRecharge = vitesseRecharge
@@ -56,7 +57,7 @@ class Armure(Item):
 	def __init__(self, id, poids, nom, description, defense, energie, vitesseRecharge):
 		Item.__init__(self, id, poids, nom, description)
 		self.defense = defense
-		self.MAX_ENERGIE = energie
+		self.max_energie = energie
 		self.energie = energie
 		self.vitesseRecharge = vitesseRecharge
 
@@ -97,3 +98,41 @@ class Inventaire():
 		if item in self.items:
 			self.items.remove(item)
 			self.poids -= item.poids
+			
+'''
+Classe du Coffre
+'''
+class Coffre():
+	def __init__(self):
+		self.items = []
+
+	'''
+	Rajout d'un item au coffre
+	'''
+	def ajouterItem(self, item):
+		self.items.append(item)
+
+	'''
+	Va retirer l'item de la liste
+	S'il ne se trouve pas dans la liste, rien ne se passe
+	Sinon la fonction va l'enlever du coffre
+	'''
+	def retirerItem(self, item):
+		if item in self.items:
+			self.items.remove(item)
+			
+'''
+Classe des Sac
+'''
+class Sac():
+	def __init__(self):
+		self.items = []
+
+	'''
+	Va retirer l'item de la liste
+	S'il ne se trouve pas dans la liste, rien ne se passe
+	Sinon la fonction va l'enlever du coffre
+	'''
+	def retirerItem(self, item):
+		if item in self.items:
+			self.items.remove(item)
