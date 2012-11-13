@@ -36,8 +36,6 @@ class Client():
 			self.socket.send(donnees)    #on envoi le message
 		except socket.error:
 			print("Les données n'ont pas pu être envoyées. Impossible de rejoindre le serveur.")
-			print("Tentative de reconnexion...")
-			self.connecter()
 
 	def updateVue(self):
 		pass
