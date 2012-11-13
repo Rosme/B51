@@ -10,8 +10,8 @@ import select
 
 class Client():
 
-	def __init__(self):
-		self.host = '10.57.229.6' #L'adresse IP que le client va entrer dans la fenêtre client
+	def __init__(self, host):
+		self.host = host #L'adresse IP que le client va entrer dans la fenêtre client
 		self.port = 43225 #Le # du port par défaut, le client peut le change si désirer
 		self.adresse = (self.host, self.port)
 		self.buffersize = 4096
@@ -75,5 +75,6 @@ class Client():
 
 ''' MAIN '''
 if __name__ == "__main__":
-	j = Client()
+	host = input("Host: ")
+	j = Client(host)
 	j.connecter()
