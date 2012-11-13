@@ -106,8 +106,8 @@ class FrameJeu():
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             #self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
-            self.map.create_rectangle(temp[0]- self.perso.posMapX, temp[1]- self.perso.posMapY, temp[2]- self.perso.posMapX, temp[3]- self.perso.posMapY, fill='blue', tags="p")
-            self.map.create_image((self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),((self.parent.parent.jeu.listePersonnage[0].posMapY-32)- self.perso.posMapY), image=self.pers, tags="p")
+            self.map.create_rectangle(self.perso.posEcranX+ temp[0]- self.perso.posMapX, self.perso.posEcranY+temp[1]- self.perso.posMapY, self.perso.posEcranX+temp[2]- self.perso.posMapX, self.perso.posEcranY+temp[3]- self.perso.posMapY, fill='blue', tags="p")
+            self.map.create_image(self.perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),self.perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- self.perso.posMapY)-32, image=self.pers, tags="p")
     
     def ajoutEcouteur(self):
         #input du clavier        
@@ -139,7 +139,7 @@ class FrameJeu():
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
-            self.map.create_oval(i.x-5, i.y-5, i.x, i.y, fill='red', tags="balle")
+            self.map.create_oval(i.posEcranX-5, i.posEcranY-5, i.posEcranX, i.posEcranY, fill='red', tags="balle")
     
     def coord(self,x1,y1):
         #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom

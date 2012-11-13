@@ -73,7 +73,7 @@ class Personnage():
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
-                    listeBalle.append(Balle(512, 350, x, y, i.force+self.attaque))
+                    listeBalle.append(Balle(self.posMapX, self.posMapY, x, y, i.force+self.attaque))
                     break
             
     def recharge(self):

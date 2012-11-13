@@ -5,22 +5,22 @@ class Balle():
     def __init__(self, departX, departY, finX, finY, force):
         #self.posMatX = 11
         #self.posMatY = 11
-        self.posEcranX = 0
-        self.posEcranY = 0
-        self.posMapX = 672
-        self.posMapY = 336
-        self.x = departX
-        self.y = departY
+        self.posMapX = departX
+        self.posMapY = departY
+        self.posEcranX = 512
+        self.posEcranY = 350
         self.force = force
         self.radius = 5
         self.velocite = 15
-        self.entreDeux = math.sqrt(abs((finX-departX)**2)+abs((finY-departY)**2))
-        self.veloX = ((self.velocite * (finX - departX))/self.entreDeux)
-        self.veloY = ((self.velocite * (finY - departY))/self.entreDeux)
+        self.entreDeux = math.sqrt(abs((finX-self.posEcranX)**2)+abs((finY-self.ssposEcranY)**2))
+        self.veloX = ((self.velocite * (finX - self.posEcranX))/self.entreDeux)
+        self.veloY = ((self.velocite * (finY - self.posEcranY))/self.entreDeux)
         
-    def bouge(self):
-        self.x += self.veloX
-        self.y += self.veloY
+    def bouge(self, perso):
+        self.posMapX += self.veloX
+        self.posMapY += self.veloY
+        self.posEcranX = perso.posEcranX + (self.posMapX - perso.posMapX)
+        self.posEcranY = perso.posEcranY + (self.posMapY - perso.posMapY)
         
     def collision(self, listePersonnage):
         for i in listePersonnage:
@@ -40,5 +40,5 @@ class Balle():
         return False
         
     def obtenirLimite(self):
-        return [self.x, self.y, self.x+self.radius, self.y+self.radius]
+        return [self.posMapX, self.posMapY, self.posMapX+self.radius, self.posMapY+self.radius]
     

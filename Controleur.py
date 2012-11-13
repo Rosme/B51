@@ -28,7 +28,7 @@ class Controleur():
         temp = self.jeu.listeBalle
         
         for i in self.jeu.listeBalle:
-            i.bouge()
+            i.bouge(self.jeu.joueur)
             if i.collision(self.jeu.listePersonnage):
                 temp.remove(i)
                 
@@ -69,7 +69,16 @@ class Controleur():
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)
     
     def infoHumain(self):
-        self.jeu.info("Humain")
+        return self.jeu.info("Humain")
+        
+    def infoPopamu(self):
+        return self.jeu.info("Popamu")
+        
+    def infoIrki(self):
+        return self.jeu.info("Irki")
+        
+    def infoAtarix(self):
+        return self.jeu.info("Atarix")
         
     def nouveauHumain(self):
         self.jeu.nouveauJoueur("Humain")
