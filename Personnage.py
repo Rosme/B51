@@ -20,8 +20,8 @@ class Personnage():
         self.y = 100
         self.posMatX = 11
         self.posMatY = 11
-        self.posEcranX = 0
-        self.posEcranY = 0
+        self.posEcranX = 612
+        self.posEcranY = 350
         self.posMapX = 672
         self.posMapY = 336
         self.inventaire = Item.Inventaire(self.poidsLimite)
@@ -73,7 +73,7 @@ class Personnage():
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
-                    listeBalle.append(Balle(self.posMapX, self.posMapY, x, y, i.force+self.attaque))
+                    listeBalle.append(Balle(self, x, y, i.force+self.attaque))
                     break
             
     def recharge(self):

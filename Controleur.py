@@ -57,9 +57,8 @@ class Controleur():
             self.jeu.joueur.posMapY+=tempy
             self.app.frameJeu.posDepartX = ((21 * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
-            #self.app.frameJeu.posDepartX-=tempx
-            #self.app.frameJeu.posDepartY-=tempy
-        print("actu",self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)      
+            
+        #print("actu",self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)      
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")
             self.app.frameJeu.map.delete("perso")

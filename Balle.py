@@ -2,17 +2,17 @@
 import math
 
 class Balle():
-    def __init__(self, departX, departY, finX, finY, force):
+    def __init__(self, perso, finX, finY, force):
         #self.posMatX = 11
         #self.posMatY = 11
-        self.posMapX = departX
-        self.posMapY = departY
-        self.posEcranX = 512
-        self.posEcranY = 350
+        self.posMapX = perso.posMapX
+        self.posMapY = perso.posMapY-30
+        self.posEcranX = perso.posEcranX + (self.posMapX - perso.posMapX)
+        self.posEcranY = perso.posEcranY + (self.posMapY - perso.posMapY)
         self.force = force
         self.radius = 5
         self.velocite = 15
-        self.entreDeux = math.sqrt(abs((finX-self.posEcranX)**2)+abs((finY-self.ssposEcranY)**2))
+        self.entreDeux = math.sqrt(abs((finX-self.posEcranX)**2)+abs((finY-self.posEcranY)**2))
         self.veloX = ((self.velocite * (finX - self.posEcranX))/self.entreDeux)
         self.veloY = ((self.velocite * (finY - self.posEcranY))/self.entreDeux)
         
