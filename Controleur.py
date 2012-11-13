@@ -23,7 +23,7 @@ class Controleur():
     def rechargement(self):
         self.jeu.joueur.recharge()
         self.app.frameJeu.map.after(100,self.rechargement)
-        
+    
     def balle(self):
         temp = self.jeu.listeBalle
         
@@ -50,32 +50,37 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        if self.map[tempMatX][tempMatY]=='0' and self.map[tempMatX+1][tempMatY-1]!='1':
+        
+        if self.map[tempMatX][tempMatY]== 'm' or self.map[tempMatX][tempMatY] == 'v' or self.map[tempMatX][tempMatY]== 'b' or self.map[tempMatX][tempMatY] == 'n':
+            #self.jeu.carte.prochaineMap(self.map[tempMatX][tempMatY])
+            print("teleport")
+        elif self.map[tempMatX][tempMatY]=='0' and self.map[tempMatX+1][tempMatY-1]!='1':
             self.jeu.joueur.posMatX=tempMatX
             self.jeu.joueur.posMatY=tempMatY
             self.jeu.joueur.posMapX+=tempx
             self.jeu.joueur.posMapY+=tempy
             self.app.frameJeu.posDepartX = ((21 * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
-            
-        #print("actu",self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)      
+                
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")
             self.app.frameJeu.map.delete("perso")
+            self.app.frameJeu.map.delete("logo")
             self.app.frameJeu.map.delete("p")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)   
+    
     
     def infoHumain(self):
         return self.jeu.info("Humain")
-        
+    
     def infoPopamu(self):
-        return self.jeu.info("Popamu")
-        
+        return self.jeu.info("Popamu") 
+    
     def infoIrki(self):
         return self.jeu.info("Irki")
-        
+            
     def infoAtarix(self):
         return self.jeu.info("Atarix")
         
@@ -87,7 +92,7 @@ class Controleur():
     
     def nouveauZeborf(self):
         self.jeu.nouveauJoueur("Zeborf")
-        
+    
     def nouveauIrki(self):
         self.jeu.nouveauJoueur("Irki")
     

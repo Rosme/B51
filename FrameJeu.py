@@ -12,15 +12,14 @@ class FrameJeu():
         self.largeurTuile=64
         self.hauteurTuile=32
         
-    def initMap(self,perso,map):
-        self.perso=perso        
+    def initMap(self,perso,map):       
         #position du joueur centre dans l'ecran
-        self.perso.posEcranX=self.largeurJeu/2
-        self.perso.posEcranY=self.hauteurJeu/2
+        perso.posEcranX=self.largeurJeu/2
+        perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=((21 * self.largeurTuile)/2) - (self.perso.posMapX-self.perso.posEcranX)
-        self.posDepartY=-32 -(self.perso.posMapY-self.perso.posEcranY)
+        self.posDepartX=((21 * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
+        self.posDepartY=-32 -(perso.posMapY-perso.posEcranY)
         
         self.persoAff=True
         #importation des images
@@ -31,15 +30,11 @@ class FrameJeu():
         self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
         self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
 
-        self.perso.posMatX,self.perso.posMatY=self.coord(self.perso.posEcranX,self.perso.posEcranX)
+        perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranX)
         
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
         self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        
-        #HUD du joueur
-        self.barreEtat= tkinter.Canvas(self.parent.root,width=self.largeurJeu,height=self.parent.localisationJeuY)
-        self.barreEtat.place(x=self.parent.localisationJeuX, y=0)
         
         #chat
         self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
@@ -49,11 +44,9 @@ class FrameJeu():
         #self.inv=tkinter.Canvas(self.root,width=300, height=700,bg="green")
         #self.inv.place(x=724,y=0)
                 
-        self.affichageMap(self.perso,map)
-        #print(self.perso.posEcranX,self.perso.posEcranY,self.perso.x,self.perso.y)
-        #ajout des ecouteurs pour effectuer des actions en jeu
+        self.affichageMap(perso,map)
         
-        return self.perso
+        return perso
         
     def ajoutEcouteuretBoucle(self):
         self.ajoutEcouteur()
@@ -61,42 +54,46 @@ class FrameJeu():
         self.parent.parent.rechargement()
         self.parent.parent.balle()
     
-    def affichageMap(self,perso,map):
-        self.perso=perso  
-        self.posInitX=self.posDepartX
-        self.posInitY=self.posDepartY
+    def affichageMap(self,perso,map):  
+        posInitX=self.posDepartX
+        posInitY=self.posDepartY
         
         #affichage de toutes les tuiles de la map ainsi que le personnage
         #passe toutes les lignes de la map
         for i in range(len(map)):
             #retour en haut a droite de l'ecran
-            self.posTempX=self.posInitX
-            self.posTempY=self.posInitY
+            posTempX=posInitX
+            posTempY=posInitY
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
                 if map[i][k]=='1':
-                    self.map.create_image(self.posTempX,self.posTempY-16,image=self.roche,tags="image")
+                    self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                     #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
-                
+                    
                 #affichage du personnage
                 if self.persoAff==True:
-                    if self.perso.posMatX<i and self.perso.posMatY<k:
-                        self.map.create_image(self.perso.posEcranX,self.perso.posEcranY-32,image=self.pers,tags="perso")
+                    if perso.posMatX<i and perso.posMatY<k:
+                        self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
                         self.persoAff=False
                     
                 #affichage du gazon
                 if map[i][k]=='0' or map[i][k]=='3':
-                    self.map.create_image(self.posTempX,self.posTempY,image=self.gazon,tags="image")
+                    self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
                     #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
-                    
+                
+                for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
+                   if self.parent.parent.jeu.carte.listeLogo[p][0]==i and self.parent.parent.jeu.carte.listeLogo[p][1]==self.parent.parent.jeu.carte.s.nbLigne-(k+1):
+                       print(self.parent.parent.jeu.carte.listeLogo[p])
+                       self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
+                     
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
-                self.posTempX-=(self.largeurTuile/2)
-                self.posTempY+=(self.hauteurTuile/2)
+                posTempX-=(self.largeurTuile/2)
+                posTempY+=(self.hauteurTuile/2)
             #apres chaque ligne, on calcul la position de le premiere tuile de la prochaine ligne a etre affiche
-            self.posInitX+=(self.largeurTuile/2)
-            self.posInitY+=(self.hauteurTuile/2)
+            posInitX+=(self.largeurTuile/2)
+            posInitY+=(self.hauteurTuile/2)
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
@@ -106,8 +103,8 @@ class FrameJeu():
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             #self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
-            self.map.create_rectangle(self.perso.posEcranX+ temp[0]- self.perso.posMapX, self.perso.posEcranY+temp[1]- self.perso.posMapY, self.perso.posEcranX+temp[2]- self.perso.posMapX, self.perso.posEcranY+temp[3]- self.perso.posMapY, fill='blue', tags="p")
-            self.map.create_image(self.perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - self.perso.posMapX),self.perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- self.perso.posMapY)-32, image=self.pers, tags="p")
+            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
+            self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
     
     def ajoutEcouteur(self):
         #input du clavier        
@@ -133,9 +130,6 @@ class FrameJeu():
         self.parent.root.bind("<KeyPress-Q>",self.parent.parent.autoSoin)
         
         self.parent.root.bind("<Button-1>", self.parent.parent.tire)
-        #calcul les coordonnees du personnage dans la matrice selon sa position x,y dans l'ecran
-        #x1 est la position du joueur sur l'axe des X
-        #y1 est la position du joueuru sur l'axe des Y
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
