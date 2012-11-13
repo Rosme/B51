@@ -74,5 +74,5 @@ class Client():
 
 ''' MAIN '''
 if __name__ == "__main__":
-	j = Client(host)
+	j = Client()
 	j.connecter()
