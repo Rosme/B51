@@ -2,6 +2,7 @@
 '''
 Par Jean-Sebastien Fauteux
 Classe Serveur pour faire tourner le serveur du jeu
+serveur.py
 '''
 
 import select 

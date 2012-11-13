@@ -1,7 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 '''
 @author David Lebrun
-serveur.py
+client.py
 '''
 
 import socket
