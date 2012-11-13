@@ -11,7 +11,7 @@ import select
 class Client():
 
 	def __init__(self):
-		self.host = '192.168.1.2' #L'adresse IP que le client va entrer dans la fenêtre client
+		self.host = 'localhost' #L'adresse IP que le client va entrer dans la fenêtre client
 		self.port = 43225 #Le # du port par défaut, le client peut le change si désirer
 		self.adresse = (self.host, self.port)
 		self.buffersize = 4096
@@ -38,7 +38,6 @@ class Client():
 		pass
 
 	def connecter(self):
-		self.j = Client()
 		print("Connexion en cours...")
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect(self.adresse)
@@ -75,5 +74,5 @@ class Client():
 
 ''' MAIN '''
 if __name__ == "__main__":
-	j = Client()
+	j = Client(host)
 	j.connecter()

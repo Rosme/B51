@@ -20,6 +20,7 @@ class Serveur():
 		self.socket = s
 		self.clients = []
 		self.deconnected = []
+		print("Serveur demarré")
 
 	def arreter(self):
 		self.statut = "arreter"
