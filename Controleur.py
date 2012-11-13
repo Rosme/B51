@@ -10,16 +10,19 @@ class Controleur():
         #0-haut,1-droite,2-bas,3-gauche
         for i in range(4):
             self.mouvement.append(False)
-            
+        self.jeu.nouveauJoueur("Humain")
+        self.enJeu(self.jeu.joueur)
         self.app.root.mainloop()
     
     def miseAJour(self):
         self.actualiser()
-        self.app.map.after(10,self.miseAJour)
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire()
+        self.app.frameJeu.map.after(30,self.miseAJour)
     
     def rechargement(self):
         self.jeu.joueur.recharge()
-        self.app.map.after(100,self.rechargement)
+        self.app.frameJeu.map.after(100,self.rechargement)
         
     def balle(self):
         temp = self.jeu.listeBalle
@@ -30,48 +33,53 @@ class Controleur():
                 temp.remove(i)
                 
         self.jeu.listeBalle = temp
-              
-        self.app.map.delete("balle")
-        self.app.tire()
-        self.app.map.after(100, self.balle)
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire()
+        self.app.frameJeu.map.after(100, self.balle)
+    
+    def enJeu(self,perso):
+        self.app.jeu(perso,self.jeu.carte.s.salle)
+        self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s.salle)
+        self.app.frameJeu.ajoutEcouteuretBoucle()
     
     def actualiser(self):
-        self.app.laListe=self.jeu.carte.s.salle
+        self.map=self.jeu.carte.s.salle
         
         tempx=0
         tempy=0
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
-        
-        tempMatX,tempMatY=self.app.coord(self.app.posEcranX+(tempx)*2,self.app.posEcranY+(tempy)*2)
-        if self.app.laListe[tempMatX][tempMatY]=='0' and self.app.laListe[tempMatX+1][tempMatY-1]!='1':
-            self.jeu.joueur.x=tempMatX
-            self.jeu.joueur.y=tempMatY
-            self.jeu.joueur.posDepartX-=tempx
-            self.jeu.joueur.posDepartY-=tempy
-            
+        tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
+        if self.map[tempMatX][tempMatY]=='0' and self.map[tempMatX+1][tempMatY-1]!='1':
+            self.jeu.joueur.posMatX=tempMatX
+            self.jeu.joueur.posMatY=tempMatY
+            self.jeu.joueur.posMapX+=tempx
+            self.jeu.joueur.posMapY+=tempy
+            self.app.frameJeu.posDepartX = ((21 * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
+            self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
+            #self.app.frameJeu.posDepartX-=tempx
+            #self.app.frameJeu.posDepartY-=tempy
+        print("actu",self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)      
         if True in self.mouvement:
-            self.app.map.delete("image")
-            self.app.map.delete("perso")
-            self.app.persoAff=True
-            self.app.map.delete("text")
-            self.app.affichageMap()
+            self.app.frameJeu.map.delete("image")
+            self.app.frameJeu.map.delete("perso")
+            self.app.frameJeu.map.delete("p")
+            self.app.frameJeu.persoAff=True
+            self.app.frameJeu.map.delete("text")
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)
     
     def infoHumain(self):
         self.jeu.info("Humain")
         
-    def infoPopamu(self):
-        self.jeu.info("Popamu")
-        
-    def infoIrki(self):
-        self.jeu.info("Irki")
-        
-    def infoAtarix(self):
-        self.jeu.info("Atarix")
-        
     def nouveauHumain(self):
         self.jeu.nouveauJoueur("Humain")
     
+    def nouveauWohawk(self):
+        self.jeu.nouveauJoueur("Wohawk")
+    
+    def nouveauZeborf(self):
+        self.jeu.nouveauJoueur("Zeborf")
+        
     def nouveauIrki(self):
         self.jeu.nouveauJoueur("Irki")
     

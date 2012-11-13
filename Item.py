@@ -1,3 +1,4 @@
+# -*- coding: ISO-8859-1 -*-
 '''
 Classe de base pour les items
 '''

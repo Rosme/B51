@@ -1,4 +1,6 @@
-class MenuPrincipal()
+import tkinter
+
+class MenuPrincipal():
     def __init__(self, parent):
         self.parent = parent
     def menuPrincipal(self):

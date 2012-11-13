@@ -19,8 +19,14 @@ class Jeu():
     def info(self, race):
         if race == "Humain":
             raceInfo = Race.Humain()
-        
-        racename, vie, attaque, defense, poidsLimite, description = raceInfo.info()
+        if race == "Popamu":
+            raceInfo = Race.Popamu()
+        if race == "Irki":
+            raceInfo = Race.Irki()
+        if race == "Atarix":
+            raceInfo = Race.Atarix()
+            
+        return raceInfo.info()
         
     def nouveauJoueur(self, race):
         nom = "Marco"
@@ -43,12 +49,10 @@ class Jeu():
         
         pers = Personnage(self.nbId+1)
         pers.nouveauPersonnage("Kevin", Race.Atarix())
-        
+        pers.posMapX+=100
         self.listePersonnage.append(pers)
         
         self.nbId+=1
-        
-        self.parent.app.initMap()
 
     def chargerJoueur(self):
         nom = "Marco"

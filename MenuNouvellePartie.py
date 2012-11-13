@@ -1,9 +1,11 @@
-class MenuNouvellePartie()
+import tkinter
+
+class MenuNouvellePartie():
     def __init__(self, parent):
         self.parent = parent
 
     def menuNouvellePartie(self,event):
-        #ajoute les données au list box
+        #ajoute les donnees au list box
         #on efface le menu pour afficher l'autre
         self.variable = tkinter.StringVar(self.root)
         self.variable.set("Veuillez choisir une race...") 
