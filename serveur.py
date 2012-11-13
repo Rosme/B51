@@ -20,11 +20,6 @@ class Serveur():
 		self.socket = s
 		self.clients = []
 		self.deconnected = []
-		#On affiche la confirmation du démarrage
-		print("********************************************************")
-		print("DEMARRAGE DU SERVEUR : Area B51 Multiplayer game")
-		print("INFORMATIONS SERVEUR: ", socket.gethostbyname(socket.gethostname()), ":", self.port)
-		print("********************************************************")
 
 	def arreter(self):
 		self.statut = "arreter"
@@ -45,8 +40,6 @@ class Serveur():
 
 		for connection in incomingConnection:
 			conn, address = self.socket.accept()
-			#On confirme au serveur qu'un client vient de se connecter
-			print("Le client :", address, "vient de se connecter") 
 			self.clients.append(conn)
 
 	def update(self):
