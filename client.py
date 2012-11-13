@@ -3,10 +3,11 @@
 @author David Lebrun
 serveur.py
 '''
-#abou
+
 import socket
-import pickle
+import pickle		
 import select
+import sys
 
 class Client():
 
@@ -28,49 +29,53 @@ class Client():
 			print("Aucune donnees recu")
 
 	def envoyerMessage(self):
-		#eventuelle boucle qui envoi continuellement des donnees
-		#envoyer donne au serveur
-		self.donneesSend = input("Donnnes:")
-		self.donneesSend = self.donneesSend.encode()
-		self.socket.send(self.donneesSend)
+		donnees = b""
+		donnees = input("Message :") #on met le message dans une variables
+		donnees = donnees.encode() 	 #on encode le message
+		self.socket.send(donnees)    #on envoi le message
 
 	def updateVue(self):
 		pass
 
 	def connecter(self):
 		print("Connexion en cours...")
-		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.connect(self.adresse)
-		print("Connexion etablie avec : ", self.adresse)
+		try:
+			self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		except socket.error:
+			print("Une erreur inconnue est survenue.")
+		
+		try:
+			self.socket.connect(self.adresse)
+			print("Connexion etablie avec : ", self.adresse)
+		except socket.gaierror:
+			print("Impossible de rejoindre l'hôte. Veuillez recommencer")
+			sys.exit(15)
+		except socket.error:
+			print("Un problème de connexion est survenue. ")
+			sys.exit(15)
+			
 		while self.clientOn:
 			try:
 				self.connexionAccepte, wlist, xlist = select.select([self.socket], [], [], 0.05) #on ecoute les joueur dans la listes des joueur qui sont connectés
-				self.donnees = input("Message :")
-				self.donnees = self.donnees.encode()
-				self.socket.send(self.donnees)
+				self.envoyerMessage() #on entre dans la méthode envoyerMessage
+				
 			except select.error:
-				pass #tant qu'il ny a pas de clients connecte il passe ici
+				pass
 			else:
+				pass
 				#on parcourt chaque client dans la liste - verification si il ont des donnes a soumettre
-				for self.client in self.connexionAccepte:
-					self.donneesRecu = pickle.load(self.client.recv(self.buffersize))
-					print(":", self.donneesRecu)
-					'''self.donneesRecu = self.client.recv(self.buffersize)
-					self.donneesRecu = self.donneesRecu.decode()
-					print(self.donneesRecu)
-					#on veut envoyer le message recu du client aux autres client'''
-
+				#ici on doit appeler la méthode recevoirMessage() pour permettre la réception des messages du serveur
+				
 	def deconnecter(self):
 		print("Déconnexion en cours...")
 		#On déconnecte le client
 		self.connexion.close()
-
+	
 	def update(self):
 		pass
 
 	def appliquerCommande(self):
 		pass
-
 
 ''' MAIN '''
 if __name__ == "__main__":
