@@ -29,10 +29,15 @@ class Client():
 			print("Aucune donnees recu")
 
 	def envoyerMessage(self):
-		donnees = b""
-		donnees = input("Message :") #on met le message dans une variables
-		donnees = donnees.encode() 	 #on encode le message
-		self.socket.send(donnees)    #on envoi le message
+		try:
+			donnees = b""
+			donnees = input("Message :") #on met le message dans une variables
+			donnees = donnees.encode() 	 #on encode le message
+			self.socket.send(donnees)    #on envoi le message
+		except socket.error:
+			print("Les données n'ont pas pu être envoyées. Impossible de rejoindre le serveur.")
+			print("Tentative de reconnexion...")
+			self.connecter()
 
 	def updateVue(self):
 		pass
@@ -49,10 +54,8 @@ class Client():
 			print("Connexion etablie avec : ", self.adresse)
 		except socket.gaierror:
 			print("Impossible de rejoindre l'hôte. Veuillez recommencer")
-			sys.exit(15)
 		except socket.error:
 			print("Un problème de connexion est survenue. ")
-			sys.exit(15)
 			
 		while self.clientOn:
 			try:
