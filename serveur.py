@@ -7,13 +7,17 @@ serveur.py
 
 import select 
 import socket
+import pickle
+import netdata as nd
+import commande as cm
 
 class Serveur():
 	def __init__(self, port = 43225):
 		self.port = port
 		self.statut = "arreter"
+		self.listeCommande = {"fermer-serveur":self.arreter, "demarrer-serveur":self.demarrer, "redemarrer-serveur":self.redemarrer, "client-deconnection":self.clientDeconnection}
 
-	def demarrer(self):
+	def demarrer(self, client = None, donnees = None):
 		self.statut = "demarrer"
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.bind(('', self.port))
@@ -21,28 +25,40 @@ class Serveur():
 		self.socket = s
 		self.clients = []
 		self.deconnected = []
-		print("Serveur demarré")
+		print("Demarrage du serveur")
 
-	def arreter(self):
+	def arreter(self, client = None, donnees = None):
 		self.statut = "arreter"
+	
+	def deconnecterClients(self):
 		for client in self.clients:
 			client.close()
-		
 
-	def redemarrer(self):
+	def clientDeconnection(self, client, donnees = None):
+		self.deconnected.append(client)
+		msg = nd.Message("/quit")
+		bMsg = pickle.dumps(msg)
+		client.send(bMsg)
+		self.clients.remove(client)
+		client.close()
+
+	def redemarrer(self, client = None, donnees = None):
 		pass
 
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 		
+		'''
 		for deco in self.deconnected:
 			self.clients.remove(deco)
 			deco.close()
 		self.deconnected = []
+		'''
 
 		for connection in incomingConnection:
 			conn, address = self.socket.accept()
 			self.clients.append(conn)
+			print("Nouveau client")
 
 	def update(self):
 		pass
@@ -52,25 +68,44 @@ class Serveur():
 			toRead = []
 			try:
 				toRead, wlist, xlist = select.select(self.clients, [], [], 0.05)
-			except select.error:
-				print(select.error)
+			except select.error as serror:
+				print("Select error: ", serror)
 			else:
+
 				for client in toRead:
-					received = client.recv(1024)
-					received = received.decode()
-					received = received.split("\r")[0]
-					print("{}".format(received))
-					if received == "/quit":
-						self.deconnected.append(client)
-					elif received == "/shutdown":
-						self.arreter()
+					try:
+						data = pickle.loads(client.recv(4096))
+						if isinstance(data, nd.PersoInfo):
+							data.id = data.nom + str(len(self.clients))
+							bData = pickle.dumps(data)
+							client.send(bData)
+						elif isinstance(data, nd.Message):
+							estCommande, message, donnees = cm.parseCommande(data.message)
+							if estCommande == True:
+								self.appliquerCommande(message, client, donnees)
+							else:
+								print(message)
+						else:
+							print("Type de donnees inconnu")
+					except EOFError as eof:
+						print("Erreur sur le serveur: ", eof)
+
+					
 
 	def envoyerMessage(self):
-		pass
-		
-	def appliquerCommande(self):
-		pass
+		message = nd.Message("")
+		if self.statut == "arreter":
+			message.message = "serveur-shutdown"
+		else:
+			message.message = "Rien"
 
+		bMessage = pickle.dumps(message) #Serialisation
+		for client in self.clients:
+			client.send(bMessage)
+		
+	def appliquerCommande(self, action, client, donnees):
+		if action in self.listeCommande:
+			self.listeCommande[action](client, donnees)
 
 serveur = Serveur()
 serveur.demarrer()
@@ -78,4 +113,7 @@ serveur.demarrer()
 while serveur.statut == "demarrer":
 	serveur.updateClients()
 	serveur.recevoirMessage()
+	serveur.updateClients()
 	serveur.envoyerMessage()
+
+serveur.deconnecterClients()
