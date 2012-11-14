@@ -16,8 +16,6 @@ class Personnage():
         self.defense = race.defense
         self.poidsLimite = race.poidsLimite
         self.description = race.description
-        self.x = 200
-        self.y = 100
         self.posMatX = 11
         self.posMatY = 11
         self.posEcranX = 612

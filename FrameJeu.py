@@ -85,7 +85,7 @@ class FrameJeu():
                 
                 for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
                     if self.parent.parent.jeu.carte.listeLogo[p][0]==i and self.parent.parent.jeu.carte.listeLogo[p][1]==self.parent.parent.jeu.carte.s.nbLigne-(k+1):
-                        print(self.parent.parent.jeu.carte.listeLogo[p])
+                        #print(self.parent.parent.jeu.carte.listeLogo[p])
                         self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
                      
                    
@@ -112,25 +112,8 @@ class FrameJeu():
     
     def ajoutEcouteur(self):
         #input du clavier        
-        self.parent.root.bind("<KeyPress-d>",self.parent.parent.peseDroit)
-        self.parent.root.bind("<KeyPress-w>",self.parent.parent.peseHaut)
-        self.parent.root.bind("<KeyPress-s>",self.parent.parent.peseBas)
-        self.parent.root.bind("<KeyPress-a>",self.parent.parent.peseGauche)
-        self.parent.root.bind("<KeyPress-D>",self.parent.parent.peseDroit)
-        self.parent.root.bind("<KeyPress-W>",self.parent.parent.peseHaut)
-        self.parent.root.bind("<KeyPress-S>",self.parent.parent.peseBas)
-        self.parent.root.bind("<KeyPress-A>",self.parent.parent.peseGauche)
-        
-        self.parent.root.bind("<KeyRelease-d>",self.parent.parent.relacheDroit)
-        self.parent.root.bind("<KeyRelease-w>",self.parent.parent.relacheHaut)
-        self.parent.root.bind("<KeyRelease-s>",self.parent.parent.relacheBas)
-        self.parent.root.bind("<KeyRelease-a>",self.parent.parent.relacheGauche)
-        self.parent.root.bind("<KeyRelease-D>",self.parent.parent.relacheDroit)
-        self.parent.root.bind("<KeyRelease-W>",self.parent.parent.relacheHaut)
-        self.parent.root.bind("<KeyRelease-S>",self.parent.parent.relacheBas)
-        self.parent.root.bind("<KeyRelease-A>",self.parent.parent.relacheGauche)
-        
-        self.parent.root.bind("<Key>",self.parent.parent.gestionKey)
+        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
+        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
         
         self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
         self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
