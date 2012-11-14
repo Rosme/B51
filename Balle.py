@@ -12,6 +12,8 @@ class Balle():
         self.force = force
         self.radius = 5
         self.velocite = 10
+        self.distanceMax = 300
+        self.distanceParcouru = 0
         #calcul la distance entre les deux points. Départ et fin.
         self.entreDeux = math.sqrt(abs((finX-self.posEcranX)**2)+abs((finY-self.posEcranY)**2))
         #calcul la vitesse qu'elle va parcourir en X et Y avec un maximum de self.velocite de vitessse.
@@ -19,29 +21,34 @@ class Balle():
         self.veloY = ((self.velocite * (finY - self.posEcranY))/self.entreDeux)
         
     def bouge(self, perso):
+        self.distanceParcouru += math.sqrt(abs((self.veloX)**2)+abs((self.veloY)**2))
         self.posMapX += self.veloX
         self.posMapY += self.veloY
         self.posEcranX = perso.posEcranX + (self.posMapX - perso.posMapX)
         self.posEcranY = perso.posEcranY + (self.posMapY - perso.posMapY)
         
+        
     def collision(self, liste, map):
-        for i in liste:
-            rectPerso = i.obtenirLimite()
-            rectBalle = self.obtenirLimite()
-            j=0
-            while j < 4:
-                if rectBalle[j] > rectPerso[0] and rectBalle[j] < rectPerso[2]:
-                    k=1
-                    while k < 4:
-                        if rectBalle[k] > rectPerso[1] and rectBalle[k] < rectPerso[3]:
-                            i.touche(self.force)
-                            return True
-                        k+=2
-                j+=2
-        try:
-            if map[self.posMatX][self.posMatY]=='1':    
+        if self.distanceParcouru < self.distanceMax:
+            for i in liste:
+                rectPerso = i.obtenirLimite()
+                rectBalle = self.obtenirLimite()
+                j=0
+                while j < 4:
+                    if rectBalle[j] > rectPerso[0] and rectBalle[j] < rectPerso[2]:
+                        k=1
+                        while k < 4:
+                            if rectBalle[k] > rectPerso[1] and rectBalle[k] < rectPerso[3]:
+                                i.touche(self.force)
+                                return True
+                            k+=2
+                    j+=2
+            try:
+                if map[self.posMatX][self.posMatY]=='1':    
+                    return True
+            except IndexError:
                 return True
-        except IndexError:
+        else:
             return True
         
         return False

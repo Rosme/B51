@@ -19,7 +19,7 @@ class FrameJeu():
         perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
+        self.posDepartX=(((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2)+((self.parent.parent.jeu.carte.s.nbLigne * self.largeurTuile)/2))/2  - (perso.posMapX-perso.posEcranX)
         self.posDepartY=-32 -(perso.posMapY-perso.posEcranY)
         
         self.persoAff=True

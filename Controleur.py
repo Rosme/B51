@@ -73,7 +73,7 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        
+        print(str(self.jeu.joueur.posMatX)+ ", " + str(self.jeu.joueur.posMatY))
         if self.map[tempMatX][tempMatY]== 'm' or self.map[tempMatX][tempMatY] == 'v' or self.map[tempMatX][tempMatY]== 'b' or self.map[tempMatX][tempMatY] == 'n':
             #self.jeu.carte.prochaineMap(self.map[tempMatX][tempMatY])
             print("teleport")
@@ -82,7 +82,7 @@ class Controleur():
             self.jeu.joueur.posMatY=tempMatY
             self.jeu.joueur.posMapX+=tempx
             self.jeu.joueur.posMapY+=tempy
-            self.app.frameJeu.posDepartX = ((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
+            self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
                 
         if self.mouvement[4]:
