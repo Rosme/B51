@@ -4,8 +4,7 @@
 client.py
 '''
 
-import socket
-import pickle		
+import socket	
 import select
 import sys
 import netdata as nd
