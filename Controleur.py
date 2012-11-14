@@ -8,7 +8,7 @@ class Controleur():
         self.app = Vue.Application(self)
         self.mouvement = list() 
         #0-haut,1-droite,2-bas,3-gauche
-        for i in range(4):
+        for i in range(5):
             self.mouvement.append(False)
         self.jeu.nouveauJoueur("Humain")
         self.enJeu(self.jeu.joueur)
@@ -16,9 +16,7 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        self.app.frameJeu.map.delete("balle")
-        self.app.frameJeu.tire()
-        self.app.frameJeu.map.after(30,self.miseAJour)
+        self.app.frameJeu.map.after(10,self.miseAJour)
     
     def rechargement(self):
         self.jeu.joueur.recharge()
@@ -29,13 +27,16 @@ class Controleur():
         
         for i in self.jeu.listeBalle:
             i.bouge(self.jeu.joueur)
-            if i.collision(self.jeu.listePersonnage):
+            i.posMatX,i.posMatY=self.app.frameJeu.coord(i.posEcranX+(i.veloX)*2,i.posEcranY+(i.veloY)*2)
+            if i.collision(self.jeu.listePersonnage, self.map):
                 temp.remove(i)
+            #if i.collision(self.jeu.carte.listeLogo):
+                #temp.remove(i)
                 
         self.jeu.listeBalle = temp
         self.app.frameJeu.map.delete("balle")
         self.app.frameJeu.tire()
-        self.app.frameJeu.map.after(100, self.balle)
+        self.app.frameJeu.map.after(50, self.balle)
     
     def enJeu(self,perso):
         self.app.jeu(perso,self.jeu.carte.s.salle)
@@ -59,17 +60,24 @@ class Controleur():
             self.jeu.joueur.posMatY=tempMatY
             self.jeu.joueur.posMapX+=tempx
             self.jeu.joueur.posMapY+=tempy
-            self.app.frameJeu.posDepartX = ((21 * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
+            self.app.frameJeu.posDepartX = ((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
                 
+        if self.mouvement[4]:
+            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+        
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")
             self.app.frameJeu.map.delete("perso")
             self.app.frameJeu.map.delete("logo")
             self.app.frameJeu.map.delete("p")
+            self.app.frameJeu.map.delete("balle")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map)   
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map) 
+            self.app.frameJeu.tire()  
     
     
     def infoHumain(self):
@@ -108,7 +116,7 @@ class Controleur():
     def sauvegardeJoueur(self):
         self.jeu.sauvegardeJoueur()
         
-    def autoSoin(self,Event):
+    def autoSoin(self):
         self.jeu.joueur.autoSoin()
         
     def rajoutMetal(self):
@@ -128,6 +136,13 @@ class Controleur():
         
     def fabricationDematerialisateur(self):
         self.jeu.artisanat.fabricationDematerialisateur()
+
+    def gestionKey(self, event):
+        if event.char.upper() == 'Q':
+            self.autoSoin()
+            print("win")
+        if event.keysym == 'Escape':
+            pass
 
     def peseHaut(self,event):
         self.mouvement[0]=True
@@ -149,8 +164,17 @@ class Controleur():
     def relacheGauche(self,event):
         self.mouvement[3]=False
         
-    def tire(self,event):
-        self.jeu.joueur.tire(self.jeu.listeBalle, event.x, event.y)
+    def peseTire(self,event):
+        self.mouvement[4] = True
+        self.x = event.x
+        self.y = event.y
+    def relacheTire(self,event):
+        self.mouvement[4] = False
+        
+    def tireCoord(self,event):
+        if self.mouvement[4]:
+            self.x = event.x
+            self.y = event.y
         
 
 if __name__ == '__main__':

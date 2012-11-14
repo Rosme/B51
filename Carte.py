@@ -1,3 +1,4 @@
+# -*- coding: ISO-8859-1 -*-
 import os
 
 class Carte():
@@ -9,9 +10,9 @@ class Carte():
     	
     def chargeObjets(self):
         try:
-            liens = open("liens/liens.txt", 'r')
+            liens = open("assets/liens/liens.txt", 'r')
         except IOError:
-            print ("Le fichier liens.txt n'a pas Ã©tÃ© retrouvÃ© (liens/liens.txt)")
+            print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
         ligne = list()
@@ -70,7 +71,7 @@ class Salle():
     
     def chargeCarte(self, nomMap):
         try:
-            f = open("Map/" + nomMap + ".mp", 'r')
+            f = open("assets/map/" + nomMap + ".mp", 'r')
         except IOError:
             print ("La map " + nomMap + "n'existe pas.")
             os._exit(1)
@@ -90,6 +91,3 @@ class Salle():
         for i in ligne.splitlines():
             i.split('\n')
             self.salle.append(i)
-
-#if __name__=="__main__":
-    #Carte()

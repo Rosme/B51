@@ -1,3 +1,4 @@
+# -*- coding: ISO-8859-1 -*-
 import tkinter
 
 class FrameJeu():
@@ -18,14 +19,14 @@ class FrameJeu():
         perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=((21 * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
+        self.posDepartX=((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
         self.posDepartY=-32 -(perso.posMapY-perso.posEcranY)
         
         self.persoAff=True
         #importation des images
-        self.roche=tkinter.PhotoImage(file="Image/rock1.gif")
-        self.gazon=tkinter.PhotoImage(file="Image/grass.gif")
-        self.pers=tkinter.PhotoImage(file="Image/f1.gif")
+        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
+        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
+        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         
         self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
         self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
@@ -83,9 +84,9 @@ class FrameJeu():
                     #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
                 
                 for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
-                   if self.parent.parent.jeu.carte.listeLogo[p][0]==i and self.parent.parent.jeu.carte.listeLogo[p][1]==self.parent.parent.jeu.carte.s.nbLigne-(k+1):
-                       print(self.parent.parent.jeu.carte.listeLogo[p])
-                       self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
+                    if self.parent.parent.jeu.carte.listeLogo[p][0]==i and self.parent.parent.jeu.carte.listeLogo[p][1]==self.parent.parent.jeu.carte.s.nbLigne-(k+1):
+                        print(self.parent.parent.jeu.carte.listeLogo[p])
+                        self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
                      
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
@@ -102,9 +103,12 @@ class FrameJeu():
         
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
-            #self.map.create_rectangle(self.parent.jeu.listePersonnage[0].x, self.parent.jeu.listePersonnage[0].y, self.parent.jeu.listePersonnage[0].x+100, self.parent.jeu.listePersonnage[0].y+100, fill='blue')
             self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
             self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+    
+    def tire(self):  
+        for i in self.parent.parent.jeu.listeBalle:
+            self.map.create_oval(i.posEcranX-5, i.posEcranY-5, i.posEcranX, i.posEcranY, fill='red', tags="balle")
     
     def ajoutEcouteur(self):
         #input du clavier        
@@ -126,14 +130,11 @@ class FrameJeu():
         self.parent.root.bind("<KeyRelease-S>",self.parent.parent.relacheBas)
         self.parent.root.bind("<KeyRelease-A>",self.parent.parent.relacheGauche)
         
-        self.parent.root.bind("<KeyPress-q>",self.parent.parent.autoSoin)
-        self.parent.root.bind("<KeyPress-Q>",self.parent.parent.autoSoin)
+        self.parent.root.bind("<Key>",self.parent.parent.gestionKey)
         
-        self.parent.root.bind("<Button-1>", self.parent.parent.tire)
-    
-    def tire(self):  
-        for i in self.parent.parent.jeu.listeBalle:
-            self.map.create_oval(i.posEcranX-5, i.posEcranY-5, i.posEcranX, i.posEcranY, fill='red', tags="balle")
+        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
+        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
+        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
     
     def coord(self,x1,y1):
         #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
