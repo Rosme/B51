@@ -36,13 +36,14 @@ class Divers(Item):
 Arme
 '''
 class Arme(Item):
-	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge):
+	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge, vitesseTire):
 		Item.__init__(self, id, poids, nom, description)
 		self.force = force
 		self.max_energie = energie
 		self.energie = energie
 		self.cout = cout
 		self.vitesseRecharge = vitesseRecharge
+		self.vitesseTire = vitesseTire
 
 	def utiliser(self):
 		self.energie -= self.cout

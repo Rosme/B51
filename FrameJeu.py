@@ -54,6 +54,7 @@ class FrameJeu():
         self.parent.parent.miseAJour()
         self.parent.parent.rechargement()
         self.parent.parent.balle()
+        #self.parent.parent.vitesseTire()
     
     def affichageMap(self,perso,map):  
         posInitX=self.posDepartX

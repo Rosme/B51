@@ -22,17 +22,18 @@ class Controleur():
         self.jeu.joueur.recharge()
         self.app.frameJeu.map.after(100,self.rechargement)
     
-    def vitesseDeTire(self):
-        self.nouveauTire()
-        self.app.frameJeu.map.after(1000,self.vitesseDeTire)
+    #def vitesseTire(self):
+        #self.nouveauTire()
+        #for i in self.jeu.joueur.inventaire.items:
+            #if i.id == 7:
+                #self.app.frameJeu.map.after(i.vitesseTire,self.vitesseTire)
+                #break
     
-    def nouveauTire(self):
-        for i in self.jeu.joueur.inventaire.items:
-            if i.id == 7:
-                if self.mouvement[4]:
-                    self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-                    balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-                    balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+    #def nouveauTire(self):
+        #if self.mouvement[4]:
+            #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
     
     
     def balle(self):
@@ -63,7 +64,6 @@ class Controleur():
         self.app.jeu(perso,self.jeu.carte.s.salle)
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s.salle)
         self.app.frameJeu.ajoutEcouteuretBoucle()
-        self.vitesseDeTire()
     
     def actualiser(self):
         self.map=self.jeu.carte.s.salle
@@ -85,12 +85,10 @@ class Controleur():
             self.app.frameJeu.posDepartX = ((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2) - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
                 
-        #for i in self.jeu.joueur.inventaire.items:
-            #if i.id == 7:
-                #if self.mouvement[4]:
-                    #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-                    #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-                    #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+        if self.mouvement[4]:
+            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")

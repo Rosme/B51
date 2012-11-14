@@ -23,7 +23,7 @@ class Personnage():
         self.posMapX = 672
         self.posMapY = 336
         self.inventaire = Item.Inventaire(self.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5))
+        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
