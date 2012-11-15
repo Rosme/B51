@@ -27,16 +27,16 @@ class Client():
 			if bMessage:
 				donnees = pickle.loads(bMessage) #On desirialise le binaire en objet
 				if isinstance(donnees, nd.Message):
-					if donnees.message == "serveur-shutdown":
-						print("Le serveur est fermer")
-						self.clientOn = False
-					elif donnees.message == "/quit":
-						print("Deconnection reussi")
-						self.clientOn = False
+					if donnees.message == "ok-deconnection":
+						self.deconnecter()
 					else:
 						print(donnees.message)
 		except socket.timeout:
 			pass
+		except socket.error:
+			print("La connexion avec le serveur est impossible")
+			self.deconnecter()
+			
 
 	def envoyerMessage(self):
 		try:
@@ -59,7 +59,8 @@ class Client():
 	def deconnecter(self):
 		print("Deconnexion en cours...")
 		#On déconnecte le client
-		self.connexion.close()
+		self.socket.close()
+		self.clientOn = False
 	
 	def update(self):
 		pass
