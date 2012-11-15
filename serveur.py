@@ -35,12 +35,10 @@ class Serveur():
 			client.close()
 
 	def clientDeconnection(self, client, donnees = None):
-		self.deconnected.append(client)
 		msg = nd.Message("/quit")
 		bMsg = pickle.dumps(msg)
 		client.send(bMsg)
-		self.clients.remove(client)
-		client.close()
+		self.deconnected.append(client)
 
 	def redemarrer(self, client = None, donnees = None):
 		pass
@@ -48,12 +46,12 @@ class Serveur():
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 		
-		'''
+		
 		for deco in self.deconnected:
 			self.clients.remove(deco)
 			deco.close()
 		self.deconnected = []
-		'''
+		
 
 		for connection in incomingConnection:
 			conn, address = self.socket.accept()
@@ -93,7 +91,7 @@ class Serveur():
 					
 
 	def envoyerMessage(self):
-		message = nd.Message("")
+		message = nd.Message(" ")
 		if self.statut == "arreter":
 			message.message = "serveur-shutdown"
 		else:
