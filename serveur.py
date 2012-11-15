@@ -35,6 +35,7 @@ class Serveur():
 			client.close()
 
 	def clientDeconnection(self, client, donnees = None):
+		print("Client Deconnecte")
 		msg = nd.Message("/quit")
 		bMsg = pickle.dumps(msg)
 		client.send(bMsg)
@@ -46,7 +47,6 @@ class Serveur():
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 		
-		
 		for deco in self.deconnected:
 			self.clients.remove(deco)
 			deco.close()
@@ -56,6 +56,7 @@ class Serveur():
 		for connection in incomingConnection:
 			conn, address = self.socket.accept()
 			self.clients.append(conn)
+			print("Nouveau client")
 
 	def update(self):
 		pass
@@ -72,12 +73,7 @@ class Serveur():
 				for client in toRead:
 					try:
 						data = pickle.loads(client.recv(4096))
-						if isinstance(data, nd.PersoInfo):
-							data.id = data.nom + str(len(self.clients))
-							bData = pickle.dumps(data)
-							client.send(bData)
-							print("Nouveau client")
-						elif isinstance(data, nd.Message):
+						if isinstance(data, nd.Message):
 							estCommande, message, donnees = cm.parseCommande(data.message)
 							if estCommande == True:
 								self.appliquerCommande(message, client, donnees)
@@ -87,19 +83,21 @@ class Serveur():
 							print("Type de donnees inconnu")
 					except EOFError as eof:
 						print("Erreur sur le serveur: ", eof)
+						self.clients = []
+					except Exception as ex:
+						print("Erreur sur lecture de client. Deconnection")
+						self.deconnected.append(client)
 
 					
-
 	def envoyerMessage(self):
-		message = nd.Message(" ")
+		message = nd.Message("")
 		if self.statut == "arreter":
 			message.message = "serveur-shutdown"
-		else:
-			message.message = "Rien"
 
-		bMessage = pickle.dumps(message) #Serialisation
-		for client in self.clients:
-			client.send(bMessage)
+		if message.message != "":
+			bMessage = pickle.dumps(message) #Serialisation
+			for client in self.clients:
+				client.send(bMessage)
 		
 	def appliquerCommande(self, action, client, donnees):
 		if action in self.listeCommande:
