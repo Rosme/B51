@@ -7,6 +7,7 @@ client.py
 import socket	
 import select
 import sys
+import pickle
 import netdata as nd
 
 class Client():

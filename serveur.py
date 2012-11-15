@@ -58,7 +58,6 @@ class Serveur():
 		for connection in incomingConnection:
 			conn, address = self.socket.accept()
 			self.clients.append(conn)
-			print("Nouveau client")
 
 	def update(self):
 		pass
@@ -79,6 +78,7 @@ class Serveur():
 							data.id = data.nom + str(len(self.clients))
 							bData = pickle.dumps(data)
 							client.send(bData)
+							print("Nouveau client")
 						elif isinstance(data, nd.Message):
 							estCommande, message, donnees = cm.parseCommande(data.message)
 							if estCommande == True:
