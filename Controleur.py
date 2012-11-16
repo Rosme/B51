@@ -10,8 +10,9 @@ class Controleur():
         #0-haut,1-droite,2-bas,3-gauche
         for i in range(5):
             self.mouvement.append(False)
-        self.jeu.nouveauJoueur("Humain")
-        self.enJeu(self.jeu.joueur)
+        #self.jeu.nouveauJoueur("Humain")
+        self.demarrer()
+        #self.enJeu(self.jeu.joueur)
         self.app.root.mainloop()
     
     def miseAJour(self):
@@ -60,6 +61,9 @@ class Controleur():
         self.app.frameJeu.tire()
         self.app.frameJeu.map.after(50, self.balle)
     
+    def demarrer(self):
+        self.app.menuPrincipal()
+    
     def enJeu(self,perso):
         self.app.jeu(perso,self.jeu.carte.s.salle)
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s.salle)
@@ -102,35 +106,11 @@ class Controleur():
             self.app.frameJeu.tire()  
     
     
-    def infoHumain(self):
-        return self.jeu.info("Humain")
-    
-    def infoPopamu(self):
-        return self.jeu.info("Popamu") 
-    
-    def infoIrki(self):
-        return self.jeu.info("Irki")
-            
-    def infoAtarix(self):
-        return self.jeu.info("Atarix")
+    def raceInfo(self, race):
+        return self.jeu.info(race)
         
-    def nouveauHumain(self):
-        self.jeu.nouveauJoueur("Humain")
-    
-    def nouveauWohawk(self):
-        self.jeu.nouveauJoueur("Wohawk")
-    
-    def nouveauZeborf(self):
-        self.jeu.nouveauJoueur("Zeborf")
-    
-    def nouveauIrki(self):
-        self.jeu.nouveauJoueur("Irki")
-    
-    def nouveauPopamu(self):
-        self.jeu.nouveauJoueur("Popamu")
-        
-    def nouveauAtarix(self):
-        self.jeu.nouveauJoueur("Atarix")
+    def nouveauJoueur(self, race, nom):
+        self.jeu.nouveauJoueur(race, nom)
         
     def chargerJoueur(self):
         self.jeu.chargerJoueur()

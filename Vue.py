@@ -23,7 +23,8 @@ class Application():
     def menuPrincipal(self):
         self.menuP=MenuPrincipal.MenuPrincipal(self)
         
-    def menuNouvellePartie(self):
+    def menuNouvellePartie(self, event):
+        self.menuP.effaceMenuPrinc()
         self.menuN=MenuNouvellePartie.MenuNouvellePartie(self)
     
     def jeu(self,perso,map):

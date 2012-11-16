@@ -28,8 +28,7 @@ class Jeu():
             
         return raceInfo.info()
         
-    def nouveauJoueur(self, race):
-        nom = "Marco"
+    def nouveauJoueur(self, race, nom):
         
         self.joueur = Personnage(self.nbId)
         
