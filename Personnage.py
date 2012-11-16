@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import pickle
 import Item
+import Objet
 from Balle import *
         
 class Personnage():
@@ -10,24 +11,20 @@ class Personnage():
         
     def nouveauPersonnage(self, nom, race):
         self.nom = nom
-        self.race = race.race
-        self.vie = race.vie
-        self.attaque = race.attaque
-        self.defense = race.defense
-        self.poidsLimite = race.poidsLimite
-        self.description = race.description
-        self.posMatX = 11
+        self.race = race
+        self.posMatX = 10
         self.posMatY = 11
         self.posEcranX = 612
         self.posEcranY = 350
         self.posMapX = 672
         self.posMapY = 336
-        self.inventaire = Item.Inventaire(self.poidsLimite)
+        self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
+        self.coffre = Objet.Coffre(19,1,640,0)
     
     def bouge(self, mouvement):
         tempx = 0
@@ -71,7 +68,7 @@ class Personnage():
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
-                    listeBalle.append(Balle(self, x, y, i.force+self.attaque))
+                    listeBalle.append(Balle(self, x, y, i.force+self.race.attaque))
                     break
             
     def recharge(self):
@@ -93,7 +90,7 @@ class Personnage():
                 break
          
     def subit(self, degat):
-        self.vie -= degat
+        self.race.vie -= degat
                 
     def chargerPersonnage(self, nom):
         nomFichier = nom + '.plr'
@@ -112,10 +109,10 @@ class Personnage():
         for i in self.inventaire.items:
             #ID de la seringue = 3
             if i.id == 3:
-                if self.vie + i.qualite < 350:
+                if self.race.vie + i.qualite < 350:
                     i.utiliser(self)
                 else:
-                    self.vie = 350 - i.qualite
+                    self.race.vie = 350 - i.qualite
                     i.utiliser(self)
                     
                 self.inventaire.retirerItem(i)

@@ -53,9 +53,7 @@ class Jeu():
         
         self.nbId+=1
 
-    def chargerJoueur(self):
-        nom = "Marco"
-        
+    def chargerJoueur(self, nom):        
         self.joueur = Personnage(self.nbId)
         self.joueur = self.joueur.chargerPersonnage(nom)
             

@@ -2,8 +2,9 @@
 import tkinter
 import MenuPrincipal
 import MenuNouvellePartie
-import FrameJeu
+import MenuChargerPartie
 import MenuConnexion
+import FrameJeu
 
 class Application():
     def __init__(self, parent):
@@ -27,7 +28,11 @@ class Application():
     def menuNouvellePartie(self,event):
         self.menuP.effaceMenuPrinc()
         self.menuN=MenuNouvellePartie.MenuNouvellePartie(self)
-    
+        
+    def menuChargerPartie(self,event):
+        self.menuP.effaceMenuPrinc()
+        self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
+        
     def menuConnexion(self):
         self.menuC=MenuConnexion.MenuConnexion(self)
     

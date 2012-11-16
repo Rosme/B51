@@ -7,12 +7,11 @@ class Controleur():
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
         self.mouvement = list() 
-        #0-haut,1-droite,2-bas,3-gauche
+        #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)
-        #self.jeu.nouveauJoueur("Humain")
+            
         self.demarrer()
-        #self.enJeu(self.jeu.joueur)
         self.app.root.mainloop()
     
     def miseAJour(self):
@@ -22,20 +21,6 @@ class Controleur():
     def rechargement(self):
         self.jeu.joueur.recharge()
         self.app.frameJeu.map.after(100,self.rechargement)
-    
-    #def vitesseTire(self):
-        #self.nouveauTire()
-        #for i in self.jeu.joueur.inventaire.items:
-            #if i.id == 7:
-                #self.app.frameJeu.map.after(i.vitesseTire,self.vitesseTire)
-                #break
-    
-    #def nouveauTire(self):
-        #if self.mouvement[4]:
-            #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
-    
     
     def balle(self):
         temp = self.jeu.listeBalle
@@ -103,7 +88,7 @@ class Controleur():
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.map) 
-            self.app.frameJeu.tire()  
+            self.app.frameJeu.tire()    
     
     
     def raceInfo(self, race):
@@ -112,8 +97,8 @@ class Controleur():
     def nouveauJoueur(self, race, nom):
         self.jeu.nouveauJoueur(race, nom)
         
-    def chargerJoueur(self):
-        self.jeu.chargerJoueur()
+    def chargerJoueur(self, nom):
+        self.jeu.chargerJoueur(nom)
         
     def sauvegardeJoueur(self):
         self.jeu.sauvegardeJoueur()
@@ -153,6 +138,9 @@ class Controleur():
             
         if key == 'Q':
             self.autoSoin()
+            
+        if key == 'E':
+            self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()

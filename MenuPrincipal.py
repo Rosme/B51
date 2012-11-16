@@ -19,7 +19,7 @@ class MenuPrincipal():
         
         
         self.fondEcran.tag_bind("nouvelle_partie","<Button-1>",self.parent.menuNouvellePartie)
-        self.fondEcran.tag_bind("continuer_partie","<Button-1>")
+        self.fondEcran.tag_bind("continuer_partie","<Button-1>", self.parent.menuChargerPartie)
         self.fondEcran.tag_bind("quitter","<Button-1>",self.fermerFenetre)
         
     def effaceMenuPrinc(self):

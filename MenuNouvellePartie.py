@@ -39,13 +39,6 @@ class MenuNouvellePartie():
         #affiche les bouton retour et continuer
         self.boutonContinuer= tkinter.Button(self.parent.root, text='continuer', command=self.validEntre)
         self.boutonRetour= tkinter.Button(self.parent.root, text='retour',command=self.retour)
-        #affiche les images des 4 races
-        
-        #self.humainpic = tkinter.PhotoImage(file='th.gif',width=160,height=160)
-        #self.fondEcran.create_image(160,250, image= self.humainpic)
-        #self.fondEcran.create_image(400,250, image= self.humainpic)
-        #self.fondEcran.create_image(160,500, image= self.humainpic)
-        #self.fondEcran.create_image(400,500, image= self.humainpic)
         
         self.textAtt = self.fondEcran.create_text(700,250,text='Attribut:',fill='white',font=("Arial","30"),tags="attribut")
         self.textVie = self.fondEcran.create_text(700,300,text='Vie:',fill='white',font=("Arial","20"),tags="attribut")
