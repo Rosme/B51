@@ -9,20 +9,23 @@ class MenuNouvellePartie():
     def raceInfo(self):
         race = self.valRace.get()
         temp= self.parent.parent.raceInfo(race)
-        self.parent.menuP.fondEcran.itemconfig(self.textAtt, text='Attribut : ' + temp[0])
-        self.parent.menuP.fondEcran.itemconfig(self.textVie, text='Vie : ' + str(temp[1]))
-        self.parent.menuP.fondEcran.itemconfig(self.textAtk, text='Attaque : ' + str(temp[2]))
-        self.parent.menuP.fondEcran.itemconfig(self.textDef, text='Defense : ' + str(temp[3]))
-        self.parent.menuP.fondEcran.itemconfig(self.textPL, text='Poids Limite : ' + str(temp[4]))
+        self.fondEcran.itemconfig(self.textAtt, text='Attribut : ' + temp[0])
+        self.fondEcran.itemconfig(self.textVie, text='Vie : ' + str(temp[1]))
+        self.fondEcran.itemconfig(self.textAtk, text='Attaque : ' + str(temp[2]))
+        self.fondEcran.itemconfig(self.textDef, text='Defense : ' + str(temp[3]))
+        self.fondEcran.itemconfig(self.textPL, text='Poids Limite : ' + str(temp[4]))
          
     def menuSecondaire(self):
-        #ajoute les données au list box
-        #on efface le menu pour afficher l'autre
-        self.variable = tkinter.StringVar(self.parent.root)
-        self.variable.set("Veuillez choisir une race...")
-        self.nomLabel = tkinter.Label(self.parent.root, text="Nom de Joueur:", width=15)
+        self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
+        self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
+        self.fondEcran.place(x=0,y=0)
+        self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
+        
+        
+        self.fondEcran.create_text(100,50,text="Nom de Joueur:",fill='white',font=("Arial","15"),tags="nomText")
         self.nomJoueur = tkinter.Entry(self.parent.root,  width="18")
-        self.raceLabel = tkinter.Label(self.parent.root, text="Race: ",width=15)
+        self.fondEcran.create_text(100,100,text="Race :",fill='white',font=("Arial","15"),tags="raceText")
+
         #afficher les bouton pour les race
         
         self.valRace=tkinter.StringVar()
@@ -35,41 +38,49 @@ class MenuNouvellePartie():
         self.boutonHumain.select()
         #affiche les bouton retour et continuer
         self.boutonContinuer= tkinter.Button(self.parent.root, text='continuer', command=self.validEntre)
-        self.boutonRetour= tkinter.Button(self.parent.root, text='retour',command=self.parent.menuP.clear)
+        self.boutonRetour= tkinter.Button(self.parent.root, text='retour',command=self.retour)
         #affiche les images des 4 races
+        
         #self.humainpic = tkinter.PhotoImage(file='th.gif',width=160,height=160)
         #self.fondEcran.create_image(160,250, image= self.humainpic)
         #self.fondEcran.create_image(400,250, image= self.humainpic)
         #self.fondEcran.create_image(160,500, image= self.humainpic)
         #self.fondEcran.create_image(400,500, image= self.humainpic)
-        self.textAtt = self.parent.menuP.fondEcran.create_text(700,250,text='Attribut:',fill='white',font=("Arial","30"),tags="attribut")
-        self.textVie = self.parent.menuP.fondEcran.create_text(700,300,text='Vie:',fill='white',font=("Arial","20"),tags="attribut")
-        self.textAtk = self.parent.menuP.fondEcran.create_text(700,350,text='Attaque:',fill='white',font=("Arial","20"),tags="attribut")
-        self.textDef = self.parent.menuP.fondEcran.create_text(700,400,text='Defense',fill='white',font=("Arial","20"),tags="attribut")
-        self.textPL = self.parent.menuP.fondEcran.create_text(700,450,text="Poid limite:",fill='white',font=("Arial","20"),tags="attribut")
+        
+        self.textAtt = self.fondEcran.create_text(700,250,text='Attribut:',fill='white',font=("Arial","30"),tags="attribut")
+        self.textVie = self.fondEcran.create_text(700,300,text='Vie:',fill='white',font=("Arial","20"),tags="attribut")
+        self.textAtk = self.fondEcran.create_text(700,350,text='Attaque:',fill='white',font=("Arial","20"),tags="attribut")
+        self.textDef = self.fondEcran.create_text(700,400,text='Defense',fill='white',font=("Arial","20"),tags="attribut")
+        self.textPL = self.fondEcran.create_text(700,450,text="Poid limite:",fill='white',font=("Arial","20"),tags="attribut")
         
         #place les widget et les bouton
-        self.nomLabel.place(x=50, y=50)
         self.nomJoueur.place(x=200, y=50)
-        self.raceLabel.place(x=50, y=100)
         self.boutonHumain.place(x=120,y=350)
         self.boutonRace2.place(x=320,y=350)
         self.boutonRace3.place(x=120,y=600)
         self.boutonRace4.place(x=320,y=600)
-        #b.place(x=320,y=650)
         self.boutonContinuer.place(x=550,y=650)
         self.boutonRetour.place(x=400,y=650)
         self.nomJoueur.focus_set()
+        self.raceInfo()
         
-    def testRetour(self):  
-        self.parent.menuP.fondEcran.delete("nouvelle_partie")
-        self.parent.menuP.fondEcran.delete("continuer_partie")
-        self.parent.menuP.fondEcran.delete("option")
-        self.parent.menuP.fondEcran.delete("quitter")
-        self.parent.menuP.fondEcran.delete("screensize")
-        self.parent.menuP.fondEcran.delete("save")
-        self.parent.menuP.fondEcran.delete("sound")
-        self.parent.menuP.fondEcran.delete("backbouton")
+    def retour(self):
+        self.effacerMenuNouvellePartie()
+        self.parent.menuP.menuPrincipal()
+    
+    def connexion(self):
+        self.effacerMenuNouvellePartie()
+        self.parent.menuConnexion()
+        
+    def effacerMenuNouvellePartie(self):  
+        self.fondEcran.destroy()
+        self.boutonRace2.destroy()
+        self.boutonHumain.destroy()
+        self.boutonRace3.destroy()
+        self.boutonRace4.destroy()
+        self.boutonContinuer.destroy()
+        self.nomJoueur.destroy()
+        self.boutonRetour.destroy()
         
     def validEntre(self):
         value=self.nomJoueur.get()
@@ -77,20 +88,9 @@ class MenuNouvellePartie():
         if newvalue is None:
             print("nom vide")  
         else:
-            self.validRace()
-            
-    def validRace(self):
-        value=self.valRace.get()
-        newvalue=self.validate(value)
-        if newvalue is None:
-            print("race vide")
-            
-        else:
-            self.testRetour()
             self.parent.parent.nouveauJoueur(self.valRace.get(), self.nomJoueur.get())
-            self.parent.parent.sauvegardeJoueur()
-            self.parent.parent.enJeu(self.parent.parent.jeu.joueur)
-            
+            self.connexion()
+
     def validate(self, newvalue):
         if newvalue:
             return False 

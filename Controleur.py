@@ -64,8 +64,8 @@ class Controleur():
     def demarrer(self):
         self.app.menuPrincipal()
     
-    def enJeu(self,perso):
-        self.app.jeu(perso,self.jeu.carte.s.salle)
+    def enJeu(self):
+        self.app.jeu(self.jeu.joueur,self.jeu.carte.s.salle)
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s.salle)
         self.app.frameJeu.ajoutEcouteuretBoucle()
     
@@ -78,10 +78,10 @@ class Controleur():
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
         print(str(self.jeu.joueur.posMatX)+ ", " + str(self.jeu.joueur.posMatY))
-        if self.map[tempMatX][tempMatY]== 'm' or self.map[tempMatX][tempMatY] == 'v' or self.map[tempMatX][tempMatY]== 'b' or self.map[tempMatX][tempMatY] == 'n':
+        if self.map[tempMatY][tempMatX]== 'm' or self.map[tempMatY][tempMatX] == 'v' or self.map[tempMatY][tempMatX]== 'b' or self.map[tempMatY][tempMatX] == 'n':
             #self.jeu.carte.prochaineMap(self.map[tempMatX][tempMatY])
             print("teleport")
-        elif self.map[tempMatX][tempMatY]=='0' and self.map[tempMatX+1][tempMatY-1]!='1':
+        elif self.map[tempMatY][tempMatX]=='0' and self.map[tempMatY+1][tempMatX-1]!='1':
             self.jeu.joueur.posMatX=tempMatX
             self.jeu.joueur.posMatY=tempMatY
             self.jeu.joueur.posMapX+=tempx
@@ -92,7 +92,7 @@ class Controleur():
         if self.mouvement[4]:
             self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
             balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+            balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")

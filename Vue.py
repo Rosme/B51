@@ -3,6 +3,7 @@ import tkinter
 import MenuPrincipal
 import MenuNouvellePartie
 import FrameJeu
+import MenuConnexion
 
 class Application():
     def __init__(self, parent):
@@ -23,9 +24,12 @@ class Application():
     def menuPrincipal(self):
         self.menuP=MenuPrincipal.MenuPrincipal(self)
         
-    def menuNouvellePartie(self, event):
+    def menuNouvellePartie(self,event):
         self.menuP.effaceMenuPrinc()
         self.menuN=MenuNouvellePartie.MenuNouvellePartie(self)
+    
+    def menuConnexion(self):
+        self.menuC=MenuConnexion.MenuConnexion(self)
     
     def jeu(self,perso,map):
         self.frameJeu=FrameJeu.FrameJeu(self,perso,map)

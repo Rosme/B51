@@ -19,7 +19,7 @@ class FrameJeu():
         perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=(((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2)+((self.parent.parent.jeu.carte.s.nbLigne * self.largeurTuile)/2))/2  - (perso.posMapX-perso.posEcranX)
+        self.posDepartX=((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
         self.posDepartY=-32 -(perso.posMapY-perso.posEcranY)
         
         self.persoAff=True
@@ -31,7 +31,7 @@ class FrameJeu():
         self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
         self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
 
-        perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranX)
+        perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
         
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
@@ -54,7 +54,6 @@ class FrameJeu():
         self.parent.parent.miseAJour()
         self.parent.parent.rechargement()
         self.parent.parent.balle()
-        #self.parent.parent.vitesseTire()
     
     def affichageMap(self,perso,map):  
         posInitX=self.posDepartX
@@ -75,17 +74,20 @@ class FrameJeu():
                     
                 #affichage du personnage
                 if self.persoAff==True:
-                    if perso.posMatX<i and perso.posMatY<k:
+                    if perso.posMatX<k and perso.posMatY<i:
                         self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
                         self.persoAff=False
                     
                 #affichage du gazon
-                if map[i][k]=='0' or map[i][k]=='3':
+                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                     self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
                     #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
                 
+                if  map[i][k]=='3':
+                    self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                
                 for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
-                    if self.parent.parent.jeu.carte.listeLogo[p][0]==i and self.parent.parent.jeu.carte.listeLogo[p][1]==self.parent.parent.jeu.carte.s.nbLigne-(k+1):
+                    if self.parent.parent.jeu.carte.listeLogo[p][0]==self.parent.parent.jeu.carte.s.nbLigne-(k+1) and self.parent.parent.jeu.carte.listeLogo[p][1]==i:
                         #print(self.parent.parent.jeu.carte.listeLogo[p])
                         self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
                      
@@ -128,9 +130,9 @@ class FrameJeu():
         y=(y1-self.posMilieuDiagoY)/16  
         if y<0:
             y*=-1
-                    
+                  
         y=round(y)
-           
+  
         for i in range(y):
             tempX+=32
            
@@ -145,4 +147,4 @@ class FrameJeu():
             temp=x
             x=y
             y=temp
-        return x,y
+        return y,x
