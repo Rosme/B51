@@ -1,4 +1,9 @@
 # -*- coding: ISO-8859-1 -*-
+'''
+Méthode pour vérifier si le client à demandé un action au serveur
+Par Jean-Sebastien Fauteux
+commande.py
+'''
 
 def parseCommande(commande):
 	commande = commande.split("\r")[0]

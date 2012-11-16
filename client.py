@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 '''
 @author David Lebrun
+Classe Client pour se connecter au serveur et communiquer avec les autres clients
 client.py
 '''
 
@@ -18,15 +19,14 @@ class Client():
 		self.adresse = (self.host, self.port)
 		self.buffersize = 4096
 		self.clientOn = True
-		self.id = -1
+		self.id = -1	
 
 	def recevoirMessage(self):
-		#eventuelle boucle qui reçoit continuellement des donnees
 		try:
 			bMessage = self.socket.recv(self.buffersize)
 			if bMessage:
-				donnees = pickle.loads(bMessage) #On desirialise le binaire en objet
-				if isinstance(donnees, nd.Message):
+				donnees = pickle.loads(bMessage) 	#On desérialise le binaire en objet
+				if isinstance(donnees, nd.Message):		#Vérification, retourne vrai si l'objet est un instance de nd.message, sinon retourne faux
 					if donnees.message == "ok-deconnection":
 						self.deconnecter()
 					else:
@@ -52,9 +52,9 @@ class Client():
 		pass
 
 	def connecter(self):
-		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.connect(self.adresse)
-		self.socket.settimeout(0.1)
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#création du socket
+		self.socket.connect(self.adresse)								#connexion au serveur
+		self.socket.settimeout(0.1)										#maximum de 0.1 ms pour le timeout, déclenche une exception si le délai c'est écoulé
 				
 	def deconnecter(self):
 		print("Deconnexion en cours...")

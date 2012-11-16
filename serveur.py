@@ -19,11 +19,11 @@ class Serveur():
 
 	def demarrer(self, client = None, donnees = None):
 		self.statut = "demarrer"
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#création du socket
 		s.bind(('', self.port))
 		s.listen(5)
 		self.socket = s
-		self.clients = []
+		self.clients = []		
 		self.deconnected = []
 		print("Demarrage du serveur")
 
@@ -32,16 +32,16 @@ class Serveur():
 	
 	def deconnecterClients(self):
 		for client in self.clients:
-			client.close()
+			client.close()			#déconnecte le client à partir de la liste
 
 	def clientDeconnection(self, client, donnees = None):
 		print("Client Deconnecte")
 		msg = nd.Message("ok-deconnection")
-		bMsg = pickle.dumps(msg)
-		client.send(bMsg)
-		self.clients.remove(client)
-		client.close()
-		
+		bMsg = pickle.dumps(msg)			
+		client.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
+		self.clients.remove(client)			
+		client.close()						#fermeture de sa connexion
+			
 
 	def redemarrer(self, client = None, donnees = None):
 		pass
@@ -49,10 +49,10 @@ class Serveur():
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 
-		for connection in incomingConnection:
+		for connection in incomingConnection:			#Accepte les connexions et ajoutes les clients dans la liste
 			conn, address = self.socket.accept()
 			self.clients.append(conn)
-			print("Nouveau client")
+			print("Nouveau client")			
 
 	def update(self):
 		pass
@@ -68,11 +68,11 @@ class Serveur():
 
 				for client in toRead:
 					try:
-						data = pickle.loads(client.recv(4096))
-						if isinstance(data, nd.Message):
-							estCommande, message, donnees = cm.parseCommande(data.message)
-							if estCommande == True:
-								self.appliquerCommande(message, client, donnees)
+						data = pickle.loads(client.recv(4096))				#desérialise les données reçu
+						if isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
+							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
+							if estCommande == True:											
+								self.appliquerCommande(message, client, donnees)			
 							else:
 								print(message)
 						else:
@@ -91,9 +91,9 @@ class Serveur():
 			message.message = "serveur-shutdown"
 
 		if message.message != "NO_MESSAGE":
-			bMessage = pickle.dumps(message) #Serialisation
+			bMessage = pickle.dumps(message) #Serialisation du message/données
 			for client in self.clients:
-				client.send(bMessage)
+				client.send(bMessage)		#envoi message/données
 		
 	def appliquerCommande(self, action, client, donnees):
 		if action in self.listeCommande:
