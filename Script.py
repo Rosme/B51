@@ -1,5 +1,5 @@
 # -*- coding: ISO-8859-1 -*-
 
 class Script():
-    def __init__(self):
+    def __init__(self, string-emil):
         pass
