@@ -14,13 +14,17 @@ class MenuConnexion():
         self.iplabel = tkinter.Label(self.parent.root, text="connexion: (IP:Port)", width=15)
         self.ipentry = tkinter.Entry(self.parent.root, width="18" )
         self.bouton= tkinter.Button(self.parent.root, text='Debuter', command=self.validerIPort)
-        self.boutonRetour= tkinter.Button(self.parent.root, text='Retour',command=self.effacerEcran)
+        self.boutonRetour= tkinter.Button(self.parent.root, text='Retour',command=self.retour)
                 
         #place les widget
         self.iplabel.place(x=50, y=50)
         self.ipentry.place(x=200, y=50)
         self.bouton.place(x=400,y=400)
         self.boutonRetour.place(x=200,y=400)
+    
+    def retour(self):
+        self.effacerEcran()
+        self.parent.menuP.menuPrincipal()
 
     def effacerEcran(self):
         self.iplabel.destroy()
