@@ -78,12 +78,13 @@ class MenuNouvellePartie():
         
     def validEntre(self):
         self.profilename=self.nomJoueur.get()
-        self.saveChar()
         newvalue=self.validate(self.profilename)
         if newvalue is None:
             print("nom vide")  
         else:
             self.parent.parent.nouveauJoueur(self.valRace.get(), self.nomJoueur.get())
+            self.parent.parent.sauvegardeJoueur()
+            self.saveChar()
             self.connexion()
 
     def validate(self, newvalue):
@@ -94,7 +95,7 @@ class MenuNouvellePartie():
         #Pourrait également enregistrer d'autre informations.....(ip client, nombre vie du personnage, position de sauvegarde du personnage
         self.file = open("player.dat", 'a')
         self.file.write("Nom Joueur:")
-        self.file.write(self.profilename)
+        self.file.write(self.profilename + " ")
         self.file.write("Race Joueur:")
         self.file.write(self.valRace.get())
         self.file.write("\n")
