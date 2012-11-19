@@ -1,8 +1,9 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
+import math
 
 class FrameJeu():
-    def __init__(self,parent,perso,map):
+    def __init__(self,parent):
         self.parent = parent
         
         #dimensions du jeu
@@ -13,14 +14,14 @@ class FrameJeu():
         self.largeurTuile=64
         self.hauteurTuile=32
         
-    def initMap(self,perso,map):       
+    def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
         perso.posEcranY=self.hauteurJeu/2
         
         #position des premiers blocs
-        self.posDepartX=((self.parent.parent.jeu.carte.s.nbColonne * self.largeurTuile)/2) - (perso.posMapX-perso.posEcranX)
-        self.posDepartY=-32 -(perso.posMapY-perso.posEcranY)
+        self.posDepartX = (((laSalle.nbColonne * self.largeurTuile)/2)+((laSalle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
+        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
         
         self.persoAff=True
         #importation des images
@@ -28,8 +29,8 @@ class FrameJeu():
         self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         
-        self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
-        self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
+        self.posMilieuDiagoX=(self.posDepartX-(len(laSalle.salle[1])-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(len(laSalle.salle)-1)*16)
 
         perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
         
@@ -45,7 +46,7 @@ class FrameJeu():
         #self.inv=tkinter.Canvas(self.root,width=300, height=700,bg="green")
         #self.inv.place(x=724,y=0)
                 
-        self.affichageMap(perso,map)
+        self.affichageMap(perso,laSalle.salle)
         
         return perso
         
@@ -68,7 +69,7 @@ class FrameJeu():
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
-                if map[i][k]=='1':
+                if map[i][k]=='z':
                     self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                     #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
                     
@@ -79,9 +80,9 @@ class FrameJeu():
                         self.persoAff=False
                     
                 #affichage du gazon
-                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
+                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m' or map[i][k]=='1':
                     self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                    #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
+                    self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 if  map[i][k]=='3':
                     self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
@@ -101,8 +102,8 @@ class FrameJeu():
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
-        self.posMilieuDiagoX=self.posDepartX-(len(map[1])-1)*32
-        self.posMilieuDiagoY=self.posDepartY+(len(map)-1)*16
+        self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
         
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
@@ -123,6 +124,41 @@ class FrameJeu():
         self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
     
     def coord(self,x1,y1):
+        x=0
+        y=0
+        mily=self.posMilieuDiagoY-self.posDepartY
+        x1-=self.posMilieuDiagoX
+        y1-=self.posDepartY
+        #print(self.posMilieuDiagoX,self.posMilieuDiagoY,self.posDepartY)
+        #print(mily,x1,y1)
+        
+        tempx=math.floor(x1/(self.largeurTuile/2))*self.largeurTuile/2
+        tempy=math.floor(y1/(self.hauteurTuile/2))*self.hauteurTuile/2
+        #print(tempx,tempy)
+        #print("###################################################################")
+        if tempy==mily:
+            tempx = math.floor(tempx/self.largeurTuile)
+            x=tempx
+            y=tempx
+        elif tempy<mily:
+            while tempy!=mily:
+                tempx-=(self.largeurTuile/2)
+                tempy+=(self.hauteurTuile/2)
+                x+=1
+            tempx = math.floor(tempx/self.largeurTuile)
+            x+=tempx
+            y+=tempx
+        elif tempy>mily:
+            while tempy!=mily:
+                tempx-=(self.largeurTuile/2)
+                tempy-=(self.hauteurTuile/2)
+                y+=1
+            tempx = math.floor(tempx/self.largeurTuile)
+            x+=tempx
+            y+=tempx
+        return x,y
+        
+        '''
         #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
         tempX=self.posMilieuDiagoX
         tempY=self.posMilieuDiagoY
@@ -147,4 +183,4 @@ class FrameJeu():
             temp=x
             x=y
             y=temp
-        return y,x
+        return y,x'''

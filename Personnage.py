@@ -12,8 +12,8 @@ class Personnage():
     def nouveauPersonnage(self, nom, race):
         self.nom = nom
         self.race = race
-        self.posMatX = 10
-        self.posMatY = 11
+        self.posMatX = 0
+        self.posMatY = 0
         self.posEcranX = 612
         self.posEcranY = 350
         self.posMapX = 672

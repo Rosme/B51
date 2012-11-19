@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import Vue
 import Modele
+import os
 
 class Controleur():
     def __init__(self):
@@ -36,7 +37,7 @@ class Controleur():
             else:
                 i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+25,(i.posEcranY+(i.veloY)*2)+25)
 
-            if i.collision(self.jeu.listePersonnage, self.map):
+            if i.collision(self.jeu.listePersonnage, self.jeu.carte.s.salle):
                 temp.remove(i)
             #if i.collision(self.jeu.carte.listeLogo):
                 #temp.remove(i)
@@ -50,29 +51,30 @@ class Controleur():
         self.app.menuPrincipal()
     
     def enJeu(self):
-        self.app.jeu(self.jeu.joueur,self.jeu.carte.s.salle)
-        self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s.salle)
+        self.app.jeu()
+        self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s)
         self.app.frameJeu.ajoutEcouteuretBoucle()
     
     def actualiser(self):
-        self.map=self.jeu.carte.s.salle
+        laMap=self.jeu.carte.s.salle
         
         tempx=0
         tempy=0
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        print(str(self.jeu.joueur.posMatX)+ ", " + str(self.jeu.joueur.posMatY))
-        if self.map[tempMatY][tempMatX]== 'm' or self.map[tempMatY][tempMatX] == 'v' or self.map[tempMatY][tempMatX]== 'b' or self.map[tempMatY][tempMatX] == 'n':
-            #self.jeu.carte.prochaineMap(self.map[tempMatX][tempMatY])
+        
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+            #self.jeu.carte.s.changementCarte(laMap[tempMatX][tempMatY])
             print("teleport")
-        elif self.map[tempMatY][tempMatX]=='0' and self.map[tempMatY+1][tempMatX-1]!='1':
-            self.jeu.joueur.posMatX=tempMatX
-            self.jeu.joueur.posMatY=tempMatY
-            self.jeu.joueur.posMapX+=tempx
-            self.jeu.joueur.posMapY+=tempy
-            self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
-            self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
+        elif laMap[tempMatY][tempMatX]=='0' and laMap[tempMatY+1][tempMatX-1]!='1':
+            if tempx!=0 or tempy!=0:
+                self.jeu.joueur.posMatX=tempMatX
+                self.jeu.joueur.posMatY=tempMatY
+                self.jeu.joueur.posMapX+=tempx
+                self.jeu.joueur.posMapY+=tempy
+                self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
+                self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
                 
         if self.mouvement[4]:
             self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
@@ -87,7 +89,7 @@ class Controleur():
             self.app.frameJeu.map.delete("balle")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,self.map) 
+            self.app.frameJeu.affichageMap(self.jeu.joueur,laMap) 
             self.app.frameJeu.tire()    
     
     

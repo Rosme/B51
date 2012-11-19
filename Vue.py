@@ -36,8 +36,8 @@ class Application():
     def menuConnexion(self):
         self.menuC=MenuConnexion.MenuConnexion(self)
     
-    def jeu(self,perso,map):
-        self.frameJeu=FrameJeu.FrameJeu(self,perso,map)
+    def jeu(self):
+        self.frameJeu=FrameJeu.FrameJeu(self)
         
     def exit(self):
         print("c la fin!!!")
