@@ -184,3 +184,41 @@ class FrameJeu():
             x=y
             y=temp
         return y,x'''
+        
+    def coordProchaineZone(self,salle,char):
+        for i in range(salle.nbLigne):
+            for j in range(salle.nbColonne):
+                if salle.salle[i][j]==char:
+                    try:
+                        if salle.salle[i][j+1]==char:
+                            try:
+                                if salle.salle[i+1][j]=='0':
+                                    matx = j
+                                    maty = i+1
+                            except IndexError:
+                                if salle.salle[i-1][j]=='0':
+                                    matx = j
+                                    maty = i-1
+                    except IndexError:
+                        if salle.salle[i][j-1]==char:
+                            try:
+                                if salle.salle[i][j+1]=='0':
+                                    matx = j+1
+                                    maty = i
+                            except IndexError:
+                                if salle.salle[i][j-1]=='0':
+                                    matx = j-1
+                                    maty = i
+    
+        depx=self.posMilieuDiagoX
+        depy=self.posMilieuDiagoY
+        for p in range(maty):
+            depx+=32
+            depy+=16
+        
+        for q in range(maty):
+            depx+=32
+            depx-=16
+        depx+=32
+                
+        
