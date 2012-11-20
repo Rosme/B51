@@ -3,7 +3,7 @@ import os
 
 class Carte():
     def __init__(self):
-        self.nomMap = "MainRoom"
+        self.nomMap = "F_E1S1"
         self.s = Salle()
         self.s.chargeCarte(self.nomMap)
         #self.s.changementCarte('v') pour tester seulement

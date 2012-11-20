@@ -57,6 +57,7 @@ class FrameJeu():
         self.parent.parent.balle()
     
     def affichageMap(self,perso,map):  
+        self.vueProximite(perso,len(map[0]),len(map))
         posInitX=self.posDepartX
         posInitY=self.posDepartY
         
@@ -69,28 +70,29 @@ class FrameJeu():
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
-                if map[i][k]=='z':
-                    self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
-                    #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
+                if k>self.limiteX[0] and k< self.limiteX[1] and i >self.limiteY[0] and i< self.limiteY[1]:
+                    if map[i][k]=='1':
+                        self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
+                        #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
+                        
+                    #affichage du personnage
+                    if self.persoAff==True:
+                        if perso.posMatX<k and perso.posMatY<i:
+                            self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
+                            self.persoAff=False
+                        
+                    #affichage du gazon
+                    if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
+                        self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
+                        self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                     
-                #affichage du personnage
-                if self.persoAff==True:
-                    if perso.posMatX<k and perso.posMatY<i:
-                        self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
-                        self.persoAff=False
+                    if  map[i][k]=='3':
+                        self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
                     
-                #affichage du gazon
-                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m' or map[i][k]=='1':
-                    self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                    self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
-                
-                if  map[i][k]=='3':
-                    self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
-                
-                for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
-                    if self.parent.parent.jeu.carte.listeLogo[p][0]==self.parent.parent.jeu.carte.s.nbLigne-(k+1) and self.parent.parent.jeu.carte.listeLogo[p][1]==i:
-                        #print(self.parent.parent.jeu.carte.listeLogo[p])
-                        self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
+                    for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
+                        if self.parent.parent.jeu.carte.listeLogo[p][0]==self.parent.parent.jeu.carte.s.nbLigne-(k+1) and self.parent.parent.jeu.carte.listeLogo[p][1]==i:
+                            #print(self.parent.parent.jeu.carte.listeLogo[p])
+                            self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
                      
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
@@ -105,6 +107,7 @@ class FrameJeu():
         self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
         
+
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
@@ -129,13 +132,9 @@ class FrameJeu():
         mily=self.posMilieuDiagoY-self.posDepartY
         x1-=self.posMilieuDiagoX
         y1-=self.posDepartY
-        #print(self.posMilieuDiagoX,self.posMilieuDiagoY,self.posDepartY)
-        #print(mily,x1,y1)
-        
+
         tempx=math.floor(x1/(self.largeurTuile/2))*self.largeurTuile/2
-        tempy=math.floor(y1/(self.hauteurTuile/2))*self.hauteurTuile/2
-        #print(tempx,tempy)
-        #print("###################################################################")
+        tempy=math.floor(y1/(self.hauteurTuile/2))*self.hauteurTuile/2        
         if tempy==mily:
             tempx = math.floor(tempx/self.largeurTuile)
             x=tempx
@@ -156,6 +155,7 @@ class FrameJeu():
             tempx = math.floor(tempx/self.largeurTuile)
             x+=tempx
             y+=tempx
+        print(y,x)
         return x,y
         
         '''
@@ -195,23 +195,32 @@ class FrameJeu():
                                 if salle.salle[i+1][j]=='0':
                                     matx = j
                                     maty = i+1
+                                    break
                             except IndexError:
                                 if salle.salle[i-1][j]=='0':
                                     matx = j
                                     maty = i-1
+                                    break
                     except IndexError:
                         if salle.salle[i][j-1]==char:
                             try:
                                 if salle.salle[i][j+1]=='0':
                                     matx = j+1
                                     maty = i
+                                    break
                             except IndexError:
                                 if salle.salle[i][j-1]=='0':
                                     matx = j-1
                                     maty = i
+                                    break
     
+        
+        self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
+        
         depx=self.posMilieuDiagoX
         depy=self.posMilieuDiagoY
+        
         for p in range(maty):
             depx+=32
             depy+=16
@@ -220,5 +229,34 @@ class FrameJeu():
             depx+=32
             depx-=16
         depx+=32
-                
         
+        #perso.posMapX=depx
+        #perso.posMapY=depy
+        #return perso
+        
+    
+    def vueProximite(self,perso,nbColonne,nbLigne):
+        rayon=8
+        self.limiteX=list()
+        self.limiteY=list()
+        
+        if perso.posMatX <rayon:
+            self.limiteX.append(-1)
+            self.limiteX.append((rayon*2)-1)
+        elif perso.posMatX> (nbColonne-rayon):
+            self.limiteX.append(nbColonne-(rayon*2))
+            self.limiteX.append(nbColonne)
+        elif perso.posMatX>=rayon and perso.posMatX<= (nbColonne-(rayon)):
+            self.limiteX.append(perso.posMatX-rayon)
+            self.limiteX.append(perso.posMatX+rayon)
+        
+        if perso.posMatY <rayon:
+            self.limiteY.append(-1)
+            self.limiteY.append((rayon*2)-1)
+        elif perso.posMatY> (nbLigne-rayon):
+            self.limiteY.append(nbLigne-(rayon*2))
+            self.limiteY.append(nbLigne)
+        elif perso.posMatY>=rayon and perso.posMatY<= (nbLigne-rayon):
+            self.limiteY.append(perso.posMatY-rayon)
+            self.limiteY.append(perso.posMatY+rayon)
+ 

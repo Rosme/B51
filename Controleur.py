@@ -64,6 +64,11 @@ class Controleur():
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
         
+        if self.mouvement[4]:
+            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+        
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             #self.jeu.carte.s.changementCarte(laMap[tempMatX][tempMatY])
             print("teleport")
@@ -76,10 +81,6 @@ class Controleur():
                 self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
                 self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
                 
-        if self.mouvement[4]:
-            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if True in self.mouvement:
             self.app.frameJeu.map.delete("image")
