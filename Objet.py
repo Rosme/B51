@@ -1,16 +1,21 @@
 # -*- coding: ISO-8859-1 -*-
 
 class Objet():
-    def __init__(self, matX, matY, mapX, mapY):
+    def __init__(self, matX, matY, mapX, mapY, largeur, hauteur):
         self.posMatX = matX
         self.posMatY = matY
         self.posMapX = mapX
         self.posMapY = mapY
+        self.largeur = largeur
+        self.hauteur = hauteur
         self.aTerre = True
+        
+    def obtenirLimite(self):
+        return [self.posMapX, self.posMapY, self.posMapX+self.largeur, self.posMapY+self.hauteur]
 
 class Sac(Objet):
     def __init__(self, matX, matY, mapX, mapY):
-        Objet.__init__(self, matX, matY, mapX, mapY)
+        Objet.__init__(self, matX, matY, mapX, mapY, 10, 10)
         self.items = []
 
     '''
@@ -24,7 +29,7 @@ class Sac(Objet):
 
 class Coffre(Objet):
     def __init__(self, matX, matY, mapX, mapY):
-        Objet.__init__(self, matX, matY, mapX, mapY)
+        Objet.__init__(self, matX, matY, mapX, mapY, 80, 80)
         self.items = []
         self.ouvert = False
 
@@ -61,13 +66,10 @@ class Coffre(Objet):
     def retirerItem(self, item):
         if item in self.items:
             self.items.remove(item)
-                 
-    def obtenirLimite(self):
-        return [self.posMapX, self.posMapY, self.posMapX+60, self.posMapY+60]
        
 class Roche(Objet):
     def __init__(self, matX, matY, mapX, mapY, map):
-        Objet.__init__(self, matX, matY, mapX, mapY)
+        Objet.__init__(self, matX, matY, mapX, mapY, 10, 10)
         self.depose(map)
         
     def bouge(self, perso):
@@ -79,12 +81,81 @@ class Roche(Objet):
         
     def depose(self, map):
         self.aTerre = True
-        if map[self.posMatY][self.posMatX] == 'a':
-            #appel la méthode de la switch sens unique
-            pass
-        elif map[self.posMatY][self.posMatX] == 's':
-            #appel la méthode de la switch double sens
+    
+class Interrupteur(Objet):
+    def __init__(self, matX, matY, mapX, mapY, unique):
+        Objet.__init__(self, matX, matY, mapX, mapY, 20, 20)
+        self.active = False
+        self.usageUnique = unique
+    
+    def limite(self, perso):
+        if self.aTerre:
+            if not self.ouvert:
+                limitePerso = perso.obtenirLimite()
+                limiteObjet = self.obtenirLimite()
+                j=0
+                while j < 4:
+                    if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                        k=1
+                        while k < 4:
+                            if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                                self.active = True
+                                return True
+                            k+=2
+                    j+=2
+                    
+        self.active = False
+        return False
+    
+    def active(self, map, nomMap):
+        if nomMap == "F_E1S1":
+            #25 par 14-15
+            if self.active:
+                map[25][14]=0
+                map[25][15]=0
+                return map
+            else:
+                map[25][14]=2
+                map[25][15]=2
+                return map
+                
+    
+class Declencheur(Objet):
+    def __init__(self, matX, matY, mapX, mapY, unique):
+        Objet.__init__(self, matX, matY, mapX, mapY, 20, 20)
+        self.active = False
+        self.usageUnique = unique
+        
+    def limite(self, perso):
+        if self.aTerre:
+            if not self.ouvert:
+                limitePerso = perso.obtenirLimite()
+                limiteObjet = self.obtenirLimite()
+                j=0
+                while j < 4:
+                    if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                        k=1
+                        while k < 4:
+                            if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                                self.active = True
+                                return True
+                            k+=2
+                    j+=2
+                    
+        self.active = False
+        return False
+        
+    def active(self, nomMap):
+        if nomMap == "F_E1S1":
             pass
         
-    def obtenirLimite(self):
-        return [self.posMapX, self.posMapY, self.posMapX+20, self.posMapY+20]
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

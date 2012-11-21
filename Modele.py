@@ -12,7 +12,6 @@ class Jeu():
         self.carte = Carte.Carte()
         self.artisanat = Artisanat.Artisanat(self)
         self.listePersonnage = list()
-        self.listeLogomate = list()
         self.listeBalle = list()
         self.nbId = 0
         self.joueur = ""
@@ -28,14 +27,6 @@ class Jeu():
             raceInfo = Race.Atarix()
             
         return raceInfo.info()
-
-    def nouveauLogo(self, posMap):
-        pers = Personnage(self.nbId)
-        pers.nouveauPersonnage("Logo", Race.Logomate())
-        pers.posMapX = posMap[0]
-        pers.posMapY = posMap[1]
-        self.listeLogomate.append(pers)
-        self.nbId+=1
         
     def nouveauJoueur(self, race, nom):
         
