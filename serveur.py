@@ -11,11 +11,21 @@ import pickle
 import netdata as nd
 import commande as cm
 
+class ClientInfo():
+	def __init__(self, conn, address, id):
+		self.conn = conn
+		self.address = address
+		self.id = id
+
 class Serveur():
 	def __init__(self, port = 43225):
 		self.port = port
 		self.statut = "arreter"
 		self.listeCommande = {"fermer-serveur":self.arreter, "demarrer-serveur":self.demarrer, "redemarrer-serveur":self.redemarrer, "client-deconnection":self.clientDeconnection}
+		self.maxConnect = 10
+		self.idConnect = []
+		for i in range(self.maxConnect):
+			self.idConnect.append(False)
 
 	def demarrer(self, client = None, donnees = None):
 		self.statut = "demarrer"
@@ -32,16 +42,20 @@ class Serveur():
 	
 	def deconnecterClients(self):
 		for client in self.clients:
-			client.close()			#déconnecte le client à partir de la liste
+			client.conn.close()			#déconnecte le client à partir de la liste
 
 	def clientDeconnection(self, client, donnees = None):
 		print("Client Deconnecte")
 		msg = nd.Message("ok-deconnection")
 		bMsg = pickle.dumps(msg)			
-		client.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
+		client.conn.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
 		self.clients.remove(client)			
-		client.close()						#fermeture de sa connexion
-			
+		client.conn.close()						#fermeture de sa connexion
+	
+	def retirerClient(self, client):
+		client.conn.close()
+		self.clients.remove(client)
+		self.idConnect[client.id] = False
 
 	def redemarrer(self, client = None, donnees = None):
 		pass
@@ -49,10 +63,11 @@ class Serveur():
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 
-		for connection in incomingConnection:			#Accepte les connexions et ajoutes les clients dans la liste
-			conn, address = self.socket.accept()
-			self.clients.append(conn)
-			print("Nouveau client")			
+		if len(self.clients) < self.maxConnect:
+			for connection in incomingConnection:			#Accepte les connexions et ajoutes les clients dans la liste
+				conn, address = self.socket.accept()
+				client = ClientInfo(conn, address, len(self.clients)+100)
+				self.clients.append(client)
 
 	def update(self):
 		pass
@@ -61,7 +76,10 @@ class Serveur():
 		if self.statut == "demarrer" and self.clients:
 			toRead = []
 			try:
-				toRead, wlist, xlist = select.select(self.clients, [], [], 0.05)
+				listConn = []
+				for co in self.clients:
+					listConn.append(co.conn)
+				toRead, wlist, xlist = select.select(listConn, [], [], 0.05)
 			except select.error as serror:
 				print("Select error: ", serror)
 			else:
@@ -69,7 +87,14 @@ class Serveur():
 				for client in toRead:
 					try:
 						data = pickle.loads(client.recv(4096))				#desérialise les données reçu
-						if isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
+						if isinstance(data, nd.PersoInfo):
+							info = self.genererId(data)
+							cl = self.obtenirInfoClient(client)
+							cl.id = info.id
+							bData = pickle.dumps(info)
+							client.send(bData)
+							print("Nouveau client: " + info.nom + "(" + str(info.id) + ")")
+						elif isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
 							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
 							if estCommande == True:											
 								self.appliquerCommande(message, client, donnees)			
@@ -81,10 +106,17 @@ class Serveur():
 						print("Erreur sur le serveur: ", eof)
 						self.clients = []
 					except Exception as ex:
-						print("Erreur sur lecture de client. Deconnection")
-						self.deconnected.append(client)
+						print("Erreur sur lecture de client. Deconnection: ", ex)
+						client.close()
+						self.retirerClient(self.obtenirInfoClient(client))
 
-					
+
+	def obtenirInfoClient(self, conn):
+		for client in self.clients:
+			if client.conn == conn:
+				return client
+		return False
+
 	def envoyerMessage(self):
 		message = nd.Message("NO_MESSAGE")
 		if self.statut == "arreter":
@@ -93,11 +125,19 @@ class Serveur():
 		if message.message != "NO_MESSAGE":
 			bMessage = pickle.dumps(message) #Serialisation du message/données
 			for client in self.clients:
-				client.send(bMessage)		#envoi message/données
+				client.conn.send(bMessage)		#envoi message/données
 		
 	def appliquerCommande(self, action, client, donnees):
 		if action in self.listeCommande:
 			self.listeCommande[action](client, donnees)
+
+
+	def genererId(self, info):
+		for i in range(len(self.idConnect)):
+			if self.idConnect[i] == False:
+				info.id = i
+				self.idConnect[i] = True
+				return info
 
 serveur = Serveur()
 serveur.demarrer()

@@ -5,9 +5,8 @@ import Objet
 from Balle import *
         
 class Personnage():
-    def __init__(self, id):
-        '''Caractéristiques uniques'''
-        self.id = id
+    def __init__(self):
+        pass
         
     def nouveauPersonnage(self, nom, race):
         self.nom = nom
