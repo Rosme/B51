@@ -10,6 +10,7 @@ class Jeu():
     def __init__(self, parent):
         self.parent = parent
         self.listePersonnage = list()
+        self.listeLogomate = list()
         self.listeBalle = list()
         self.joueur = ""
         self.carte = Carte.Carte(self)
@@ -33,11 +34,10 @@ class Jeu():
         pers.posMapX = int(posMap[0])
         pers.posMapY = int(posMap[1])
         self.listeLogomate.append(pers)
-        self.nbId+=1
         
     def nouveauJoueur(self, race, nom):
         
-        self.joueur = Personnage(self.nbId)
+        self.joueur = Personnage()
         
         if race == "Humain":
             self.joueur.nouveauPersonnage(nom, Race.Humain())
@@ -50,21 +50,15 @@ class Jeu():
             
         elif race == "Atarix":
             self.joueur.nouveauPersonnage(nom, Race.Atarix())
-            
-        self.nbId+=1
         
-        pers = Personnage(self.nbId+1)
+        pers = Personnage()
         pers.nouveauPersonnage("Kevin", Race.Atarix())
         pers.posMapX+=100
         self.listePersonnage.append(pers)
-        
-        self.nbId+=1
 
     def chargerJoueur(self, nom):        
-        self.joueur = Personnage(self.nbId)
+        self.joueur = Personnage()
         self.joueur = self.joueur.chargerPersonnage(nom)
-            
-        self.nbId += 1
         
     def sauvegardeJoueur(self):
         self.joueur.sauvegardePersonnage()
