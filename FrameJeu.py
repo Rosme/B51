@@ -155,7 +155,7 @@ class FrameJeu():
             tempx = math.floor(tempx/self.largeurTuile)
             x+=tempx
             y+=tempx
-        print(y,x)
+        #print(y,x)
         return x,y
         
         '''

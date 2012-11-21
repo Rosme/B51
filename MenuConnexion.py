@@ -1,11 +1,16 @@
 import tkinter
+import socket
+import pickle
+import netdata as nd
 
 class MenuConnexion():
     def __init__(self, parent):
         self.parent = parent
-        self.menuConnexion()
+        self.nom = ''
+        self.menuConnexion(self.nom)
         
-    def menuConnexion(self):
+    def menuConnexion(self, nomJoueur):
+        self.nom = nomJoueur
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
         self.fondEcran.place(x=0,y=0)
@@ -32,17 +37,15 @@ class MenuConnexion():
     def debuterPartie(self):
         self.effacerEcran()
         self.parent.parent.enJeu()
-        
-    def validerIPort(self):
-        self.debuterPartie()
-       
-    '''
+    
     def validerIPort(self):
         adresse = self.ipentry.get()
 
         temp = adresse.split(':')
         adresse = temp[0]
         port = temp[1]
+        port = int(port)
+        '''
         temp = adresse.split('.')
         
         if len(temp) != 4:
@@ -65,8 +68,22 @@ class MenuConnexion():
         
             if port <= 1024 or port >= 49551:
                 return False
+
+
                     
         except ValueError:
             return False
         # sinon on redemande de rentrer les info de reseau encore
-    '''
+        '''
+        binding = (adresse, port)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect(binding)
+
+        pInfo = nd.PersoInfo(self.nom)
+        sbData = pickle.dumps(pInfo)
+        self.sock.send(sbData)
+
+        rbData = self.sock.recv(4096)
+        rData = pickle.loads(rbData)
+        print(rData.id)
+        self.debuterPartie()
