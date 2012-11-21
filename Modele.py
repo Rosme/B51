@@ -9,13 +9,13 @@ import Artisanat
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
-        self.carte = Carte.Carte()
-        self.artisanat = Artisanat.Artisanat(self)
         self.listePersonnage = list()
         self.listeLogomate = list()
         self.listeBalle = list()
         self.nbId = 0
         self.joueur = ""
+        self.carte = Carte.Carte(self)
+        self.artisanat = Artisanat.Artisanat(self)
         
     def info(self, race):
         if race == "Humain":
@@ -30,7 +30,7 @@ class Jeu():
         return raceInfo.info()
 
     def nouveauLogo(self, posMap):
-        pers = Personnage(self.nbId)
+        pers = Personnage()
         pers.nouveauPersonnage("Logo", Race.Logomate())
         pers.posMapX = posMap[0]
         pers.posMapY = posMap[1]
