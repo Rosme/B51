@@ -22,13 +22,16 @@ class Carte():
         ligne = liens.read()
 
         """Tous les objets possible"""
-        self.listeObjet = ["Logomate", "Sac", "Coffre", "Roche"]
+        self.listeObjet = ["Logomate", "Sac", "Coffre", "Roche", "Interrupteur", "Declencheur", "Levier"]
 
         """Liste des positions de chaque objet """
         self.listeLogo = list()
         self.listeSac = list()
         self.listeCoffre = list()
         self.listeRoche = list()
+        self.listeInterrupteur = list()
+        self.listeDeclencheur = list()
+        self.listeLevier = list()
         
         self.mapValide = False
         self.valideAssign = False
@@ -47,13 +50,18 @@ class Carte():
             elif(self.valideAssign == True and i != "break"):
                 if(self.listeObjet[self.posListeObj] == "Logomate"):
                     self.parent.nouveauLogo(self.convertion(i))
-                    #self.listeLogo.append(self.convertion(i))
                 elif (self.listeObjet[self.posListeObj] == "Sac"):
                     self.listeSac.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Coffre"):
                     self.listeCoffre.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Roche"):
                     self.listeRoche.append(self.convertion(i))
+                elif(self.listeObjet[self.posListeObj] == "Interrupteur"):
+                    self.listeInterrupteur.append(self.convertion(i))
+                elif(self.listeObjet[self.posListeObj] == "Declencheur"):
+                    self.listeDeclencheur.append(self.convertion(i))
+                elif(self.listeObjet[self.posListeObj] == "Levier"):
+                    self.listeLevier.append(self.convertion(i))
             elif(self.valideAssign == True and i == "break"):
                 self.valideAssign = False
                 self.mapValide = True
