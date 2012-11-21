@@ -120,7 +120,7 @@ class Serveur():
 	def envoyerMessage(self):
 		message = nd.Message("NO_MESSAGE")
 		if self.statut == "arreter":
-			message.message = "serveur-shutdown"
+			message.message = "fermer-serveur"
 
 		if message.message != "NO_MESSAGE":
 			bMessage = pickle.dumps(message) #Serialisation du message/données

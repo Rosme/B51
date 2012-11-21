@@ -39,7 +39,7 @@ class Jeu():
         
     def nouveauJoueur(self, race, nom):
         
-        self.joueur = Personnage(self.nbId)
+        self.joueur = Personnage()
         
         if race == "Humain":
             self.joueur.nouveauPersonnage(nom, Race.Humain())

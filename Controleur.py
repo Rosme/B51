@@ -2,12 +2,14 @@
 import Vue
 import Modele
 import os
+import ConnecteurReseau
 
 class Controleur():
     def __init__(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
-        self.mouvement = list() 
+        self.mouvement = list()
+        self.reseau = ConnecteurReseau.ConnecteurReseau()
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)

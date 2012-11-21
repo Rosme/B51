@@ -45,45 +45,8 @@ class MenuConnexion():
         adresse = temp[0]
         port = temp[1]
         port = int(port)
-        '''
-        temp = adresse.split('.')
-        
-        if len(temp) != 4:
-            return False
-        
-        adresse = []    
-        for i in range(4):
-            adresse.append(temp[i])
-        
-        try:
-            ip = []
-            for i in adresse:
-                ip.append(int(i))
-        
-            port = int(port)
-            
-            for i in range(4):
-                if ip[i] > 255 or ip[i]< 0:
-                    return False
-        
-            if port <= 1024 or port >= 49551:
-                return False
 
+        reseau = self.parent.parent.reseau.connecter(adresse, port, self.nom)
+        print(reseau.id)
 
-                    
-        except ValueError:
-            return False
-        # sinon on redemande de rentrer les info de reseau encore
-        '''
-        binding = (adresse, port)
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect(binding)
-
-        pInfo = nd.PersoInfo(self.nom)
-        sbData = pickle.dumps(pInfo)
-        self.sock.send(sbData)
-
-        rbData = self.sock.recv(4096)
-        rData = pickle.loads(rbData)
-        print(rData.id)
         self.debuterPartie()
