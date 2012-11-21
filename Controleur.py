@@ -26,6 +26,15 @@ class Controleur():
         self.app.frameJeu.map.after(100,self.rechargement)
     
     def balle(self):
+        
+        self.collision(self.jeu.listePersonnage)
+        self.collision(self.jeu.listeLogomate)
+        
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire()
+        self.app.frameJeu.map.after(50, self.balle)
+
+    def collision(self, liste):
         temp = self.jeu.listeBalle
         
         for i in self.jeu.listeBalle:
@@ -39,16 +48,11 @@ class Controleur():
             else:
                 i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+25,(i.posEcranY+(i.veloY)*2)+25)
 
-            if i.collision(self.jeu.listePersonnage, self.jeu.carte.s.salle):
+            if i.collision(liste, self.jeu.carte.s.salle):
                 temp.remove(i)
-            #if i.collision(self.jeu.carte.listeLogo):
-                #temp.remove(i)
                 
         self.jeu.listeBalle = temp
-        self.app.frameJeu.map.delete("balle")
-        self.app.frameJeu.tire()
-        self.app.frameJeu.map.after(50, self.balle)
-    
+        
     def demarrer(self):
         self.app.menuPrincipal()
     

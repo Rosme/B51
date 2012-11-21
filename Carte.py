@@ -10,7 +10,7 @@ class Carte():
         #self.s.changementCarte('v') pour tester seulement
         #self.s.sauvegarderMap(self.nomMap, ['yo', 'yo', 'yo']) pour tester seulement
         self.chargeObjets()
-		
+        
     def chargeObjets(self):
         try:
             liens = open("assets/liens/liens.txt", 'r')

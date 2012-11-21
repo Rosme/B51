@@ -89,10 +89,9 @@ class FrameJeu():
                     if  map[i][k]=='3':
                         self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
                     
-                    for p in range(len(self.parent.parent.jeu.carte.listeLogo)):
-                        if self.parent.parent.jeu.carte.listeLogo[p][0]==self.parent.parent.jeu.carte.s.nbLigne-(k+1) and self.parent.parent.jeu.carte.listeLogo[p][1]==i:
-                            #print(self.parent.parent.jeu.carte.listeLogo[p])
-                            self.map.create_image(posTempX,posTempY-32,image=self.pers,tags="logo")
+                    for p in self.parent.parent.jeu.listeLogomate:
+                        if p.posMatX<k and p.posMatY<i:
+                            self.map.create_image(perso.posEcranX+(p.posMapX - perso.posMapX),perso.posEcranY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
                      
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
