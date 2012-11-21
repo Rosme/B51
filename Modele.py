@@ -9,7 +9,6 @@ import Artisanat
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
-        self.nbId = 0
         self.listePersonnage = list()
         self.listeLogomate = list()
         self.listeBalle = list()
@@ -30,7 +29,7 @@ class Jeu():
         return raceInfo.info()
 
     def nouveauLogo(self, posMap):
-        pers = Personnage(self.nbId)
+        pers = Personnage()
         pers.nouveauPersonnage("Logo", Race.Logomate())
         pers.posMapX = int(posMap[0])
         pers.posMapY = int(posMap[1])
