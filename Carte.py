@@ -3,7 +3,7 @@ import os
 
 class Carte():
     def __init__(self):
-        self.nomMap = "F_E1S1"
+        self.nomMap = "MainRoom"
         self.s = Salle()
         self.s.chargeCarte(self.nomMap)
         #self.s.changementCarte('v') pour tester seulement
@@ -123,7 +123,6 @@ class Salle():
             i += 1
 
         self.fichier.close()
-
         self.chargeCarte(self.dictionnaire[charactere])
             
 #if __name__=="__main__":

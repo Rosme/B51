@@ -185,7 +185,7 @@ class FrameJeu():
             y=temp
         return y,x'''
         
-    def coordProchaineZone(self,salle,char):
+    def coordProchaineZone(self,salle,char,perso):
         for i in range(salle.nbLigne):
             for j in range(salle.nbColonne):
                 if salle.salle[i][j]==char:
@@ -215,8 +215,8 @@ class FrameJeu():
                                     break
     
         
-        self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
+        self.posMilieuDiagoX=(self.posDepartX-(len(salle.salle[1])-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(len(salle.salle)-1)*16)
         
         depx=self.posMilieuDiagoX
         depy=self.posMilieuDiagoY
@@ -230,9 +230,9 @@ class FrameJeu():
             depx-=16
         depx+=32
         
-        #perso.posMapX=depx
-        #perso.posMapY=depy
-        #return perso
+        perso.posMapX=depx
+        perso.posMapY=depy
+        return perso
         
     
     def vueProximite(self,perso,nbColonne,nbLigne):

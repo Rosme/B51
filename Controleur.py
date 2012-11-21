@@ -70,8 +70,10 @@ class Controleur():
             balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
-            #self.jeu.carte.s.changementCarte(laMap[tempMatX][tempMatY])
-            print("teleport")
+            car=laMap[tempMatY][tempMatX]
+            os.system("pause")
+            self.jeu.carte.s.changementCarte(car)
+            self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
         elif laMap[tempMatY][tempMatX]=='0' and laMap[tempMatY+1][tempMatX-1]!='1':
             if tempx!=0 or tempy!=0:
                 self.jeu.joueur.posMatX=tempMatX
