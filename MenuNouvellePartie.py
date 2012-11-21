@@ -96,7 +96,7 @@ class MenuNouvellePartie():
         self.file = open("player.dat", 'a')
         self.file.write("Nom Joueur:")
         self.file.write(self.profilename + " ")
-        self.file.write("Race Joueur:")
+        self.file.write("Race:")
         self.file.write(self.valRace.get())
         self.file.write("\n")
         self.file.close()

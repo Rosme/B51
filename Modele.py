@@ -11,7 +11,6 @@ class Jeu():
         self.parent = parent
         self.listePersonnage = list()
         self.listeBalle = list()
-        self.nbId = 0
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -31,8 +30,8 @@ class Jeu():
     def nouveauLogo(self, posMap):
         pers = Personnage()
         pers.nouveauPersonnage("Logo", Race.Logomate())
-        pers.posMapX = posMap[0]
-        pers.posMapY = posMap[1]
+        pers.posMapX = int(posMap[0])
+        pers.posMapY = int(posMap[1])
         self.listeLogomate.append(pers)
         self.nbId+=1
         
