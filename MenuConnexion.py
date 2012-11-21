@@ -47,7 +47,6 @@ class MenuConnexion():
         port = temp[1]
         port = int(port)
 
-        reseau = self.parent.parent.reseau.connecter(adresse, port, self.nom)
-        print(reseau.id)
+        self.parent.parent.reseau.connecter(adresse, port, self.nom)
 
         self.debuterPartie()
