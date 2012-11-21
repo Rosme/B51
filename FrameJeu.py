@@ -158,32 +158,6 @@ class FrameJeu():
         print(y,x)
         return x,y
         
-        '''
-        #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
-        tempX=self.posMilieuDiagoX
-        tempY=self.posMilieuDiagoY
-        #print("coord",self.posMilieuDiagoY)
-        y=(y1-self.posMilieuDiagoY)/16  
-        if y<0:
-            y*=-1
-                  
-        y=round(y)
-  
-        for i in range(y):
-            tempX+=32
-           
-        x=(x1-tempX)/64  
-        x= round(x)
-        
-        for f in range(x):
-            y+=1
-        
-        #si le joueur est au-dessus de la diagonale
-        if self.posMilieuDiagoY<y1:
-            temp=x
-            x=y
-            y=temp
-        return y,x'''
         
     def coordProchaineZone(self,salle,char,perso):
         for i in range(salle.nbLigne):
