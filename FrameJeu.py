@@ -29,8 +29,8 @@ class FrameJeu():
         self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         
-        self.posMilieuDiagoX=(self.posDepartX-(len(laSalle.salle[1])-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(len(laSalle.salle)-1)*16)
+        self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
 
         perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
         
@@ -58,6 +58,7 @@ class FrameJeu():
     
     def affichageMap(self,perso,map):  
         self.vueProximite(perso,len(map[0]),len(map))
+        
         posInitX=self.posDepartX
         posInitY=self.posDepartY
         
@@ -73,7 +74,6 @@ class FrameJeu():
                 if k>self.limiteX[0] and k< self.limiteX[1] and i >self.limiteY[0] and i< self.limiteY[1]:
                     if map[i][k]=='1':
                         self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
-                        #self.map.create_text(self.posTempX,self.posTempY,text=str(i)+","+str(k),tags="text")
                         
                     #affichage du personnage
                     if self.persoAff==True:
@@ -158,33 +158,6 @@ class FrameJeu():
         #print(y,x)
         return x,y
         
-        '''
-        #voir le commentaire dans le methode affichageMap() en rapport avec les variables de meme nom
-        tempX=self.posMilieuDiagoX
-        tempY=self.posMilieuDiagoY
-        #print("coord",self.posMilieuDiagoY)
-        y=(y1-self.posMilieuDiagoY)/16  
-        if y<0:
-            y*=-1
-                  
-        y=round(y)
-  
-        for i in range(y):
-            tempX+=32
-           
-        x=(x1-tempX)/64  
-        x= round(x)
-        
-        for f in range(x):
-            y+=1
-        
-        #si le joueur est au-dessus de la diagonale
-        if self.posMilieuDiagoY<y1:
-            temp=x
-            x=y
-            y=temp
-        return y,x'''
-        
     def coordProchaineZone(self,salle,char,perso):
         for i in range(salle.nbLigne):
             for j in range(salle.nbColonne):
@@ -214,24 +187,23 @@ class FrameJeu():
                                     maty = i
                                     break
     
-        
-        self.posMilieuDiagoX=(self.posDepartX-(len(salle.salle[1])-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(len(salle.salle)-1)*16)
-        
-        depx=self.posMilieuDiagoX
-        depy=self.posMilieuDiagoY
-        
-        for p in range(maty):
-            depx+=32
-            depy+=16
-        
-        for q in range(maty):
-            depx+=32
-            depx-=16
-        depx+=32
+        depx=self.largeurJeu/2
+        depy=0      
+        print(maty,matx)
+        matx=salle.nbColonne-matx
+        depx+=(((32*maty)-(32*matx))+32)
+        depy+=(((16*maty)+(16*matx))-16)
         
         perso.posMapX=depx
         perso.posMapY=depy
+       
+        self.posDepartX = (((salle.nbColonne * self.largeurTuile)/2)+((salle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
+        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
+        
+        self.posMilieuDiagoX=(self.posDepartX-(salle.nbColonne-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(salle.nbLigne-1)*16)
+
+        print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         return perso
         
     
