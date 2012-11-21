@@ -15,7 +15,7 @@ class ConnecteurReseau():
 		self.adresse = adresse
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.bind((adresse, port))
+		self.socket.connect((adresse, port))
 
 		#On envoie les informations de connection pour générer un ID et avoir une connection
 		infoJoueur = nd.PersoInfo(nom)
@@ -28,6 +28,8 @@ class ConnecteurReseau():
 		self.id = infoJoueur.id
 
 		self.socket.settimeout(0.1)
+
+		return infoJoueur
 
 	def deconnecter(self):
 		cmd = nd.Message("/quit")

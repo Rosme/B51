@@ -18,6 +18,8 @@ class Application():
         self.largeurFrame=1024
         self.hauteurFrame=768
         
+        self.nomJoueur = "Marco"
+
         self.root=tkinter.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.exit)
         self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
@@ -34,7 +36,7 @@ class Application():
         self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
         
     def menuConnexion(self):
-        self.menuC=MenuConnexion.MenuConnexion(self)
+        self.menuC=MenuConnexion.MenuConnexion(self, self.nomJoueur)
     
     def jeu(self):
         self.frameJeu=FrameJeu.FrameJeu(self)
