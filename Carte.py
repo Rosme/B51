@@ -2,14 +2,15 @@
 import os
 
 class Carte():
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.nomMap = "MainRoom"
         self.s = Salle()
         self.s.chargeCarte(self.nomMap)
         #self.s.changementCarte('v') pour tester seulement
         #self.s.sauvegarderMap(self.nomMap, ['yo', 'yo', 'yo']) pour tester seulement
         self.chargeObjets()
-
+		
     def chargeObjets(self):
         try:
             liens = open("assets/liens/liens.txt", 'r')
@@ -45,7 +46,8 @@ class Carte():
                 self.mapValide = False
             elif(self.valideAssign == True and i != "break"):
                 if(self.listeObjet[self.posListeObj] == "Logomate"):
-                    self.listeLogo.append(self.convertion(i))
+                    self.parent.nouveauLogo(self.convertion(i))
+                    #self.listeLogo.append(self.convertion(i))
                 elif (self.listeObjet[self.posListeObj] == "Sac"):
                     self.listeSac.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Coffre"):
@@ -123,6 +125,7 @@ class Salle():
             i += 1
 
         self.fichier.close()
+
         self.chargeCarte(self.dictionnaire[charactere])
             
 #if __name__=="__main__":
