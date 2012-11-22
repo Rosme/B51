@@ -67,17 +67,15 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        
         if self.mouvement[4]:
             self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
             balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-            print("switch",self.jeu.joueur.posMatY,self.jeu.joueur.posMatX)
         elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2': #and laMap[tempMatY+1][tempMatX-1]!='1':
             if tempx!=0 or tempy!=0:
                 self.jeu.joueur.posMatX=tempMatX

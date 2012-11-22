@@ -58,7 +58,7 @@ class FrameJeu():
     
     def affichageMap(self,perso,map):  
         self.vueProximite(perso,len(map[0]),len(map))
-        print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
+        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX
         posInitY=self.posDepartY
         
@@ -158,64 +158,66 @@ class FrameJeu():
         return x,y
         
     def coordProchaineZone(self,salle,char,perso):
+        trouver=False
+        depx=self.largeurJeu/2
+        depy=0
+        
         for i in range(salle.nbLigne):
             for j in range(salle.nbColonne):
                 if salle.salle[i][j]==char:
                     try:
-                        print("oups1")
                         #si l'autre char à droite
                         if salle.salle[i][j+1]==char:
-                            print("bob1")                            
                             try:
-                                if salle.salle[i+1][j]=='0':
-                                    print("#################################")
+                                if salle.salle[i+1][j]=='0':#porte en bas
                                     matx = j
                                     maty = i+1
+                                    trouver=True
+                                    print("1",maty,matx)
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
                             except IndexError:
-                                if salle.salle[i-1][j]=='0':
-                                    print("#################################")
+                                if salle.salle[i-1][j]=='0':#porte en haut
                                     matx = j
                                     maty = i-1
+                                    trouver=True
+                                    print("2")
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))+31
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
                         else:
                             raise IndexError
                     except IndexError: 
-                        print("oups2")
                         #sil'autre char est en dessous
                         if salle.salle[i+1][j]==char:
-                            print("bob2")
                             try:
-                                if salle.salle[i][j+1]=='0':
-                                    print("#################################")
+                                if salle.salle[i][j+1]=='0':#porte à droite
                                     matx = j+1
                                     maty = i
+                                    trouver=True
+                                    print("3")
+                                    matx=salle.nbColonne-matx
+                                    depx+=((32*maty)-(16*matx)-16)+(64*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
                             except IndexError:
-                                if salle.salle[i][j-1]=='0':
-                                    print("#################################")
+                                if salle.salle[i][j-1]=='0':#porte à gauche
                                     matx = j-1
                                     maty = i
+                                    trouver=True
+                                    print("4")
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(32*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
-        perso.posMatY=maty
-        perso.posMatX=matx
+            if trouver:
+                break
         
-        depx=self.largeurJeu/2
-        depy=0
-        print(maty,matx)
-        matx=salle.nbColonne-matx
-        if salle.nbColonne == maty+matx:
-            print("1")
-            depx+=(((32*maty)-(32*matx))+32)
-            depy+=(((16*maty)+(16*matx))-16)
-        elif salle.nbColonne<maty+matx:
-            print("2")
-            depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbLigne-matx)/2))
-            depy+=(((16*maty)+(16*matx))-16)-16
-        elif salle.nbColonne>maty+matx:
-            print("3")
-            depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbLigne-matx)/2))-32
-            depy+=(((16*maty)+(16*matx))-16)-16
+        perso.posMatY=maty
+        perso.posMatX=salle.nbColonne-matx
         
         perso.posMapX=depx
         perso.posMapY=depy
@@ -226,12 +228,11 @@ class FrameJeu():
         self.posMilieuDiagoX=(self.posDepartX-(salle.nbColonne-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(salle.nbLigne-1)*16)
 
-        print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
+        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         return perso
         
     
     def vueProximite(self,perso,nbColonne,nbLigne):
-        print("p",perso.posMatY,perso.posMatX)
         rayon=8
         self.limiteX=list()
         self.limiteY=list()
