@@ -77,8 +77,8 @@ class Controleur():
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-            
-        elif laMap[tempMatY][tempMatX]=='0' and laMap[tempMatY+1][tempMatX-1]!='1':
+            print("switch",self.jeu.joueur.posMatY,self.jeu.joueur.posMatX)
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2': #and laMap[tempMatY+1][tempMatX-1]!='1':
             if tempx!=0 or tempy!=0:
                 self.jeu.joueur.posMatX=tempMatX
                 self.jeu.joueur.posMatY=tempMatY
@@ -96,7 +96,7 @@ class Controleur():
             self.app.frameJeu.map.delete("balle")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,laMap) 
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s.salle) 
             self.app.frameJeu.tire()    
     
     
