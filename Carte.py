@@ -82,9 +82,15 @@ class Salle():
     def __init__(self):
         self.salle = list()
         self.dictSauvegarde = dict()
+        self.dictionnaireAsso = dict()
     
     def chargeCarte(self, nomMap):
-        self.ouvertureMap(nomMap)
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.laMap = nomMap
+        self.listeTempo = self.laMap.split('\n')
+        self.laMap = self.listeTempo[0]
+        
+        self.ouvertureMap(self.laMap)
 
         """Dimensions de la carte"""    
         self.dimensionCarte = self.fichier.readline()
@@ -118,7 +124,9 @@ class Salle():
             os._exit(1)
     
     def changementCarte(self, charactere):
-        self.dictionnaire = dict()
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.listeTempo = self.nomMap.split('\n')
+        self.nomMap = self.listeTempo[0]
         
         self.ouvertureMap(self.nomMap)
         self.fichier.readline()
@@ -129,12 +137,12 @@ class Salle():
         i = 0
         while i < len(self.listeAsso):
             self.listeValeur = self.listeAsso[i].split(":")
-            self.dictionnaire[self.listeValeur[0]] = self.listeValeur[1]
+            self.dictionnaireAsso[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
 
         self.fichier.close()
-
-        self.chargeCarte(self.dictionnaire[charactere])
+        print (self.dictionnaireAsso)
+        self.chargeCarte(self.dictionnaireAsso[charactere])
             
 #if __name__=="__main__":
     #Carte()
