@@ -157,10 +157,12 @@ class Controleur():
             self.autoSoin()
             
         if key == 'E':
-            if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
-                self.jeu.listeRoche[0].bouge(self.jeu.joueur)
-            else:
-                self.jeu.listeRoche[0].depose()
+            if self.jeu.listeRoche:
+                if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
+                    self.jeu.listeRoche[0].bouge(self.jeu.joueur)
+                else:
+                    self.jeu.listeRoche[0].depose()
+                    
             self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
     
     def relacheKeyGestion(self, event):

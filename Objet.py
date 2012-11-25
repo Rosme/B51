@@ -42,14 +42,34 @@ class Coffre(Objet):
                 j=0
                 while j < 4:
                     if limiteCoffre[j] > limitePerso[0] and limiteCoffre[j] < limitePerso[2]:
+                        valide = True
+                    elif j == 0:
+                        if limiteCoffre[j] < limitePerso[0] and limiteCoffre[j+2] > limitePerso[2]:
+                            valide = True
+                        else:
+                            valide = False
+                    else:
+                        valide = False
+                    if valide:
                         k=1
                         while k < 4:
                             if limiteCoffre[k] > limitePerso[1] and limiteCoffre[k] < limitePerso[3]:
+                                valide = True
+                            elif k == 1:
+                                if limiteCoffre[k] < limitePerso[1] and limiteCoffre[k+2] > limitePerso[3]:
+                                    valide = True
+                                else:
+                                    valide = False
+                            else:
+                                valide = False
+                            if valide:
+                                print("Coffre Ouvert")
                                 self.ouvert = True
                                 return True
                             k+=2
                     j+=2
         
+        print("Coffre Fermé")
         self.ouvert = False
         return False
     

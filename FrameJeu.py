@@ -108,10 +108,8 @@ class FrameJeu():
         self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
         
-
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
-            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
             self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
             
         if self.parent.parent.jeu.listeRoche:
