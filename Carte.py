@@ -5,11 +5,11 @@ class Carte():
     def __init__(self, parent):
         self.parent = parent
         self.nomMap = "MainRoom"
-        self.s = Salle()
+        self.s = Salle(self)
         self.s.chargeCarte(self.nomMap)
         #self.s.changementCarte('v') pour tester seulement
         #self.s.sauvegarderMap(self.nomMap, ['yo', 'yo', 'yo']) pour tester seulement
-        self.chargeObjets()
+        #self.chargeObjets()
         
     def chargeObjets(self):
         try:
@@ -55,9 +55,9 @@ class Carte():
                 elif(self.listeObjet[self.posListeObj] == "Coffre"):
                     self.listeCoffre.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Roche"):
-                    self.listeRoche.append(self.convertion(i))
+                    self.parent.nouvelleRoche(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Interrupteur"):
-                    self.listeInterrupteur.append(self.convertion(i))
+                    self.parent.nouveauInterrupt(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Declencheur"):
                     self.listeDeclencheur.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Levier"):
@@ -79,7 +79,8 @@ class Carte():
         return self.tempo
 
 class Salle():
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.salle = list()
         self.dictSauvegarde = dict()
         self.dictionnaireAsso = dict()
@@ -110,6 +111,8 @@ class Salle():
             self.salle.append(i)
 
         self.fichier.close()
+        self.parent.nomMap = self.laMap
+        self.parent.chargeObjets()
 
     def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
         self.dictSauvegarde[nomMap] = contenuMap
@@ -118,7 +121,6 @@ class Salle():
         try:
             self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
             self.nomMap = nomMap
-            print(self.nomMap)
         except IOError:
             print ("La map " + nomMap + " n'existe pas.")
             os._exit(1)
@@ -141,8 +143,4 @@ class Salle():
             i += 1
 
         self.fichier.close()
-        print (self.dictionnaireAsso)
         self.chargeCarte(self.dictionnaireAsso[charactere])
-            
-#if __name__=="__main__":
-    #Carte()

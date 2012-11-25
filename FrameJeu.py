@@ -72,19 +72,21 @@ class FrameJeu():
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
                 if k>self.limiteX[0] and k< self.limiteX[1] and i >self.limiteY[0] and i< self.limiteY[1]:
-                    if map[i][k]=='1':
+                    if map[i][k]=='1' or map[i][k] == '2':
                         self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                         
                     #affichage du personnage
                     if self.persoAff==True:
                         if perso.posMatX<k and perso.posMatY<i:
+                            temp = perso.obtenirLimite()
+                            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
                             self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
                             self.persoAff=False
                         
                     #affichage du gazon
                     if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                         self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                        self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                        #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                     
                     if  map[i][k]=='3':
                         self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
@@ -111,6 +113,10 @@ class FrameJeu():
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
             self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+            
+        if self.parent.parent.jeu.listeRoche:
+            temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
+            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:

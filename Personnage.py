@@ -23,7 +23,7 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
-        self.coffre = Objet.Coffre(19,1,640,0)
+        self.coffre = Objet.Coffre(None, 19,1,640,0)
     
     def bouge(self, mouvement):
         tempx = 0

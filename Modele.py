@@ -5,12 +5,15 @@ import Vue
 import Item
 import Carte
 import Artisanat
+import Objet
 
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
+        self.listeInterrupteur = list()
         self.listePersonnage = list()
         self.listeLogomate = list()
+        self.listeRoche = list()
         self.listeBalle = list()
         self.joueur = ""
         self.carte = Carte.Carte(self)
@@ -35,6 +38,16 @@ class Jeu():
         pers.posMapY = int(posMap[1])
         self.listeLogomate.append(pers)
         
+    def nouveauInterrupt(self, posMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(int(posMap[0]), int(posMap[1]))
+        interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False)
+        self.listeInterrupteur.append(interrupteur)
+        
+    def nouvelleRoche(self, posMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(int(posMap[0]), int(posMap[1]))
+        roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]))
+        self.listeRoche.append(roche)
+        
     def nouveauJoueur(self, race, nom):
         
         self.joueur = Personnage()
@@ -50,11 +63,6 @@ class Jeu():
             
         elif race == "Atarix":
             self.joueur.nouveauPersonnage(nom, Race.Atarix())
-        
-        pers = Personnage()
-        pers.nouveauPersonnage("Kevin", Race.Atarix())
-        pers.posMapX+=100
-        self.listePersonnage.append(pers)
 
     def chargerJoueur(self, nom):        
         self.joueur = Personnage()

@@ -76,7 +76,7 @@ class Controleur():
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2': #and laMap[tempMatY+1][tempMatX-1]!='1':
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
             if tempx!=0 or tempy!=0:
                 self.jeu.joueur.posMatX=tempMatX
                 self.jeu.joueur.posMatY=tempMatY
@@ -84,6 +84,16 @@ class Controleur():
                 self.jeu.joueur.posMapY+=tempy
                 self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
                 self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
+                
+        if self.jeu.listeInterrupteur:
+            for i in self.jeu.listeInterrupteur:
+                i.collision(self.jeu.joueur)
+                i.activer()
+                
+        if self.jeu.listeRoche:
+            for i in self.jeu.listeRoche:
+                if not i.aTerre:
+                    i.bouge(self.jeu.joueur)
                 
         
         if True in self.mouvement:
@@ -147,6 +157,10 @@ class Controleur():
             self.autoSoin()
             
         if key == 'E':
+            if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
+                self.jeu.listeRoche[0].bouge(self.jeu.joueur)
+            else:
+                self.jeu.listeRoche[0].depose()
             self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
     
     def relacheKeyGestion(self, event):
@@ -160,6 +174,10 @@ class Controleur():
             self.mouvement[2]=False
         if key == 'A':
             self.mouvement[3]=False
+            
+        if key == 'Z':
+            print(self.jeu.joueur.posMapX)
+            print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
             self.app.root.destroy()
