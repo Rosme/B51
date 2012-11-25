@@ -110,18 +110,31 @@ class Roche(Objet):
         return True
     
     def bouge(self, perso):
+        if not self.aTerre:
+            for i in self.parent.listeInterrupteur:
+                self.aTerre = True
+                if not self.prendre(i):
+                    self.aTerre = False
+                    i.aTerre = False
+                else:
+                    self.aTerre = False
         self.posMatX = perso.posMatX
-        self.posMatY = perso.posMatY-32
+        self.posMatY = perso.posMatY
         self.posMapX = perso.posMapX
-        self.posMapY = perso.posMapY
+        self.posMapY = perso.posMapY-32
         
     def depose(self):
         self.aTerre = True
+        for i in self.parent.listeInterrupteur:
+            if not self.prendre(i):
+                self.aTerre = True
+                i.aTerre = True
     
 class Interrupteur(Objet):
     def __init__(self, parent, matX, matY, mapX, mapY, unique):
         Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)
         self.active = False
+        self.aTerre = False
         self.usageUnique = unique
     
     def collision(self, perso):
