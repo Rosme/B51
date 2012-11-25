@@ -30,4 +30,4 @@ class MenuPrincipal():
         self.fondEcran.destroy()
         
     def fermerFenetre(self,event):
-        self.parent.exit()
+        self.parent.quitter()
