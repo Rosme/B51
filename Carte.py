@@ -25,13 +25,13 @@ class Carte():
         self.listeObjet = ["Logomate", "Sac", "Coffre", "Roche", "Interrupteur", "Declencheur", "Levier"]
 
         """Liste des positions de chaque objet """
-        self.listeLogo = list()
-        self.listeSac = list()
-        self.listeCoffre = list()
-        self.listeRoche = list()
-        self.listeInterrupteur = list()
-        self.listeDeclencheur = list()
-        self.listeLevier = list()
+        self.parent.listeLogomate = list()
+        self.parent.listeSac = list()
+        self.parent.listeCoffre = list()
+        self.parent.listeRoche = list()
+        self.parent.listeInterrupteur = list()
+        self.parent.listeDeclencheur = list()
+        self.parent.listeLevier = list()
         
         self.mapValide = False
         self.valideAssign = False
