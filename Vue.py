@@ -42,4 +42,5 @@ class Application():
         self.frameJeu=FrameJeu.FrameJeu(self)
         
     def quitter(self):
+        self.parent.reseau.deconnecter()
         self.root.quit()
