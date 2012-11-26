@@ -24,16 +24,21 @@ class FrameJeu():
         self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
         
         self.persoAff=True
-        #importation des images
-        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
-        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
-        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
+        self.importerImage()
         
-        self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
+        #position des premiers blocs
+        self.calculPositionDepart(perso,laSalle)
+       
+        self.calculPositionMilieu(laSalle)
 
         perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
         
+        self.dispositionPrincipale()
+        
+        self.affichageMap(perso,laSalle)
+        
+        return perso
+    def dispositionPrincipale(self):
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
         self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
@@ -41,23 +46,32 @@ class FrameJeu():
         #chat
         self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.place(x=self.parent.localisationJeuX,y=self.hauteurJeu)
-        
-        #inventaire
-        #self.inv=tkinter.Canvas(self.root,width=300, height=700,bg="green")
-        #self.inv.place(x=724,y=0)
-                
-        self.affichageMap(perso,laSalle.salle)
-        
-        return perso
-        
+    
+    def importerImage(self):
+        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
+        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
+        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
+    
     def ajoutEcouteuretBoucle(self):
         self.ajoutEcouteur()
         self.parent.parent.miseAJour()
         self.parent.parent.rechargement()
         self.parent.parent.balle()
     
-    def affichageMap(self,perso,map):  
-        self.vueProximite(perso,len(map[0]),len(map))
+    def calculPositionDepart(self,perso,laSalle):
+        self.posDepartX = (((laSalle.nbColonne * self.largeurTuile)/2)+((laSalle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
+        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
+        
+    def calculPositionMilieu(self,laSalle):
+        self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
+    
+    def affichageMap(self,perso,laSalle):
+        map=laSalle.salle
+        limiteX=list()
+        limiteY=list()
+        limiteX=self.vueProximite(perso.posMatX,len(map[0]))
+        limiteY=self.vueProximite(perso.posMatY,len(map))
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX
         posInitY=self.posDepartY
@@ -71,7 +85,7 @@ class FrameJeu():
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
-                if k>self.limiteX[0] and k< self.limiteX[1] and i >self.limiteY[0] and i< self.limiteY[1]:
+                if k>limiteX[0] and k< limiteX[1] and i >limiteY[0] and i< limiteY[1]:
                     if map[i][k]=='1' or map[i][k] == '2':
                         self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                         
@@ -105,8 +119,7 @@ class FrameJeu():
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
-        self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
+        self.calculPositionMilieu(laSalle)
         
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
@@ -177,7 +190,6 @@ class FrameJeu():
                                     matx = j
                                     maty = i+1
                                     trouver=True
-                                    print("1",maty,matx)
                                     matx=salle.nbColonne-matx
                                     depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))
                                     depy+=(((16*maty)+(16*matx))-16)-32
@@ -187,7 +199,6 @@ class FrameJeu():
                                     matx = j
                                     maty = i-1
                                     trouver=True
-                                    print("2")
                                     matx=salle.nbColonne-matx
                                     depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))+31
                                     depy+=(((16*maty)+(16*matx))-16)-32
@@ -202,7 +213,6 @@ class FrameJeu():
                                     matx = j+1
                                     maty = i
                                     trouver=True
-                                    print("3")
                                     matx=salle.nbColonne-matx
                                     depx+=((32*maty)-(16*matx)-16)+(64*((salle.nbColonne-matx)/2))
                                     depy+=(((16*maty)+(16*matx))-16)-32
@@ -212,7 +222,6 @@ class FrameJeu():
                                     matx = j-1
                                     maty = i
                                     trouver=True
-                                    print("4")
                                     matx=salle.nbColonne-matx
                                     depx+=(((32*maty)-(32*matx))+32)+(32*((salle.nbColonne-matx)/2))
                                     depy+=(((16*maty)+(16*matx))-16)-32
@@ -226,38 +235,25 @@ class FrameJeu():
         perso.posMapX=depx
         perso.posMapY=depy
         
-        self.posDepartX = (((salle.nbColonne * self.largeurTuile)/2)+((salle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
-        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
+        self.calculPositionDepart(perso,salle)
         
-        self.posMilieuDiagoX=(self.posDepartX-(salle.nbColonne-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(salle.nbLigne-1)*16)
+        self.calculPositionMilieu(salle)
 
-        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         return perso
         
     
-    def vueProximite(self,perso,nbColonne,nbLigne):
+    def vueProximite(self,posMat,nb):
         rayon=8
-        self.limiteX=list()
-        self.limiteY=list()
+        limite=list()
         
-        if perso.posMatX <rayon:
-            self.limiteX.append(-1)
-            self.limiteX.append((rayon*2)-1)
-        elif perso.posMatX> (nbColonne-rayon):
-            self.limiteX.append(nbColonne-(rayon*2))
-            self.limiteX.append(nbColonne)
-        elif perso.posMatX>=rayon and perso.posMatX<= (nbColonne-(rayon)):
-            self.limiteX.append(perso.posMatX-rayon)
-            self.limiteX.append(perso.posMatX+rayon)
-        
-        if perso.posMatY <rayon:
-            self.limiteY.append(-1)
-            self.limiteY.append((rayon*2)-1)
-        elif perso.posMatY> (nbLigne-rayon):
-            self.limiteY.append(nbLigne-(rayon*2))
-            self.limiteY.append(nbLigne)
-        elif perso.posMatY>=rayon and perso.posMatY<= (nbLigne-rayon):
-            self.limiteY.append(perso.posMatY-rayon)
-            self.limiteY.append(perso.posMatY+rayon)
- 
+        if posMat <rayon:
+            limite.append(-1)
+            limite.append((rayon*2)-1)
+        elif posMat> (nb-rayon):
+            limite.append(nb-(rayon*2))
+            limite.append(nb)
+        elif posMat>=rayon and posMat<= (nb-(rayon)):
+            limite.append(posMat-rayon)
+            limite.append(posMat+rayon)
+            
+        return limite

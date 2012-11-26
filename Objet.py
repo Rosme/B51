@@ -63,13 +63,11 @@ class Coffre(Objet):
                             else:
                                 valide = False
                             if valide:
-                                print("Coffre Ouvert")
                                 self.ouvert = True
                                 return True
                             k+=2
                     j+=2
         
-        print("Coffre Fermé")
         self.ouvert = False
         return False
     
@@ -87,6 +85,10 @@ class Coffre(Objet):
     def retirerItem(self, item):
         if item in self.items:
             self.items.remove(item)
+
+class Portail(Objet):
+    def __init__(self, parent, matX, matY, mapX, mapY):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)
        
 class Roche(Objet):
     def __init__(self, parent, matX, matY, mapX, mapY):
@@ -197,44 +199,33 @@ class Interrupteur(Objet):
         if self.parent.carte.nomMap == "F_E1S1":
             #25 par 14-15
             map = self.parent.carte.s.salle
-            if self.active:
-                temp=[]
-                tempLigne = map.pop(25)
-                i = 0
-                while i < 14:
-                    temp.append(tempLigne[i])
-                    i+=1
-                
-                temp.append("0")
-                i+=1
-                temp.append("0")
-                i+=1
-            
-                while i < 30:
-                    temp.append(tempLigne[i])
-                    i+=1    
-                
-                map.insert(25, temp)
-            else:
-                temp=[]
-                tempLigne = map.pop(25)
-                i = 0
-                while i < 14:
-                    temp.append(tempLigne[i])
-                    i+=1
-                
-                temp.append("2")
-                i+=1
-                temp.append("2")
-                i+=1
-            
-                while i < 30:
-                    temp.append(tempLigne[i])
-                    i+=1    
-                
-                map.insert(25, temp)
+            if self.posMatX == 22 and self.posMatY == 24:
+                if self.active:
+                    self.ouvrePorte(25, 14, map, "0", False)
+                else:
+                    self.ouvrePorte(25, 14, map, "2", False)
                 
             self.parent.carte.s.salle = map
+            
+    def ouvrePorte(self, ligne, colonne, map, car, simple):
+        temp=[]
+        tempLigne = map.pop(ligne)
+        i = 0
+        while i < colonne:
+            temp.append(tempLigne[i])
+            i+=1
+        
+        temp.append(car)
+        i+=1
+        if not simple:
+            temp.append(car)
+            i+=1
+    
+        while i < len(tempLigne):
+            temp.append(tempLigne[i])
+            i+=1    
+        
+        map.insert(ligne, temp)
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, mapX, mapY, unique):
@@ -242,32 +233,121 @@ class Declencheur(Objet):
         self.active = False
         self.usageUnique = unique
         
-    def limite(self, perso):
-        if self.aTerre:
-            if not self.ouvert:
-                limitePerso = perso.obtenirLimite()
-                limiteObjet = self.obtenirLimite()
-                j=0
-                while j < 4:
-                    if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
-                        k=1
-                        while k < 4:
-                            if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
-                                self.active = True
-                                return True
-                            k+=2
-                    j+=2
-                    
-        self.active = False
-        return False
+    def collision(self, perso):
+        if not self.aTerre:
+            limitePerso = perso.obtenirLimite()
+            limiteObjet = self.obtenirLimite()
+            j=0
+            while j < 4:
+                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                    valide = True
+                elif j == 0:
+                    if limiteObjet[j] < limitePerso[0] and limiteObjet[j+2] > limitePerso[2]:
+                        valide = True
+                    else:
+                        valide = False
+                else:
+                    valide = False
+                if valide:
+                    k=1
+                    while k < 4:
+                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                            valide = True
+                        elif k == 1:
+                            if limiteObjet[k] < limitePerso[1] and limiteObjet[k+2] > limitePerso[3]:
+                                valide = True
+                            else:
+                                valide = False
+                        else:
+                            valide = False
+                        if valide:
+                            self.active = True
+                            return True
+                        k+=2
+                j+=2
+                
+            self.active = False
+            return False
         
     def active(self, nomMap):
         if nomMap == "F_E1S1":
             pass
         
+class Levier(Objet):
+    def __init__(self, parent, matX, matY, mapX, mapY, force, energie, recharge):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60,60)
+        self.force = force
+        self.energie = energie
+        self.recharge = recharge
+        self.active = False
         
+    def collision(self, perso):
+        if not self.aTerre:
+            limitePerso = perso.obtenirLimite()
+            limiteObjet = self.obtenirLimite()
+            j=0
+            while j < 4:
+                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                    valide = True
+                elif j == 0:
+                    if limiteObjet[j] < limitePerso[0] and limiteObjet[j+2] > limitePerso[2]:
+                        valide = True
+                    else:
+                        valide = False
+                else:
+                    valide = False
+                if valide:
+                    k=1
+                    while k < 4:
+                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                            valide = True
+                        elif k == 1:
+                            if limiteObjet[k] < limitePerso[1] and limiteObjet[k+2] > limitePerso[3]:
+                                valide = True
+                            else:
+                                valide = False
+                        else:
+                            valide = False
+                        if valide:
+                            self.active = True
+                            return True
+                        k+=2
+                j+=2
+                
+            self.active = False
+            return False
+    
+    def activer(self):
+        if self.parent.carte.nomMap == "F_E1S1":
+            #25 par 14-15
+            map = self.parent.carte.s.salle
+            if self.posMatX == 22 and self.posMatY == 24:
+                if self.active:
+                    self.ouvrePorte(25, 14, map, "0", False)
+                else:
+                    self.ouvrePorte(25, 14, map, "2", False)
+                
+            self.parent.carte.s.salle = map
+            
+    def ouvrePorte(self, ligne, colonne, map, car, simple):
+        temp=[]
+        tempLigne = map.pop(ligne)
+        i = 0
+        while i < colonne:
+            temp.append(tempLigne[i])
+            i+=1
         
+        temp.append(car)
+        i+=1
+        if not simple:
+            temp.append(car)
+            i+=1
+    
+        while i < len(tempLigne):
+            temp.append(tempLigne[i])
+            i+=1    
         
+        map.insert(ligne, temp)
         
         
         

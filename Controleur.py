@@ -107,10 +107,9 @@ class Controleur():
             self.app.frameJeu.map.delete("balle")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s.salle) 
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s) 
             self.app.frameJeu.tire()
 
-        
         donneesReseau = self.reseau.recevoirDonnees()
 
         if donneesReseau:
@@ -118,7 +117,6 @@ class Controleur():
                 print("Nouveau client: " + donneesReseau.nom + "(" + str(donneesReseau.id) + ")")
             else:
                 print(donneesReseau.message)
-    
     
     def raceInfo(self, race):
         return self.jeu.info(race)

@@ -11,10 +11,14 @@ class Jeu():
     def __init__(self, parent):
         self.parent = parent
         self.listeInterrupteur = list()
+        self.listeDeclencheur = list()
         self.listePersonnage = list()
         self.listeLogomate = list()
+        self.listeCoffre = list()
+        self.listeLevier = list()
         self.listeRoche = list()
         self.listeBalle = list()
+        self.listeSac = list()
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -39,12 +43,12 @@ class Jeu():
         self.listeLogomate.append(pers)
         
     def nouveauInterrupt(self, posMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(int(posMap[0]), int(posMap[1]))
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False)
         self.listeInterrupteur.append(interrupteur)
         
     def nouvelleRoche(self, posMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(int(posMap[0]), int(posMap[1]))
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]))
         self.listeRoche.append(roche)
         
