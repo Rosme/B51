@@ -5,11 +5,11 @@ class Carte():
     def __init__(self, parent):
         self.parent = parent
         self.nomMap = "MainRoom"
-        self.s = Salle()
+        self.s = Salle(self)
         self.s.chargeCarte(self.nomMap)
         #self.s.changementCarte('v') pour tester seulement
         #self.s.sauvegarderMap(self.nomMap, ['yo', 'yo', 'yo']) pour tester seulement
-        self.chargeObjets()
+        #self.chargeObjets()
         
     def chargeObjets(self):
         try:
@@ -55,9 +55,9 @@ class Carte():
                 elif(self.listeObjet[self.posListeObj] == "Coffre"):
                     self.listeCoffre.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Roche"):
-                    self.listeRoche.append(self.convertion(i))
+                    self.parent.nouvelleRoche(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Interrupteur"):
-                    self.listeInterrupteur.append(self.convertion(i))
+                    self.parent.nouveauInterrupt(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Declencheur"):
                     self.listeDeclencheur.append(self.convertion(i))
                 elif(self.listeObjet[self.posListeObj] == "Levier"):
@@ -79,12 +79,19 @@ class Carte():
         return self.tempo
 
 class Salle():
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent = parent
         self.salle = list()
         self.dictSauvegarde = dict()
+        self.dictionnaireAsso = dict()
     
     def chargeCarte(self, nomMap):
-        self.ouvertureMap(nomMap)
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.laMap = nomMap
+        self.listeTempo = self.laMap.split('\n')
+        self.laMap = self.listeTempo[0]
+        
+        self.ouvertureMap(self.laMap)
 
         """Dimensions de la carte"""    
         self.dimensionCarte = self.fichier.readline()
@@ -104,6 +111,8 @@ class Salle():
             self.salle.append(i)
 
         self.fichier.close()
+        self.parent.nomMap = self.laMap
+        self.parent.chargeObjets()
 
     def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
         self.dictSauvegarde[nomMap] = contenuMap
@@ -112,13 +121,14 @@ class Salle():
         try:
             self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
             self.nomMap = nomMap
-            print(self.nomMap)
         except IOError:
             print ("La map " + nomMap + " n'existe pas.")
             os._exit(1)
     
     def changementCarte(self, charactere):
-        self.dictionnaire = dict()
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.listeTempo = self.nomMap.split('\n')
+        self.nomMap = self.listeTempo[0]
         
         self.ouvertureMap(self.nomMap)
         self.fichier.readline()
@@ -129,12 +139,8 @@ class Salle():
         i = 0
         while i < len(self.listeAsso):
             self.listeValeur = self.listeAsso[i].split(":")
-            self.dictionnaire[self.listeValeur[0]] = self.listeValeur[1]
+            self.dictionnaireAsso[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
 
         self.fichier.close()
-
-        self.chargeCarte(self.dictionnaire[charactere])
-            
-#if __name__=="__main__":
-    #Carte()
+        self.chargeCarte(self.dictionnaireAsso[charactere])

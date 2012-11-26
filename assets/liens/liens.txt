@@ -16,11 +16,11 @@ Sac
 break
 Coffre
 break
+Roche
+845:730
+break
 Interrupteur
-break
-Declencheur
-break
-Levier
+1505:324
 break
 ;
 F_E1S2

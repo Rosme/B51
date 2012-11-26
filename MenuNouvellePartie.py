@@ -23,7 +23,7 @@ class MenuNouvellePartie():
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
         
         
-        self.fondEcran.create_text(100,50,text="Nom de Joueur:",fill='white',font=("Arial","15"),tags="nomText")
+        self.fondEcran.create_text(100,60,text="Nom de Joueur:",fill='white',font=("Arial","15"),tags="nomText")
         self.nomJoueur = tkinter.Entry(self.parent.root,  width="18")
         self.fondEcran.create_text(100,100,text="Race :",fill='white',font=("Arial","15"),tags="raceText")
 

@@ -69,18 +69,16 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        
         if self.mouvement[4]:
             self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
             balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatY,balle.posMatX=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-            
-        elif laMap[tempMatY][tempMatX]=='0' and laMap[tempMatY+1][tempMatX-1]!='1':
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
             if tempx!=0 or tempy!=0:
                 self.jeu.joueur.posMatX=tempMatX
                 self.jeu.joueur.posMatY=tempMatY
@@ -88,6 +86,16 @@ class Controleur():
                 self.jeu.joueur.posMapY+=tempy
                 self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
                 self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
+                
+        if self.jeu.listeInterrupteur:
+            for i in self.jeu.listeInterrupteur:
+                i.collision(self.jeu.joueur)
+                i.activer()
+                
+        if self.jeu.listeRoche:
+            for i in self.jeu.listeRoche:
+                if not i.aTerre:
+                    i.bouge(self.jeu.joueur)
                 
         
         if True in self.mouvement:
@@ -98,7 +106,7 @@ class Controleur():
             self.app.frameJeu.map.delete("balle")
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,laMap) 
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s.salle) 
             self.app.frameJeu.tire()    
     
     
@@ -151,6 +159,12 @@ class Controleur():
             self.autoSoin()
             
         if key == 'E':
+            if self.jeu.listeRoche:
+                if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
+                    self.jeu.listeRoche[0].bouge(self.jeu.joueur)
+                else:
+                    self.jeu.listeRoche[0].depose()
+                    
             self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
     
     def relacheKeyGestion(self, event):
@@ -164,6 +178,10 @@ class Controleur():
             self.mouvement[2]=False
         if key == 'A':
             self.mouvement[3]=False
+            
+        if key == 'Z':
+            print(self.jeu.joueur.posMapX)
+            print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
             self.app.root.destroy()

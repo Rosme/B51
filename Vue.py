@@ -21,7 +21,7 @@ class Application():
         self.nomJoueur = "Marco"
 
         self.root=tkinter.Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.exit)
+        self.root.protocol("WM_DELETE_WINDOW", self.quitter)
         self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
         
     def menuPrincipal(self):
@@ -41,6 +41,5 @@ class Application():
     def jeu(self):
         self.frameJeu=FrameJeu.FrameJeu(self)
         
-    def exit(self):
-        print("c la fin!!!")
-        self.root.destroy()
+    def quitter(self):
+        self.root.quit()

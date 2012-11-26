@@ -12,10 +12,13 @@ class MenuChargerPartie():
         self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
         self.fondEcran.place(x=0,y=0)
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
-        self.bouton= tkinter.Button(self.parent.root, text='Continuer', command=self.parent.menuConnexion)
-        self.boutonRetour= tkinter.Button(self.parent.root, text='Retour',command=self.retour)
-        self.bouton.place(x=400,y=500)
-        self.boutonRetour.place(x=200,y=500)   
+        self.boutonConnexion= tkinter.Button(self.fondEcran, text='Continuer',command=self.getPlayer)
+        self.boutonRetour= tkinter.Button(self.fondEcran, text='Retour',command=self.retour)
+        self.boutonConnexion.place(x=550,y=650)
+        self.boutonRetour.place(x=400,y=650)   
+        
+        self.listePartie=tkinter.Canvas(self.fondEcran,width=200,height=500,bg="black")
+        self.listePartie.place(x=300,y=100)
         ligne = self.file.readline() 
         i=0 
         self.boutonListe = []
@@ -24,8 +27,8 @@ class MenuChargerPartie():
         self.v.set("")
         while len(ligne) != 0:
             sauvegardeListe.append(ligne)
-            self.boutonListe.append(tkinter.Radiobutton(self.parent.root, text=ligne,variable=self.v, value=sauvegardeListe[i], command=self.getPlayer))
-            self.boutonListe[i].place(x=200, y=200+i*25)
+            self.boutonListe.append(tkinter.Radiobutton(self.listePartie, text=ligne,variable=self.v, value=sauvegardeListe[i]))
+            self.boutonListe[i].place(x=0, y=i*25)
             ligne = self.file.readline()
             i+=1
         self.boutonListe[0].select()
@@ -45,12 +48,10 @@ class MenuChargerPartie():
         self.parent.menuP.menuPrincipal()
     
     def effacerEcran(self):
-        self.bouton.destroy()   
-        self.boutonRetour.destroy()
         self.fondEcran.destroy()
     
     def getPlayer(self):
         self.player = self.v.get()
-        print("Vous avez selectionner:" + self.player)
+        self.parent.menuConnexion()
 
     

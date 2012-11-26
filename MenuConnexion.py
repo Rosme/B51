@@ -11,22 +11,20 @@ class MenuConnexion():
         self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
         self.fondEcran.place(x=0,y=0)
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
-                
-        self.iplabel = tkinter.Label(self.parent.root, text="connexion: (IP:Port)", width=15)
-        self.ipentry = tkinter.Entry(self.parent.root, width="18" )
-        self.bouton= tkinter.Button(self.parent.root, text='Debuter', command=self.validerIPort)
+        
+        self.fondEcran.create_text(100,60,text="Adresse IP :",font=("Arial","15"),fill="white",tags="textIP")
+        self.ipentry = tkinter.Entry(self.parent.root, width="14" )
+        self.boutonConnexion= tkinter.Button(self.parent.root, text='Debuter', command=self.validerIPort)
         self.boutonRetour= tkinter.Button(self.parent.root, text='Retour',command=self.retour)
                 
         #place les widget
-        self.iplabel.place(x=50, y=50)
         self.ipentry.place(x=200, y=50)
-        self.bouton.place(x=400,y=400)
-        self.boutonRetour.place(x=200,y=400)
+        self.boutonConnexion.place(x=550,y=650)
+        self.boutonRetour.place(x=400,y=650)
 
     def effacerEcran(self):
-        self.iplabel.destroy()
         self.ipentry.destroy()
-        self.bouton.destroy()   
+        self.boutonConnexion.destroy()   
         self.boutonRetour.destroy()
         self.fondEcran.destroy()
         

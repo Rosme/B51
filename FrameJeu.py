@@ -58,7 +58,7 @@ class FrameJeu():
     
     def affichageMap(self,perso,map):  
         self.vueProximite(perso,len(map[0]),len(map))
-        
+        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX
         posInitY=self.posDepartY
         
@@ -72,19 +72,21 @@ class FrameJeu():
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
                 if k>self.limiteX[0] and k< self.limiteX[1] and i >self.limiteY[0] and i< self.limiteY[1]:
-                    if map[i][k]=='1':
+                    if map[i][k]=='1' or map[i][k] == '2':
                         self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                         
                     #affichage du personnage
                     if self.persoAff==True:
                         if perso.posMatX<k and perso.posMatY<i:
+                            temp = perso.obtenirLimite()
+                            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
                             self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
                             self.persoAff=False
                         
                     #affichage du gazon
                     if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                         self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                        self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                        #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                     
                     if  map[i][k]=='3':
                         self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
@@ -106,11 +108,13 @@ class FrameJeu():
         self.posMilieuDiagoX=(self.posDepartX-(len(map[1])-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(len(map)-1)*16)
         
-
         if self.parent.parent.jeu.listePersonnage:
             temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
-            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
             self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+            
+        if self.parent.parent.jeu.listeRoche:
+            temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
+            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
@@ -158,51 +162,77 @@ class FrameJeu():
         return x,y
         
     def coordProchaineZone(self,salle,char,perso):
+        trouver=False
+        depx=self.largeurJeu/2
+        depy=0
+        
         for i in range(salle.nbLigne):
             for j in range(salle.nbColonne):
                 if salle.salle[i][j]==char:
                     try:
+                        #si l'autre char à droite
                         if salle.salle[i][j+1]==char:
                             try:
-                                if salle.salle[i+1][j]=='0':
+                                if salle.salle[i+1][j]=='0':#porte en bas
                                     matx = j
                                     maty = i+1
+                                    trouver=True
+                                    print("1",maty,matx)
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
                             except IndexError:
-                                if salle.salle[i-1][j]=='0':
+                                if salle.salle[i-1][j]=='0':#porte en haut
                                     matx = j
                                     maty = i-1
+                                    trouver=True
+                                    print("2")
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))+31
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
-                    except IndexError:
-                        if salle.salle[i][j-1]==char:
+                        else:
+                            raise IndexError
+                    except IndexError: 
+                        #sil'autre char est en dessous
+                        if salle.salle[i+1][j]==char:
                             try:
-                                if salle.salle[i][j+1]=='0':
+                                if salle.salle[i][j+1]=='0':#porte à droite
                                     matx = j+1
                                     maty = i
+                                    trouver=True
+                                    print("3")
+                                    matx=salle.nbColonne-matx
+                                    depx+=((32*maty)-(16*matx)-16)+(64*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
                             except IndexError:
-                                if salle.salle[i][j-1]=='0':
+                                if salle.salle[i][j-1]=='0':#porte à gauche
                                     matx = j-1
                                     maty = i
+                                    trouver=True
+                                    print("4")
+                                    matx=salle.nbColonne-matx
+                                    depx+=(((32*maty)-(32*matx))+32)+(32*((salle.nbColonne-matx)/2))
+                                    depy+=(((16*maty)+(16*matx))-16)-32
                                     break
-    
-        depx=self.largeurJeu/2
-        depy=0      
-        print(maty,matx)
-        matx=salle.nbColonne-matx
-        depx+=(((32*maty)-(32*matx))+32)
-        depy+=(((16*maty)+(16*matx))-16)
+            if trouver:
+                break
+        
+        perso.posMatY=maty
+        perso.posMatX=salle.nbColonne-matx
         
         perso.posMapX=depx
         perso.posMapY=depy
-       
+        
         self.posDepartX = (((salle.nbColonne * self.largeurTuile)/2)+((salle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
         self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
         
         self.posMilieuDiagoX=(self.posDepartX-(salle.nbColonne-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(salle.nbLigne-1)*16)
 
-        print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
+        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         return perso
         
     
