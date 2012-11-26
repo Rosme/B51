@@ -13,3 +13,8 @@ class PersoInfo():
 class Message():
 	def __init__(self, message):
 		self.message = message
+
+class ClientDecoMsg(Message):
+	def __init__(self, id):
+		Message.__init__(self, "Client deconnecte: " + str(id))
+		self.id = id

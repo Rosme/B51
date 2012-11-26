@@ -1,7 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import socket
 import pickle
-import netdata as nd
+import Netdata as nd
 
 class ConnecteurReseau():
 	def __init__(self):
@@ -27,7 +27,7 @@ class ConnecteurReseau():
 		infoJoueur = pickle.loads(infoBinaire)
 		self.id = infoJoueur.id
 
-		self.socket.settimeout(0.1)
+		self.socket.settimeout(0.01)
 
 		return infoJoueur
 

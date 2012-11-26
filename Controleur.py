@@ -3,6 +3,7 @@ import Vue
 import Modele
 import os
 import ConnecteurReseau
+import Netdata as nd
 
 class Controleur():
     def __init__(self):
@@ -107,7 +108,16 @@ class Controleur():
             self.app.frameJeu.persoAff=True
             self.app.frameJeu.map.delete("text")
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s.salle) 
-            self.app.frameJeu.tire()    
+            self.app.frameJeu.tire()
+
+        
+        donneesReseau = self.reseau.recevoirDonnees()
+
+        if donneesReseau:
+            if isinstance(donneesReseau, nd.PersoInfo):
+                print("Nouveau client: " + donneesReseau.nom + "(" + str(donneesReseau.id) + ")")
+            else:
+                print(donneesReseau.message)
     
     
     def raceInfo(self, race):
@@ -184,6 +194,7 @@ class Controleur():
             print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
+            self.reseau.deconnecter()
             self.app.root.destroy()
         
     def peseTire(self,event):

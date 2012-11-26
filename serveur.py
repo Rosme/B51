@@ -8,8 +8,8 @@ serveur.py
 import select 
 import socket
 import pickle
-import netdata as nd
-import commande as cm
+import Netdata as nd
+import Commande as cm
 
 class ClientInfo():
 	def __init__(self, conn, address, id):
@@ -35,6 +35,7 @@ class Serveur():
 		self.socket = s
 		self.clients = []		
 		self.deconnected = []
+		self.queueEnvoie = []
 		print("Demarrage du serveur")
 
 	def arreter(self, client = None, donnees = None):
@@ -48,14 +49,18 @@ class Serveur():
 		print("Client Deconnecte")
 		msg = nd.Message("ok-deconnection")
 		bMsg = pickle.dumps(msg)			
-		client.conn.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
-		self.clients.remove(client)			
-		client.conn.close()						#fermeture de sa connexion
+		client.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
+		infoClient = self.obtenirInfoClient(client)
+		self.idConnect[infoClient.id] = False
+		self.clients.remove(infoClient)
+		client.close()						#fermeture de sa connexion
+		self.queueEnvoie.append(nd.ClientDecoMsg(infoClient.id))
 	
 	def retirerClient(self, client):
-		client.conn.close()
-		self.clients.remove(client)
-		self.idConnect[client.id] = False
+		if client:
+			client.conn.close()
+			self.clients.remove(client)
+			self.idConnect[client.id] = False
 
 	def redemarrer(self, client = None, donnees = None):
 		pass
@@ -94,6 +99,7 @@ class Serveur():
 							bData = pickle.dumps(info)
 							client.send(bData)
 							print("Nouveau client: " + info.nom + "(" + str(info.id) + ")")
+							self.queueEnvoie.append(info)
 						elif isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
 							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
 							if estCommande == True:											
@@ -118,14 +124,24 @@ class Serveur():
 		return False
 
 	def envoyerMessage(self):
+		'''
 		message = nd.Message("NO_MESSAGE")
 		if self.statut == "arreter":
 			message.message = "fermer-serveur"
 
+		
 		if message.message != "NO_MESSAGE":
 			bMessage = pickle.dumps(message) #Serialisation du message/données
 			for client in self.clients:
 				client.conn.send(bMessage)		#envoi message/données
+		'''
+
+		for msg in self.queueEnvoie:
+			bMsg = pickle.dumps(msg)
+			for client in self.clients:
+				client.conn.send(bMsg)
+
+		self.queueEnvoie = []
 		
 	def appliquerCommande(self, action, client, donnees):
 		if action in self.listeCommande:
