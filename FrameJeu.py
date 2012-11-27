@@ -243,7 +243,7 @@ class FrameJeu():
         
     
     def vueProximite(self,posMat,nb):
-        rayon=8
+        rayon=20
         limite=list()
         
         if posMat <rayon:

@@ -7,6 +7,7 @@ class Controleur():
     def __init__(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
+        self.compteur=0
         self.mouvement = list() 
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
@@ -17,20 +18,31 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
+        if self.compteur%5 == 0:
+            self.rechargement()
+        if self.compteur%2==0:
+            self.balle() 
+        if self.compteur%5==0:
+            self.pewpew()
+        
+        self.compteur+=1
         self.app.frameJeu.map.after(10,self.miseAJour)
     
     def rechargement(self):
         self.jeu.joueur.recharge()
-        self.app.frameJeu.map.after(100,self.rechargement)
+    
+    def pewpew(self):
+        if self.mouvement[4]:
+            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
     
     def balle(self):
-        
         self.collision(self.jeu.listePersonnage)
         self.collision(self.jeu.listeLogomate)
         
         self.app.frameJeu.map.delete("balle")
         self.app.frameJeu.tire()
-        self.app.frameJeu.map.after(50, self.balle)
 
     def collision(self, liste):
         temp = self.jeu.listeBalle
@@ -67,10 +79,6 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        if self.mouvement[4]:
-            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
