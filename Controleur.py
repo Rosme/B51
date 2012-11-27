@@ -18,7 +18,7 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        if self.compteur%5 == 0:
+        if self.compteur%20==0:
             self.rechargement()
         if self.compteur%2==0:
             self.balle() 
@@ -186,8 +186,8 @@ class Controleur():
             self.mouvement[3]=False
             
         if key == 'Z':
-            print(self.jeu.joueur.posMapX)
-            print(self.jeu.joueur.posMapY)
+            print("posMapX: " + str(self.jeu.joueur.posMapX) + "  posMapY: " + str(self.jeu.joueur.posMapY))
+            print("posCursorX: " + str(((self.jeu.joueur.posEcranX-self.x + self.jeu.joueur.posMapX))) + "  posCursorY: " + str(((self.jeu.joueur.posEcranY-self.y + self.jeu.joueur.posMapY))))
             
         if event.keysym == 'Escape':
             self.app.root.destroy()
