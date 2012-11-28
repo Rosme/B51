@@ -104,6 +104,12 @@ class FrameJeu():
                     
                     if  map[i][k]=='3':
                         self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                        
+                    if  map[i][k]=='w':
+                        self.map.create_text(posTempX, posTempY, text="Switch", fill='white', tags="image")
+                        
+                    if  map[i][k]=='e':
+                        self.map.create_text(posTempX, posTempY, text="Levier", fill='white', tags="image")
                     
                     for p in self.parent.parent.jeu.listeLogomate:
                         if p.posMatX<k and p.posMatY<i:
@@ -243,7 +249,7 @@ class FrameJeu():
         
     
     def vueProximite(self,posMat,nb):
-        rayon=20
+        rayon=8
         limite=list()
         
         if posMat <rayon:

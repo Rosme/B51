@@ -35,22 +35,42 @@ class Jeu():
             
         return raceInfo.info()
 
-    def nouveauLogo(self, posMap):
+    def nouveauLogo(self, posMap, nomMap):
         pers = Personnage()
         pers.nouveauPersonnage("Logo", Race.Logomate())
         pers.posMapX = int(posMap[0])
         pers.posMapY = int(posMap[1])
         self.listeLogomate.append(pers)
         
-    def nouveauInterrupt(self, posMap):
+    def nouveauSac(self, posMap, nomMap):
         posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
-        interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False)
-        self.listeInterrupteur.append(interrupteur)
+        sac = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
+        self.listeSac.append(sac)
         
-    def nouvelleRoche(self, posMap):
+    def nouveauCoffre(self, posMap, nomMap):
         posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
-        roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]))
-        self.listeRoche.append(roche)
+        coffre = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
+        self.listeCoffre.append(coffre)
+        
+    def nouvelleRoche(self, posMap, nomMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
+        self.listeRoche.append(roche) 
+           
+    def nouveauInterrupt(self, posMap, nomMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False, nomMap)
+        self.listeInterrupteur.append(interrupteur)
+    
+    def nouveauDeclencheur(self, posMap, nomMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        declencheur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
+        self.listeDeclencheur.append(declencheur)
+    
+    def nouveauLevier(self, posMap, nomMap):
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        levier = Objet.Levier(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), 5, 100, 2, nomMap)
+        self.listeLevier.append(levier)
         
     def nouveauJoueur(self, race, nom):
         
