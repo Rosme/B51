@@ -6,14 +6,14 @@ class FrameJeu():
     def __init__(self,parent):
         self.parent = parent
         
-        self.visibleX=2000
-        self.visibleY=256
-        self.visibleX1=2500
-        self.visibleY1=956
+        self.visibleX=0
+        self.visibleY=0
+        self.visibleX1=2000
+        self.visibleY1=2000
         
         #dimensions du jeu
-        self.largeurJeu=5000
-        self.hauteurJeu=5000
+        self.largeurJeu=2000
+        self.hauteurJeu=2000
         
         #dimensions des tuiles affiches
         self.largeurTuile=64
@@ -22,15 +22,15 @@ class FrameJeu():
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
-        perso.posEcranY=512
+        perso.posEcranY=0
         
         #self.persoAff=True
         self.importerImage()
         
         #position des premiers blocs
         #self.calculPositionDepart(perso,laSalle)
-        self.posDepartX=self.largeurJeu/2
-        self.posDepartY=0
+        self.posDepartX=(laSalle.nbColonne*32)
+        self.posDepartY=(laSalle.nbColonne*8)-32
        
         self.calculPositionMilieu(laSalle)
 
@@ -43,12 +43,43 @@ class FrameJeu():
         return perso
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
-        self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
-        self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        
+        f=tkinter.Frame(self.parent.root)
+        self.map=tkinter.Canvas(f, width=self.largeurJeu,
+                            height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
+        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
+        self.map.create_rectangle(0,0,4,4,fill='red')
+        sX=tkinter.Scrollbar(f)
+        sX.config(command=self.map.yview)
+        self.map.config(yscrollcommand=sX.set)
+        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
+        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
+        self.map.pack(side=tkinter.LEFT,expand=1,fill=tkinter.BOTH)
+        sX.pack(side=tkinter.RIGHT,fill=tkinter.Y)
+        f.place(x=0,y=0)
+        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
+		
         #chat
-        self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
-        self.conversation.place(x=self.parent.localisationJeuX,y=self.hauteurJeu)
+        #self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
+        #self.conversation.place(x=self.parent.localisationJeuX,y=self.hauteurJeu)
+    def dispositionPrincipale1(self):
+        #creation du fond noir derriere la map
+        f=tkinter.Frame(self.parent.root)
+        self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu,
+                            height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
+        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
+        self.map.create_rectangle(0,0,4,4,fill='red')
+        sX=tkinter.Scrollbar(self.parent.root)
+        sX.config(command=self.map.yview)
+        self.map.config(yscrollcommand=sX.set)
+        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
+        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
+        self.map.pack(side=tkinter.LEFT,expand=1,fill=tkinter.BOTH)
+        sX.pack(side=tkinter.RIGHT,fill=tkinter.Y)
+        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
+		
+        #chat
+        #self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
+        #self.conversation.place(x=self.parent.localisationJeuX,y=self.hauteurJeu)
     
     def importerImage(self):
         self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
@@ -70,6 +101,8 @@ class FrameJeu():
         self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
     
     def affichageMap(self,perso,laSalle):
+        pass
+    def affichageMap1(self,perso,laSalle):
         map=laSalle.salle
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX

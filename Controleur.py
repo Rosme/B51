@@ -17,7 +17,7 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        self.app.frameJeu.map.after(5,self.miseAJour)
+        self.app.frameJeu.map.after(50,self.miseAJour)
     
     def rechargement(self):
         pass
@@ -73,10 +73,10 @@ class Controleur():
             #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
             #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
-            car=laMap[tempMatY][tempMatX]
-            self.jeu.carte.s.changementCarte(car)
-            self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
+        #if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+            #car=laMap[tempMatY][tempMatX]
+            #self.jeu.carte.s.changementCarte(car)
+            #self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
         #elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
         if tempx!=0 or tempy!=0:
             self.jeu.joueur.posMatX=tempMatX
@@ -92,7 +92,7 @@ class Controleur():
             
             print(self.app.frameJeu.visibleX,self.app.frameJeu.visibleY,self.app.frameJeu.visibleX1,self.app.frameJeu.visibleY1)
             self.app.frameJeu.map.config(scrollregion=( self.app.frameJeu.visibleX, self.app.frameJeu.visibleY, self.app.frameJeu.visibleX1, self.app.frameJeu.visibleY1))
-    
+			
     def raceInfo(self, race):
         return self.jeu.info(race)
         
