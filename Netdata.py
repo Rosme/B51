@@ -18,3 +18,9 @@ class ClientDecoMsg(Message):
 	def __init__(self, id):
 		Message.__init__(self, "Client deconnecte: " + str(id))
 		self.id = id
+
+class ClientData():
+	def __init__(self, id, frame, commandes):
+		self.id = id
+		self.frame = frame
+		self.commandes = commandes

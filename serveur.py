@@ -14,6 +14,7 @@ import Commande as cm
 class ClientInfo():
 	def __init__(self, conn, address, id):
 		self.conn = conn
+		self.nom = None
 		self.address = address
 		self.id = id
 
@@ -21,8 +22,9 @@ class Serveur():
 	def __init__(self, port = 43225):
 		self.port = port
 		self.statut = "arreter"
-		self.listeCommande = {"fermer-serveur":self.arreter, "demarrer-serveur":self.demarrer, "redemarrer-serveur":self.redemarrer, "client-deconnection":self.clientDeconnection}
-		self.maxConnect = 10
+		self.listeCommande = {"fermer-serveur":self.arreter, "demarrer-serveur":self.demarrer, "client-deconnection":self.clientDeconnection, "demarrer-partie":self.demarrerPartie}
+		self.maxConnect = 8
+		self.etatPartie = False
 		self.idConnect = []
 		for i in range(self.maxConnect):
 			self.idConnect.append(False)
@@ -36,6 +38,7 @@ class Serveur():
 		self.clients = []		
 		self.deconnected = []
 		self.queueEnvoie = []
+		self.clientsEvents = []
 		print("Demarrage du serveur")
 
 	def arreter(self, client = None, donnees = None):
@@ -60,22 +63,19 @@ class Serveur():
 		if client:
 			client.conn.close()
 			self.clients.remove(client)
-			self.idConnect[client.id] = False
+			self.idConnect[client.id] = False 
 
-	def redemarrer(self, client = None, donnees = None):
-		pass
+	def demarrerPartie(self, client = None, donnees = None):
+		self.etatPartie = True
 
 	def updateClients(self):
 		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
 
-		if len(self.clients) < self.maxConnect:
+		if self.etatPartie == False and len(self.clients) < self.maxConnect:
 			for connection in incomingConnection:			#Accepte les connexions et ajoutes les clients dans la liste
 				conn, address = self.socket.accept()
 				client = ClientInfo(conn, address, len(self.clients)+100)
 				self.clients.append(client)
-
-	def update(self):
-		pass
 
 	def recevoirMessage(self):
 		if self.statut == "demarrer" and self.clients:
@@ -96,10 +96,14 @@ class Serveur():
 							info = self.genererId(data)
 							cl = self.obtenirInfoClient(client)
 							cl.id = info.id
+							cl.nom = info.nom
 							bData = pickle.dumps(info)
 							client.send(bData)
 							print("Nouveau client: " + info.nom + "(" + str(info.id) + ")")
 							self.queueEnvoie.append(info)
+						elif isinstance(data, nd.ClientData):
+							self.clientsEvents.append(data)
+						'''
 						elif isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
 							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
 							if estCommande == True:											
@@ -108,6 +112,7 @@ class Serveur():
 								print(message)
 						else:
 							print("Type de donnees inconnu")
+						'''
 					except EOFError as eof:
 						print("Erreur sur le serveur: ", eof)
 						self.clients = []
@@ -116,7 +121,6 @@ class Serveur():
 						client.close()
 						self.retirerClient(self.obtenirInfoClient(client))
 
-
 	def obtenirInfoClient(self, conn):
 		for client in self.clients:
 			if client.conn == conn:
@@ -124,18 +128,6 @@ class Serveur():
 		return False
 
 	def envoyerMessage(self):
-		'''
-		message = nd.Message("NO_MESSAGE")
-		if self.statut == "arreter":
-			message.message = "fermer-serveur"
-
-		
-		if message.message != "NO_MESSAGE":
-			bMessage = pickle.dumps(message) #Serialisation du message/données
-			for client in self.clients:
-				client.conn.send(bMessage)		#envoi message/données
-		'''
-
 		for msg in self.queueEnvoie:
 			bMsg = pickle.dumps(msg)
 			for client in self.clients:
@@ -146,7 +138,6 @@ class Serveur():
 	def appliquerCommande(self, action, client, donnees):
 		if action in self.listeCommande:
 			self.listeCommande[action](client, donnees)
-
 
 	def genererId(self, info):
 		for i in range(len(self.idConnect)):
