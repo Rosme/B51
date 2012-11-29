@@ -17,37 +17,38 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        self.app.frameJeu.map.after(10,self.miseAJour)
+        self.app.frameJeu.map.after(5,self.miseAJour)
     
     def rechargement(self):
-        self.jeu.joueur.recharge()
-        self.app.frameJeu.map.after(100,self.rechargement)
+        pass
+        #self.jeu.joueur.recharge()
+        #self.app.frameJeu.map.after(100,self.rechargement)
     
     def balle(self):
+        pass
+        #self.collision(self.jeu.listePersonnage)
+        #self.collision(self.jeu.listeLogomate)
         
-        self.collision(self.jeu.listePersonnage)
-        self.collision(self.jeu.listeLogomate)
-        
-        self.app.frameJeu.map.delete("balle")
-        self.app.frameJeu.tire()
-        self.app.frameJeu.map.after(50, self.balle)
+        #self.app.frameJeu.map.delete("balle")
+        #self.app.frameJeu.tire()
+        #self.app.frameJeu.map.after(50, self.balle)
 
     def collision(self, liste):
         temp = self.jeu.listeBalle
         
         for i in self.jeu.listeBalle:
             i.bouge(self.jeu.joueur)
-            if i.veloY<0 and i.veloX<0:
-                i.posMatX,i.posMatY=self.app.frameJeu.coord(i.posEcranX+(i.veloX)*2,(i.posEcranY+(i.veloY)*2)+30)
-            elif i.veloY>0 and i.veloX>0:
-                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+10,(i.posEcranY+(i.veloY)*2)+10)
-            elif i.veloY<0 and i.veloX>0:
-                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+40,(i.posEcranY+(i.veloY)*2)+40)                
-            else:
-                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+25,(i.posEcranY+(i.veloY)*2)+25)
+            #if i.veloY<0 and i.veloX<0:
+                #i.posMatX,i.posMatY=self.app.frameJeu.coord(i.posEcranX+(i.veloX)*2,(i.posEcranY+(i.veloY)*2)+30)
+            #elif i.veloY>0 and i.veloX>0:
+                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+10,(i.posEcranY+(i.veloY)*2)+10)
+            #elif i.veloY<0 and i.veloX>0:
+                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+40,(i.posEcranY+(i.veloY)*2)+40)                
+            #else:
+                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+25,(i.posEcranY+(i.veloY)*2)+25)
 
-            if i.collision(liste, self.jeu.carte.s.salle):
-                temp.remove(i)
+           # if i.collision(liste, self.jeu.carte.s.salle):
+                #temp.remove(i)
                 
         self.jeu.listeBalle = temp
         
@@ -67,46 +68,30 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
-        if self.mouvement[4]:
-            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+        #if self.mouvement[4]:
+            #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
-            if tempx!=0 or tempy!=0:
-                self.jeu.joueur.posMatX=tempMatX
-                self.jeu.joueur.posMatY=tempMatY
-                self.jeu.joueur.posMapX+=tempx
-                self.jeu.joueur.posMapY+=tempy
-                self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
-                self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
-                
-        if self.jeu.listeInterrupteur:
-            for i in self.jeu.listeInterrupteur:
-                i.collision(self.jeu.joueur)
-                i.activer()
-                
-        if self.jeu.listeRoche:
-            for i in self.jeu.listeRoche:
-                if not i.aTerre:
-                    i.bouge(self.jeu.joueur)
-                
-        
-        if True in self.mouvement:
-            self.app.frameJeu.map.delete("image")
-            self.app.frameJeu.map.delete("perso")
-            self.app.frameJeu.map.delete("logo")
-            self.app.frameJeu.map.delete("p")
-            self.app.frameJeu.map.delete("balle")
-            self.app.frameJeu.persoAff=True
-            self.app.frameJeu.map.delete("text")
-            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s) 
-            self.app.frameJeu.tire()    
-    
+        #elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
+        if tempx!=0 or tempy!=0:
+            self.jeu.joueur.posMatX=tempMatX
+            self.jeu.joueur.posMatY=tempMatY
+            self.jeu.joueur.posMapX+=tempx
+            self.jeu.joueur.posMapY+=tempy
+            #self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
+            #self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
+            self.app.frameJeu.visibleX+=tempx
+            self.app.frameJeu.visibleY+=tempy
+            self.app.frameJeu.visibleX1+=tempx
+            self.app.frameJeu.visibleY1+=tempy
+            
+            print(self.app.frameJeu.visibleX,self.app.frameJeu.visibleY,self.app.frameJeu.visibleX1,self.app.frameJeu.visibleY1)
+            self.app.frameJeu.map.config(scrollregion=( self.app.frameJeu.visibleX, self.app.frameJeu.visibleY, self.app.frameJeu.visibleX1, self.app.frameJeu.visibleY1))
     
     def raceInfo(self, race):
         return self.jeu.info(race)
@@ -153,17 +138,17 @@ class Controleur():
         if key == 'A':
             self.mouvement[3]=True
             
-        if key == 'Q':
-            self.autoSoin()
+        #if key == 'Q':
+            #self.autoSoin()
             
-        if key == 'E':
-            if self.jeu.listeRoche:
-                if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
-                    self.jeu.listeRoche[0].bouge(self.jeu.joueur)
-                else:
-                    self.jeu.listeRoche[0].depose()
+        #if key == 'E':
+            #if self.jeu.listeRoche:
+                #if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
+                    #self.jeu.listeRoche[0].bouge(self.jeu.joueur)
+                #else:
+                    #self.jeu.listeRoche[0].depose()
                     
-            self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
+            #self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()

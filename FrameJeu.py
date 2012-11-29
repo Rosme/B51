@@ -6,9 +6,14 @@ class FrameJeu():
     def __init__(self,parent):
         self.parent = parent
         
+        self.visibleX=2000
+        self.visibleY=256
+        self.visibleX1=2500
+        self.visibleY1=956
+        
         #dimensions du jeu
-        self.largeurJeu=1024
-        self.hauteurJeu=700
+        self.largeurJeu=5000
+        self.hauteurJeu=5000
         
         #dimensions des tuiles affiches
         self.largeurTuile=64
@@ -17,17 +22,15 @@ class FrameJeu():
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
-        perso.posEcranY=self.hauteurJeu/2
+        perso.posEcranY=512
         
-        #position des premiers blocs
-        self.posDepartX = (((laSalle.nbColonne * self.largeurTuile)/2)+((laSalle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
-        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
-        
-        self.persoAff=True
+        #self.persoAff=True
         self.importerImage()
         
         #position des premiers blocs
-        self.calculPositionDepart(perso,laSalle)
+        #self.calculPositionDepart(perso,laSalle)
+        self.posDepartX=self.largeurJeu/2
+        self.posDepartY=0
        
         self.calculPositionMilieu(laSalle)
 
@@ -40,7 +43,7 @@ class FrameJeu():
         return perso
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
-        self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black")
+        self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
         self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
         
         #chat
@@ -68,10 +71,6 @@ class FrameJeu():
     
     def affichageMap(self,perso,laSalle):
         map=laSalle.salle
-        limiteX=list()
-        limiteY=list()
-        limiteX=self.vueProximite(perso.posMatX,len(map[0]))
-        limiteY=self.vueProximite(perso.posMatY,len(map))
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX
         posInitY=self.posDepartY
@@ -85,29 +84,28 @@ class FrameJeu():
             #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])-1,-1,-1):
                 #affichage de la roche (mur)
-                if k>limiteX[0] and k< limiteX[1] and i >limiteY[0] and i< limiteY[1]:
-                    if map[i][k]=='1' or map[i][k] == '2':
-                        self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
-                        
-                    #affichage du personnage
-                    if self.persoAff==True:
-                        if perso.posMatX<k and perso.posMatY<i:
-                            temp = perso.obtenirLimite()
-                            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
-                            self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
-                            self.persoAff=False
-                        
-                    #affichage du gazon
-                    if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
-                        self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                        #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                if map[i][k]=='1' or map[i][k] == '2':
+                    self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                     
-                    if  map[i][k]=='3':
-                        self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                #affichage du personnage
+                #if self.persoAff==True:
+                    #if perso.posMatX<k and perso.posMatY<i:
+                        #temp = perso.obtenirLimite()
+                        #self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
+                        #self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
+                        #self.persoAff=False
                     
-                    for p in self.parent.parent.jeu.listeLogomate:
-                        if p.posMatX<k and p.posMatY<i:
-                            self.map.create_image(perso.posEcranX+(p.posMapX - perso.posMapX),perso.posEcranY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
+                #affichage du gazon
+                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
+                    self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
+                    #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                
+                if  map[i][k]=='3':
+                    self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                
+                #for p in self.parent.parent.jeu.listeLogomate:
+                   # if p.posMatX<k and p.posMatY<i:
+                        #self.map.create_image(perso.posEcranX+(p.posMapX - perso.posMapX),perso.posEcranY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
                      
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
@@ -121,13 +119,13 @@ class FrameJeu():
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
         self.calculPositionMilieu(laSalle)
         
-        if self.parent.parent.jeu.listePersonnage:
-            temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
-            self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+        #if self.parent.parent.jeu.listePersonnage:
+            #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
+            #self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
             
-        if self.parent.parent.jeu.listeRoche:
-            temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
-            self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        #if self.parent.parent.jeu.listeRoche:
+            #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
+            #self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
@@ -241,19 +239,3 @@ class FrameJeu():
 
         return perso
         
-    
-    def vueProximite(self,posMat,nb):
-        rayon=8
-        limite=list()
-        
-        if posMat <rayon:
-            limite.append(-1)
-            limite.append((rayon*2)-1)
-        elif posMat> (nb-rayon):
-            limite.append(nb-(rayon*2))
-            limite.append(nb)
-        elif posMat>=rayon and posMat<= (nb-(rayon)):
-            limite.append(posMat-rayon)
-            limite.append(posMat+rayon)
-            
-        return limite
