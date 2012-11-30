@@ -10,10 +10,6 @@ class Application():
     def __init__(self, parent):
         self.parent = parent
         
-        #coordonnées de l'espace de jeu
-        self.localisationJeuX=0
-        self.localisationJeuY=0
-        
         #dimensions de la fenêtre
         self.largeurFrame=1024
         self.hauteurFrame=700

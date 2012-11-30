@@ -7,8 +7,8 @@ class FrameJeu():
         self.parent = parent
         
         #dimensions du jeu
-        self.largeurJeu=2000
-        self.hauteurJeu=2000
+        self.largeurJeu=4000
+        self.hauteurJeu=4000
         
         #dimensions des tuiles affiches
         self.largeurTuile=64
@@ -17,23 +17,23 @@ class FrameJeu():
         self.importerImage()
         
         self.frameDuJeu=tkinter.Frame(self.parent.root)
+        self.frameHudHaut=tkinter.Frame(self.parent.root)
+        
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
         
-        self.offX=0
-        self.offY=0
+        self.offX=0.45
+        self.offY=0.45
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
-        perso.posEcranY=0
+        perso.posEcranY=self.hauteurJeu/2
         
         self.persoAff=True
         
         #position des premiers blocs
-        #self.calculPositionDepart(perso,laSalle)
-        self.posDepartX=1000
-        self.posDepartY=700
-       
+        self.calculPositionDepart(laSalle)
+
         self.calculPositionMilieu(laSalle)
 
         perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
@@ -46,32 +46,18 @@ class FrameJeu():
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000")
-        self.map.config(scrollregion=(0,0,2000,2000),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
+        self.map.config(scrollregion=(0,0,4000,4000),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
         self.map.pack()
         self.xscrollbar.config(command=self.map.xview)
         self.yscrollbar.config(command=self.map.yview)
         self.frameDuJeu.pack()
+        self.map.xview(tkinter.MOVETO,self.offX)
+        self.map.yview(tkinter.MOVETO,self.offY)
 		
         #chat
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()
-    def dispositionPrincipale1(self):
-        #creation du fond noir derriere la map
-        f=tkinter.Frame(self.parent.root)
-        self.map=tkinter.Canvas(self.parent.root, width=self.largeurJeu,
-                            height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
-        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        self.map.create_rectangle(0,0,4,4,fill='red')
-        sX=tkinter.Scrollbar(self.parent.root)
-        sX.config(command=self.map.yview)
-        self.map.config(yscrollcommand=sX.set)
-        self.map.pack(side=tkinter.LEFT,expand=1,fill=tkinter.BOTH)
-        sX.pack(side=tkinter.RIGHT,fill=tkinter.Y)
-		
-        #chat
-        #self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
-        #self.conversation.place(x=self.parent.localisationJeuX,y=self.hauteurJeu)
     
     def importerImage(self):
         self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
@@ -84,9 +70,9 @@ class FrameJeu():
         self.parent.parent.rechargement()
         self.parent.parent.balle()
     
-    def calculPositionDepart(self,perso,laSalle):
-        self.posDepartX = (((laSalle.nbColonne * self.largeurTuile)/2)+((laSalle.nbLigne * self.largeurTuile)/2))/2 - (perso.posMapX-perso.posEcranX)
-        self.posDepartY = -32 - (perso.posMapY-perso.posEcranY)
+    def calculPositionDepart(self,laSalle):
+        self.posDepartX=self.largeurJeu/2
+        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)
         
     def calculPositionMilieu(self,laSalle):
         self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
@@ -111,17 +97,17 @@ class FrameJeu():
                     self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
                     
                 #affichage du personnage
-                #if self.persoAff==True:
-                    #if perso.posMatX<k and perso.posMatY<i:
-                        #temp = perso.obtenirLimite()
-                        #self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
-                        #self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
-                        #self.persoAff=False
+                if self.persoAff==True:
+                    if perso.posMatX<k and perso.posMatY<i:
+                        temp = perso.obtenirLimite()
+                        self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
+                        self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
+                        self.persoAff=False
                     
                 #affichage du gazon
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                     self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                    #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                    self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 if  map[i][k]=='3':
                     self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
@@ -155,13 +141,16 @@ class FrameJeu():
         #if self.parent.parent.jeu.listeRoche:
             #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
             #self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
-        self.dessinehud()
-    def dessinehud(self):
-        personnage = self.parent.parent.jeu.joueur
+        
+        self.map.create_rectangle((self.largeurJeu/2)-2,(self.hauteurJeu/2)-2,(self.largeurJeu/2)+2,(self.hauteurJeu/2)-2,fill='red')
+
+        #self.dessinehud(perso)
+    
+    def dessinehud(self,perso):
         nbSeringue=0
         poidsJoueur=0
-        grandeurVie=(personnage.race.vie*120)/personnage.race.max_vie
-        for i in personnage.inventaire.items:
+        grandeurVie=(perso.race.vie*120)/perso.race.max_vie
+        for i in perso.inventaire.items:
             if i.id==8:
                 grandeurShield=(i.energie*120)/i.max_energie
             if i.id==7:
@@ -235,7 +224,7 @@ class FrameJeu():
             tempx = math.floor(tempx/self.largeurTuile)
             x+=tempx
             y+=tempx
-        #print(y,x)
+        print(y,x)
         return x,y
         
     def coordProchaineZone(self,salle,char,perso):
@@ -309,22 +298,21 @@ class FrameJeu():
     def depl(self,tempx,tempy):
         incr=0.005
         if tempx>0:
-            self.offX+=incr
-            self.map.xview(tkinter.MOVETO,self.offX)
+            if self.offX+incr<=1.000:
+                self.offX+=incr
+                self.map.xview(tkinter.MOVETO,self.offX)
         elif tempx<0:
-            if self.offX-incr<0:
-                 self.map.xview(tkinter.MOVETO,self.offX)
-            else:
+            if self.offX-incr>=0.000:
                 self.offX-=incr
                 self.map.xview(tkinter.MOVETO,self.offX)
 
         
         if tempy>0:
-            self.offY+=incr
-            self.map.yview(tkinter.MOVETO,self.offY)
+            if self.offY<=1.000:
+                self.offY+=incr
+                self.map.yview(tkinter.MOVETO,self.offY)
         elif tempy<0:
-            if self.offY-incr<0:
-                 self.map.yview(tkinter.MOVETO,self.offY)
-            else:
+            if self.offY-incr>=0.000:
                 self.offY-=incr
                 self.map.yview(tkinter.MOVETO,self.offY)
+        print(self.offX,self.offY)
