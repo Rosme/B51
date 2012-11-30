@@ -29,7 +29,7 @@ class Controleur():
         self.compteur+=1
         self.app.frameJeu.map.after(10,self.miseAJour)
     
-   def rechargement(self):
+    def rechargement(self):
         self.jeu.joueur.recharge()
         if self.jeu.listeLevier:
             for i in self.jeu.listeLevier:
@@ -161,8 +161,8 @@ class Controleur():
         if key == 'A':
             self.mouvement[3]=True
             
-        #if key == 'Q':
-            #self.autoSoin()
+        if key == 'Q':
+            self.autoSoin()
             
         if key == 'E':
             if self.jeu.listeRoche:
@@ -191,7 +191,7 @@ class Controleur():
         if key == 'A':
             self.mouvement[3]=False
         
-         if key == 'E':
+        if key == 'E':
             self.press = False
         
         if key == 'Z':
