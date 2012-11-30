@@ -6,11 +6,6 @@ class FrameJeu():
     def __init__(self,parent):
         self.parent = parent
         
-        self.visibleX=0
-        self.visibleY=0
-        self.visibleX1=2000
-        self.visibleY1=2000
-        
         #dimensions du jeu
         self.largeurJeu=2000
         self.hauteurJeu=2000
@@ -19,18 +14,29 @@ class FrameJeu():
         self.largeurTuile=64
         self.hauteurTuile=32
         
+        self.importerImage()
+        
+        self.frameDuJeu=tkinter.Frame(self.parent.root)
+        self.frameDuJeu.grid_rowconfigure(0, weight=1)
+        self.frameDuJeu.grid_columnconfigure(0, weight=1)
+
+        self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
+        self.xscrollbar.grid(row=1, column=0, sticky=tkinter.E+tkinter.W)
+
+        self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
+        self.yscrollbar.grid(row=0, column=1, sticky=tkinter.N+tkinter.S)
+        
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
         perso.posEcranY=0
         
-        #self.persoAff=True
-        self.importerImage()
+        self.persoAff=True
         
         #position des premiers blocs
-        #self.calculPositionDepart(perso,laSalle)
-        self.posDepartX=(laSalle.nbColonne*32)
-        self.posDepartY=(laSalle.nbColonne*8)-32
+        # self.calculPositionDepart(perso,laSalle)
+        self.posDepartX=1000
+        self.posDepartY=64
        
         self.calculPositionMilieu(laSalle)
 
@@ -43,20 +49,18 @@ class FrameJeu():
         return perso
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
-        f=tkinter.Frame(self.parent.root)
-        self.map=tkinter.Canvas(f, width=self.largeurJeu,
-                            height=self.hauteurJeu, bg="black",scrollregion=( self.visibleX, self.visibleY, self.visibleX1, self.visibleY1))
-        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        self.map.create_rectangle(0,0,4,4,fill='red')
-        sX=tkinter.Scrollbar(f)
-        sX.config(command=self.map.yview)
-        self.map.config(yscrollcommand=sX.set)
-        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
-        self.map.pack(side=tkinter.LEFT,expand=1,fill=tkinter.BOTH)
-        sX.pack(side=tkinter.RIGHT,fill=tkinter.Y)
-        f.place(x=0,y=0)
-        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
+        self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="blue")
+        self.map.config(scrollregion=(0,0,2000,2000),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
+        self.map.grid(row=0, column=0, sticky=tkinter.N+tkinter.S+tkinter.E+tkinter.W)
+        #sX=tkinter.Scrollbar(self.parent.root)
+        #sX.config(command=self.map.yview)
+        #self.map.config(yscrollcommand=sX.set)
+        self.xscrollbar.config(command=self.map.xview)
+        self.yscrollbar.config(command=self.map.yview)
+        self.frameDuJeu.pack()
+        #self.frameDuJeu.pack(side=tkinter.LEFT)
+        #print(self.parent.root.winfo_width())
+        #print(self.parent.root.winfo_height())
 		
         #chat
         #self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
@@ -101,8 +105,6 @@ class FrameJeu():
         self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
     
     def affichageMap(self,perso,laSalle):
-        pass
-    def affichageMap1(self,perso,laSalle):
         map=laSalle.salle
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX

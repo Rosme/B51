@@ -8,9 +8,10 @@ class MenuChargerPartie():
         self.loadChar()
         
     def menuPerso(self):
+        self.frameMenuChargerPartie=tkinter.Frame(self.parent.root)
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
-        self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
-        self.fondEcran.place(x=0,y=0)
+        self.fondEcran= tkinter.Canvas(self.frameMenuChargerPartie,width=1024,height=768)
+        self.fondEcran.pack()
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
         self.boutonConnexion= tkinter.Button(self.fondEcran, text='Continuer',command=self.getPlayer)
         self.boutonRetour= tkinter.Button(self.fondEcran, text='Retour',command=self.retour)
@@ -32,7 +33,11 @@ class MenuChargerPartie():
             ligne = self.file.readline()
             i+=1
         self.boutonListe[0].select()
-            
+        
+        self.menuChargerPartie()
+    def menuChargerPartie(self):
+        self.frameMenuChargerPartie.pack()
+        
     def loadChar(self):
         try:
             self.file = open("player.dat", 'r')
@@ -48,10 +53,11 @@ class MenuChargerPartie():
         self.parent.menuP.menuPrincipal()
     
     def effacerEcran(self):
-        self.fondEcran.destroy()
-    
+        self.frameMenuChargerPartie.pack_forget()
+
     def getPlayer(self):
         self.player = self.v.get()
+        self.effacerEcran()
         self.parent.menuConnexion()
 
     

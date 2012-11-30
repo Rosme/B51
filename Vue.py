@@ -15,12 +15,11 @@ class Application():
         self.localisationJeuY=0
         
         #dimensions de la fenêtre
-        self.largeurFrame=800
-        self.hauteurFrame=600
+        self.largeurFrame=1024
+        self.hauteurFrame=700
         
         self.root=tkinter.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.quitter)
-        #self.root.config(width=self.largeurFrame, height=self.hauteurFrame)
         
     def menuPrincipal(self):
         self.menuP=MenuPrincipal.MenuPrincipal(self)
