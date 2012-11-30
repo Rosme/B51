@@ -22,12 +22,12 @@ class FrameJeu():
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
         
-        self.offX=0.45
-        self.offY=0.45
+        self.offX=0.37
+        self.offY=0.42
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
-        perso.posEcranX=self.largeurJeu/2
-        perso.posEcranY=self.hauteurJeu/2
+        perso.posMapX=self.largeurJeu/2
+        perso.posMapY=self.hauteurJeu/2
         
         self.persoAff=True
         
@@ -36,7 +36,7 @@ class FrameJeu():
 
         self.calculPositionMilieu(laSalle)
 
-        perso.posMatX,perso.posMatY=self.coord(perso.posEcranX,perso.posEcranY)
+        perso.posMatX,perso.posMatY=self.coord(perso.posMapX,perso.posMapY)
         
         self.dispositionPrincipale()
         
@@ -95,14 +95,9 @@ class FrameJeu():
                 #affichage de la roche (mur)
                 if map[i][k]=='1' or map[i][k] == '2':
                     self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
-                    
-                #affichage du personnage
                 if self.persoAff==True:
-                    if perso.posMatX<k and perso.posMatY<i:
-                        temp = perso.obtenirLimite()
-                        self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='red', tags="perso")
-                        self.map.create_image(perso.posEcranX,perso.posEcranY-32,image=self.pers,tags="perso")
-                        self.persoAff=False
+                    if perso.posMatX<k and perso.posMatY<i: 
+                        self.affichagePerso(perso)
                     
                 #affichage du gazon
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
@@ -120,7 +115,7 @@ class FrameJeu():
                     
                 #for p in self.parent.parent.jeu.listeLogomate:
                    # if p.posMatX<k and p.posMatY<i:
-                        #self.map.create_image(perso.posEcranX+(p.posMapX - perso.posMapX),perso.posEcranY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
+                        #self.map.create_image(perso.posMapX+(p.posMapX - perso.posMapX),perso.posMapY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
                      
                    
                 #apres chaque affichage, on se dirige dans l'ecran en bas a gauche
@@ -136,16 +131,25 @@ class FrameJeu():
         
         #if self.parent.parent.jeu.listePersonnage:
             #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
-            #self.map.create_image(perso.posEcranX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posEcranY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+            #self.map.create_image(perso.posMapX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posMapY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
             
         #if self.parent.parent.jeu.listeRoche:
             #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
-            #self.map.create_rectangle(perso.posEcranX+ temp[0]- perso.posMapX, perso.posEcranY+temp[1]- perso.posMapY, perso.posEcranX+temp[2]- perso.posMapX, perso.posEcranY+temp[3]- perso.posMapY, fill='blue', tags="p")
+            #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
         
         self.map.create_rectangle((self.largeurJeu/2)-2,(self.hauteurJeu/2)-2,(self.largeurJeu/2)+2,(self.hauteurJeu/2)-2,fill='red')
 
         #self.dessinehud(perso)
     
+    
+    def affichagePerso(self,perso):
+        #affichage du personnage
+        self.map.delete("perso")
+        temp = perso.obtenirLimite()
+        #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
+        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.pers,tags="perso")
+        self.persoAff=False
+        
     def dessinehud(self,perso):
         nbSeringue=0
         poidsJoueur=0
@@ -184,7 +188,7 @@ class FrameJeu():
         self.map.create_text(835,40,text=str(poidsJoueur)+" /"+str(personnage.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
-            self.map.create_oval(i.posEcranX-5, i.posEcranY-5, i.posEcranX, i.posEcranY, fill='red', tags="balle")
+            self.map.create_oval(i.posMapX-5, i.posMapY-5, i.posMapX, i.posMapY, fill='red', tags="balle")
     
     def ajoutEcouteur(self):
         #input du clavier        
@@ -288,7 +292,7 @@ class FrameJeu():
         perso.posMapX=depx
         perso.posMapY=depy
         
-        self.calculPositionDepart(perso,salle)
+        self.calculPositionDepart(salle)
         
         self.calculPositionMilieu(salle)
 
@@ -296,7 +300,7 @@ class FrameJeu():
         
         
     def depl(self,tempx,tempy):
-        incr=0.005
+        incr=0.001
         if tempx>0:
             if self.offX+incr<=1.000:
                 self.offX+=incr

@@ -13,10 +13,8 @@ class Personnage():
         self.race = race
         self.posMatX = 0
         self.posMatY = 0
-        self.posEcranX = 612
-        self.posEcranY = 350
-        self.posMapX = 672
-        self.posMapY = 336
+        self.posMapX = 0
+        self.posMapY = 0
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))

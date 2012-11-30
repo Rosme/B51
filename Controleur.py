@@ -84,25 +84,24 @@ class Controleur():
         tempy=0
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
-        tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posEcranX+(tempx)*2,self.jeu.joueur.posEcranY+(tempy)*2)
+        tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX+tempx,self.jeu.joueur.posMapY+tempy)
         #if self.mouvement[4]:
             #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
             #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
             #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
-        #if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
-            #car=laMap[tempMatY][tempMatX]
-            #self.jeu.carte.s.changementCarte(car)
-            #self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-        #elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
-        if tempx!=0 or tempy!=0:
-            self.jeu.joueur.posMatX=tempMatX
-            self.jeu.joueur.posMatY=tempMatY
-            self.jeu.joueur.posMapX+=tempx
-            self.jeu.joueur.posMapY+=tempy
-            #self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
-            #self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
-            self.app.frameJeu.depl(tempx,tempy)
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+            car=laMap[tempMatY][tempMatX]
+            self.jeu.carte.s.changementCarte(car)
+            self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
+            if tempx!=0 or tempy!=0:
+                self.jeu.joueur.posMatX=tempMatX
+                self.jeu.joueur.posMatY=tempMatY
+                self.jeu.joueur.posMapX+=tempx
+                self.jeu.joueur.posMapY+=tempy
+                self.app.frameJeu.depl(tempx,tempy)
+                self.app.frameJeu.affichagePerso(self.jeu.joueur)
         
         if self.jeu.listeInterrupteur:
             for i in self.jeu.listeInterrupteur:
