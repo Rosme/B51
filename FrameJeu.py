@@ -17,15 +17,15 @@ class FrameJeu():
         self.importerImage()
         
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        self.frameDuJeu.grid_rowconfigure(0, weight=1)
-        self.frameDuJeu.grid_columnconfigure(0, weight=1)
-
+        #self.frameDuJeu.grid_rowconfigure(0, weight=1)
+        #self.frameDuJeu.grid_columnconfigure(0, weight=1)
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
-        self.xscrollbar.grid(row=1, column=0, sticky=tkinter.E+tkinter.W)
-
+        #self.xscrollbar.grid(row=1, column=0, sticky=tkinter.E+tkinter.W)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
-        self.yscrollbar.grid(row=0, column=1, sticky=tkinter.N+tkinter.S)
+        #self.yscrollbar.grid(row=0, column=1, sticky=tkinter.N+tkinter.S)
         
+        self.offX=0
+        self.offY=0
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posEcranX=self.largeurJeu/2
@@ -36,7 +36,7 @@ class FrameJeu():
         #position des premiers blocs
         # self.calculPositionDepart(perso,laSalle)
         self.posDepartX=1000
-        self.posDepartY=64
+        self.posDepartY=700
        
         self.calculPositionMilieu(laSalle)
 
@@ -51,7 +51,8 @@ class FrameJeu():
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="blue")
         self.map.config(scrollregion=(0,0,2000,2000),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
-        self.map.grid(row=0, column=0, sticky=tkinter.N+tkinter.S+tkinter.E+tkinter.W)
+        #self.map.grid(row=0, column=0, sticky=tkinter.N+tkinter.S+tkinter.E+tkinter.W)
+        self.map.pack()
         #sX=tkinter.Scrollbar(self.parent.root)
         #sX.config(command=self.map.yview)
         #self.map.config(yscrollcommand=sX.set)
@@ -75,11 +76,8 @@ class FrameJeu():
         sX=tkinter.Scrollbar(self.parent.root)
         sX.config(command=self.map.yview)
         self.map.config(yscrollcommand=sX.set)
-        #self.map.place(x=self.parent.localisationJeuX, y=self.parent.localisationJeuY)
-        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
         self.map.pack(side=tkinter.LEFT,expand=1,fill=tkinter.BOTH)
         sX.pack(side=tkinter.RIGHT,fill=tkinter.Y)
-        #self.parent.root.config(width=self.parent.largeurFrame, height=self.parent.hauteurFrame)
 		
         #chat
         #self.conversation=tkinter.Canvas(self.parent.root, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
@@ -274,3 +272,26 @@ class FrameJeu():
 
         return perso
         
+        
+    def depl(self,tempx,tempy):
+        incr=0.005
+        if tempx>0:
+            self.offX+=incr
+            self.map.xview(tkinter.MOVETO,self.offX)
+        elif tempx<0:
+            if self.offX-incr<0:
+                 self.map.xview(tkinter.MOVETO,self.offX)
+            else:
+                self.offX-=incr
+                self.map.xview(tkinter.MOVETO,self.offX)
+
+        
+        if tempy>0:
+            self.offY+=incr
+            self.map.yview(tkinter.MOVETO,self.offY)
+        elif tempy<0:
+            if self.offY-incr<0:
+                 self.map.yview(tkinter.MOVETO,self.offY)
+            else:
+                self.offY-=incr
+                self.map.yview(tkinter.MOVETO,self.offY)

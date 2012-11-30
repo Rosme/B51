@@ -85,13 +85,10 @@ class Controleur():
             self.jeu.joueur.posMapY+=tempy
             #self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             #self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
-            self.app.frameJeu.visibleX+=tempx
-            self.app.frameJeu.visibleY+=tempy
-            self.app.frameJeu.visibleX1+=tempx
-            self.app.frameJeu.visibleY1+=tempy
+            self.app.frameJeu.depl(tempx,tempy)
             
-            print(self.app.frameJeu.visibleX,self.app.frameJeu.visibleY,self.app.frameJeu.visibleX1,self.app.frameJeu.visibleY1)
-            self.app.frameJeu.map.config(scrollregion=( self.app.frameJeu.visibleX, self.app.frameJeu.visibleY, self.app.frameJeu.visibleX1, self.app.frameJeu.visibleY1))
+            
+           
 			
     def raceInfo(self, race):
         return self.jeu.info(race)
