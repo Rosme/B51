@@ -49,19 +49,19 @@ class Carte():
                 self.mapValide = False
             elif(self.valideAssign == True and i != "break"):
                 if(self.listeObjet[self.posListeObj] == "Logomate"):
-                    self.parent.nouveauLogo(self.convertion(i))
+                    self.parent.nouveauLogo(self.convertion(i), "MainRoom")
                 elif (self.listeObjet[self.posListeObj] == "Sac"):
-                    self.listeSac.append(self.convertion(i))
+                    self.parent.nouveauSac(self.convertion(i), "MainRoom")
                 elif(self.listeObjet[self.posListeObj] == "Coffre"):
-                    self.listeCoffre.append(self.convertion(i))
+                    self.parent.nouveauCoffre(self.convertion(i), "MainRoom")
                 elif(self.listeObjet[self.posListeObj] == "Roche"):
-                    self.parent.nouvelleRoche(self.convertion(i))
+                    self.parent.nouvelleRoche(self.convertion(i), "F_E1S1")
                 elif(self.listeObjet[self.posListeObj] == "Interrupteur"):
-                    self.parent.nouveauInterrupt(self.convertion(i))
+                    self.parent.nouveauInterrupt(self.convertion(i), "F_E1S1")
                 elif(self.listeObjet[self.posListeObj] == "Declencheur"):
-                    self.listeDeclencheur.append(self.convertion(i))
+                    self.parent.nouveauDeclencheur(self.convertion(i), "F_E1S1")
                 elif(self.listeObjet[self.posListeObj] == "Levier"):
-                    self.listeLevier.append(self.convertion(i))
+                    self.parent.nouveauLevier(self.convertion(i), "F_E1S1")
             elif(self.valideAssign == True and i == "break"):
                 self.valideAssign = False
                 self.mapValide = True

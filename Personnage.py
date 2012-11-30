@@ -18,12 +18,11 @@ class Personnage():
         self.posMapX = 672
         self.posMapY = 336
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5, 500))
+        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
-        self.coffre = Objet.Coffre(None, 19,1,640,-32)
     
     def bouge(self, mouvement):
         tempx = 0
@@ -108,10 +107,10 @@ class Personnage():
         for i in self.inventaire.items:
             #ID de la seringue = 3
             if i.id == 3:
-                if self.race.vie + i.qualite < 350:
+                if self.race.vie + i.qualite < self.race.max_vie:
                     i.utiliser(self)
                 else:
-                    self.race.vie = 350 - i.qualite
+                    self.race.vie = self.race.max_vie - i.qualite
                     i.utiliser(self)
                     
                 self.inventaire.retirerItem(i)

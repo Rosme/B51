@@ -7,6 +7,8 @@ class Controleur():
     def __init__(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
+        self.press = False
+        self.compteur=0
         self.mouvement = list() 
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
@@ -17,21 +19,36 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        self.app.frameJeu.map.after(50,self.miseAJour)
+        if self.compteur%10==0:
+            self.rechargement()
+        if self.compteur%3==0:
+            self.balle() 
+        if self.compteur%6==0:
+            self.pewpew()
+            
+        self.compteur+=1
+        self.app.frameJeu.map.after(10,self.miseAJour)
     
-    def rechargement(self):
-        pass
-        #self.jeu.joueur.recharge()
-        #self.app.frameJeu.map.after(100,self.rechargement)
+   def rechargement(self):
+        self.jeu.joueur.recharge()
+        if self.jeu.listeLevier:
+            for i in self.jeu.listeLevier:
+                if i.energie != i.max_energie:
+                    i.recharge()
+    
+    def pewpew(self):
+        if self.mouvement[4]:
+            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
+            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
     
     def balle(self):
-        pass
-        #self.collision(self.jeu.listePersonnage)
-        #self.collision(self.jeu.listeLogomate)
         
-        #self.app.frameJeu.map.delete("balle")
-        #self.app.frameJeu.tire()
-        #self.app.frameJeu.map.after(50, self.balle)
+        self.collision(self.jeu.listePersonnage)
+        self.collision(self.jeu.listeLogomate)
+        
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire()
 
     def collision(self, liste):
         temp = self.jeu.listeBalle
@@ -86,7 +103,16 @@ class Controleur():
             #self.app.frameJeu.posDepartX = (((self.jeu.carte.s.nbColonne * self.app.frameJeu.largeurTuile)/2)+((self.jeu.carte.s.nbLigne * self.app.frameJeu.largeurTuile)/2))/2 - (self.jeu.joueur.posMapX-self.jeu.joueur.posEcranX)
             #self.app.frameJeu.posDepartY = -32 - (self.jeu.joueur.posMapY-self.jeu.joueur.posEcranY)
             self.app.frameJeu.depl(tempx,tempy)
-            
+        
+        if self.jeu.listeInterrupteur:
+            for i in self.jeu.listeInterrupteur:
+                i.collision(self.jeu.joueur)
+                i.activer()
+                
+        if self.jeu.listeRoche:
+            for i in self.jeu.listeRoche:
+                if not i.aTerre:
+                    i.bouge(self.jeu.joueur)  
             
            
 			
@@ -138,14 +164,20 @@ class Controleur():
         #if key == 'Q':
             #self.autoSoin()
             
-        #if key == 'E':
-            #if self.jeu.listeRoche:
-                #if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
-                    #self.jeu.listeRoche[0].bouge(self.jeu.joueur)
-                #else:
-                    #self.jeu.listeRoche[0].depose()
-                    
-            #self.jeu.joueur.coffre.ouvrir(self.jeu.joueur)
+        if key == 'E':
+            if self.jeu.listeRoche:
+                if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
+                    self.jeu.listeRoche[0].bouge(self.jeu.joueur)
+                else:
+                    self.jeu.listeRoche[0].depose()
+            
+            if self.jeu.listeLevier and not self.press:
+                for i in self.jeu.listeLevier:
+                    if i.collision(self.jeu.joueur):
+                        if i.tire():
+                            i.activer()
+            
+            self.press = True
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()
@@ -158,7 +190,10 @@ class Controleur():
             self.mouvement[2]=False
         if key == 'A':
             self.mouvement[3]=False
-            
+        
+         if key == 'E':
+            self.press = False
+        
         if key == 'Z':
             print(self.jeu.joueur.posMapX)
             print(self.jeu.joueur.posMapY)

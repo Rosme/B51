@@ -4,6 +4,7 @@ import Personnage
 class Race():
     def __init__(self, race, vie, attaque, defense, poidsLimite):
         self.race = race
+        self.max_vie = vie
         self.vie = vie
         self.attaque = attaque
         self.defense = defense
