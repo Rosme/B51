@@ -185,7 +185,7 @@ class FrameJeu():
         # le poid que le joueur peut avoir
         self.poids=tkinter.PhotoImage(file='assets/image/backpack.gif',width=40,height=35)
         self.map.create_image(785,40, image= self.poids)
-        self.map.create_text(835,40,text=str(poidsJoueur)+" /"+str(personnage.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
+        self.map.create_text(835,40,text=str(poidsJoueur)+" /"+str(perso.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
             self.map.create_oval(i.posMapX-5, i.posMapY-5, i.posMapX, i.posMapY, fill='red', tags="balle")
@@ -228,7 +228,7 @@ class FrameJeu():
             tempx = math.floor(tempx/self.largeurTuile)
             x+=tempx
             y+=tempx
-        print(y,x)
+        #print(y,x)
         return x,y
         
     def coordProchaineZone(self,salle,char,perso):
@@ -319,4 +319,4 @@ class FrameJeu():
             if self.offY-incr>=0.000:
                 self.offY-=incr
                 self.map.yview(tkinter.MOVETO,self.offY)
-        print(self.offX,self.offY)
+        #print(self.offX,self.offY)

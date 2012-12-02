@@ -46,12 +46,12 @@ class Personnage():
             #Si c'est une armure (ID = 8)
             if i.id == 8:
                 #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
-                if i.energie - degat >= 0:
+                if i.energie - degat + i.defense + self.race.defense >= 0:
                     i.subit(degat)
                     break
                 #Sinon, prend le reste et descend la vie.
                 else:
-                    reste = degat
+                    reste = degat + i.defense + self.race.defense
                     reste -= i.energie
                     degat -= reste
                     i.subit(degat)
@@ -60,12 +60,15 @@ class Personnage():
     
     def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:
-            #ID de l'armure = 7
+            #ID de l'arme = 7
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
                     listeBalle.append(Balle(self, x, y, i.force+self.race.attaque))
-                    break
+                    if listeBalle[len(listeBalle)-1].valide:
+                        return True
+                    else:
+                        return False
             
     def recharge(self):
         #Recharge l'arme

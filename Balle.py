@@ -7,26 +7,27 @@ class Balle():
         self.posMatY = 0 #sera initialisé au moment de la création dans le controleur.
         self.posMapX = perso.posMapX
         self.posMapY = perso.posMapY-30
-        self.posEcranX = perso.posEcranX + (self.posMapX - perso.posMapX)
-        self.posEcranY = perso.posEcranY + (self.posMapY - perso.posMapY)
+        finX += self.posMapX-520
+        finY += self.posMapY-290
         self.force = force
         self.radius = 5
         self.velocite = 10
         self.distanceMax = 300
         self.distanceParcouru = 0
         #calcul la distance entre les deux points. Départ et fin.
-        self.entreDeux = math.sqrt(abs((finX-self.posEcranX)**2)+abs((finY-self.posEcranY)**2))
-        #calcul la vitesse qu'elle va parcourir en X et Y avec un maximum de self.velocite de vitessse.
-        self.veloX = ((self.velocite * (finX - self.posEcranX))/self.entreDeux)
-        self.veloY = ((self.velocite * (finY - self.posEcranY))/self.entreDeux)
+        try:
+            self.entreDeux = math.sqrt(abs((finX-self.posMapX)**2)+abs((finY-self.posMapY)**2))
+            #calcul la vitesse qu'elle va parcourir en X et Y avec un maximum de self.velocite de vitessse.
+            self.veloX = ((self.velocite * (finX-self.posMapX))/self.entreDeux)
+            self.veloY = ((self.velocite * (finY-self.posMapY))/self.entreDeux)
+            self.valide = True
+        except ZeroDivisionError:
+            self.valide = False
         
     def bouge(self, perso):
         self.distanceParcouru += math.sqrt(abs((self.veloX)**2)+abs((self.veloY)**2))
         self.posMapX += self.veloX
         self.posMapY += self.veloY
-        self.posEcranX = perso.posEcranX + (self.posMapX - perso.posMapX)
-        self.posEcranY = perso.posEcranY + (self.posMapY - perso.posMapY)
-        
         
     def collision(self, liste, map):
         if self.distanceParcouru < self.distanceMax:

@@ -38,12 +38,14 @@ class Controleur():
     
     def pewpew(self):
         if self.mouvement[4]:
-            self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
+            if self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y):
+                balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+                balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posMapX+(balle.veloX)*2,balle.posMapY+(balle.veloY)*2)
+            else:
+                balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
+                self.jeu.listeBalle.remove(balle);
     
     def balle(self):
-        
         self.collision(self.jeu.listePersonnage)
         self.collision(self.jeu.listeLogomate)
         
@@ -55,17 +57,17 @@ class Controleur():
         
         for i in self.jeu.listeBalle:
             i.bouge(self.jeu.joueur)
-            #if i.veloY<0 and i.veloX<0:
-                #i.posMatX,i.posMatY=self.app.frameJeu.coord(i.posEcranX+(i.veloX)*2,(i.posEcranY+(i.veloY)*2)+30)
-            #elif i.veloY>0 and i.veloX>0:
-                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+10,(i.posEcranY+(i.veloY)*2)+10)
-            #elif i.veloY<0 and i.veloX>0:
-                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+40,(i.posEcranY+(i.veloY)*2)+40)                
-            #else:
-                #i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posEcranX+(i.veloX)*2)+25,(i.posEcranY+(i.veloY)*2)+25)
+            if i.veloY<0 and i.veloX<0:
+                i.posMatX,i.posMatY=self.app.frameJeu.coord(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
+            elif i.veloY>0 and i.veloX>0:
+                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posMapX+(i.veloX)*2)+10,(i.posMapY+(i.veloY)*2)+10)
+            elif i.veloY<0 and i.veloX>0:
+                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
+            else:
+                i.posMatX,i.posMatY=self.app.frameJeu.coord((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
 
-           # if i.collision(liste, self.jeu.carte.s.salle):
-                #temp.remove(i)
+            if i.collision(liste, self.jeu.carte.s.salle):
+                temp.remove(i)
                 
         self.jeu.listeBalle = temp
         
@@ -85,10 +87,6 @@ class Controleur():
         
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX+tempx,self.jeu.joueur.posMapY+tempy)
-        #if self.mouvement[4]:
-            #self.jeu.joueur.tire(self.jeu.listeBalle, self.x, self.y)
-            #balle = self.jeu.listeBalle[len(self.jeu.listeBalle)-1]
-            #balle.posMatX,balle.posMatY=self.app.frameJeu.coord(balle.posEcranX+(balle.veloX)*2,balle.posEcranY+(balle.veloY)*2)
         
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
@@ -194,8 +192,10 @@ class Controleur():
             self.press = False
         
         if key == 'Z':
-            print(self.jeu.joueur.posMapX)
-            print(self.jeu.joueur.posMapY)
+            #print(self.jeu.joueur.posMapX)
+            #print(self.jeu.joueur.posMapY)
+            print(self.x)
+            print(self.y)
             
         if event.keysym == 'Escape':
             self.app.root.destroy()
