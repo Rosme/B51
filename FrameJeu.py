@@ -24,6 +24,7 @@ class FrameJeu():
         
         self.offX=0.37
         self.offY=0.42
+    
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posMapX=self.largeurJeu/2
@@ -43,10 +44,11 @@ class FrameJeu():
         self.affichageMap(perso,laSalle)
         
         return perso
+    
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000")
-        self.map.config(scrollregion=(0,0,4000,4000),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
+        self.map.config(scrollregion=(0,0,self.largeurJeu,self.hauteurJeu),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
         self.map.pack()
         self.xscrollbar.config(command=self.map.xview)
         self.yscrollbar.config(command=self.map.yview)
@@ -71,8 +73,8 @@ class FrameJeu():
         self.parent.parent.balle()
     
     def calculPositionDepart(self,laSalle):
-        self.posDepartX=self.largeurJeu/2
-        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)
+        self.posDepartX=(self.largeurJeu/2)-32
+        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)+16
         
     def calculPositionMilieu(self,laSalle):
         self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
@@ -137,8 +139,7 @@ class FrameJeu():
             #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
             #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
         
-        self.map.create_rectangle((self.largeurJeu/2)-2,(self.hauteurJeu/2)-2,(self.largeurJeu/2)+2,(self.hauteurJeu/2)-2,fill='red')
-
+        self.map.create_rectangle(1995,1995,2005,2005,fill='red')
         #self.dessinehud(perso)
     
     
@@ -186,6 +187,7 @@ class FrameJeu():
         self.poids=tkinter.PhotoImage(file='assets/image/backpack.gif',width=40,height=35)
         self.map.create_image(785,40, image= self.poids)
         self.map.create_text(835,40,text=str(poidsJoueur)+" /"+str(perso.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
+    
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:
             self.map.create_oval(i.posMapX-5, i.posMapY-5, i.posMapX, i.posMapY, fill='red', tags="balle")
@@ -228,13 +230,16 @@ class FrameJeu():
             tempx = math.floor(tempx/self.largeurTuile)
             x+=tempx
             y+=tempx
-        #print(y,x)
         return x,y
         
     def coordProchaineZone(self,salle,char,perso):
         trouver=False
-        depx=self.largeurJeu/2
-        depy=0
+        
+        self.calculPositionDepart(salle)
+        self.calculPositionMilieu(salle)
+        
+        depx=self.posDepartX
+        depy=self.posDepartY
         
         for i in range(salle.nbLigne):
             for j in range(salle.nbColonne):
@@ -243,22 +248,26 @@ class FrameJeu():
                         #si l'autre char à droite
                         if salle.salle[i][j+1]==char:
                             try:
-                                if salle.salle[i+1][j]=='0':#porte en bas
+                                if salle.salle[i+1][j]=='0':#porte en haut
                                     matx = j
                                     maty = i+1
                                     trouver=True
                                     matx=salle.nbColonne-matx
-                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))
-                                    depy+=(((16*maty)+(16*matx))-16)-32
+                                    depx+=(32*maty)-(32*matx)+32
+                                    depy+=(16*maty)+(16*matx)-16
+                                    self.offX=(depx/self.largeurJeu)-0.13
+                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
                             except IndexError:
-                                if salle.salle[i-1][j]=='0':#porte en haut
+                                if salle.salle[i-1][j]=='0':#porte en bas
                                     matx = j
                                     maty = i-1
                                     trouver=True
                                     matx=salle.nbColonne-matx
-                                    depx+=(((32*maty)-(32*matx))+32)+(64*((salle.nbColonne-matx)/2))+31
-                                    depy+=(((16*maty)+(16*matx))-16)-32
+                                    depx+=(32*maty)-(32*matx)+64
+                                    depy+=(16*maty)+(16*matx)-32
+                                    self.offX=(depx/self.largeurJeu)-0.13
+                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
                         else:
                             raise IndexError
@@ -271,8 +280,10 @@ class FrameJeu():
                                     maty = i
                                     trouver=True
                                     matx=salle.nbColonne-matx
-                                    depx+=((32*maty)-(16*matx)-16)+(64*((salle.nbColonne-matx)/2))
-                                    depy+=(((16*maty)+(16*matx))-16)-32
+                                    depx+=(32*maty)-(32*matx)+32
+                                    depy+=(16*maty)+(16*matx)-16
+                                    self.offX=(depx/self.largeurJeu)-0.13
+                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
                             except IndexError:
                                 if salle.salle[i][j-1]=='0':#porte à gauche
@@ -280,27 +291,26 @@ class FrameJeu():
                                     maty = i
                                     trouver=True
                                     matx=salle.nbColonne-matx
-                                    depx+=(((32*maty)-(32*matx))+32)+(32*((salle.nbColonne-matx)/2))
-                                    depy+=(((16*maty)+(16*matx))-16)-32
+                                    depx+=(32*maty)-(32*matx)+32
+                                    depy+=(16*maty)+(16*matx)-16
+                                    self.offX=(depx/self.largeurJeu)-0.13
+                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
             if trouver:
                 break
         
         perso.posMatY=maty
         perso.posMatX=salle.nbColonne-matx
-        
         perso.posMapX=depx
         perso.posMapY=depy
         
-        self.calculPositionDepart(salle)
-        
-        self.calculPositionMilieu(salle)
-
+        self.depl(4,4)
         return perso
         
         
     def depl(self,tempx,tempy):
         incr=0.001
+
         if tempx>0:
             if self.offX+incr<=1.000:
                 self.offX+=incr
@@ -310,7 +320,6 @@ class FrameJeu():
                 self.offX-=incr
                 self.map.xview(tkinter.MOVETO,self.offX)
 
-        
         if tempy>0:
             if self.offY<=1.000:
                 self.offY+=incr
@@ -318,5 +327,9 @@ class FrameJeu():
         elif tempy<0:
             if self.offY-incr>=0.000:
                 self.offY-=incr
-                self.map.yview(tkinter.MOVETO,self.offY)
-        #print(self.offX,self.offY)
+                self.map.yview(tkinter.MOVETO,self.offY)  
+        if tempy==0 and tempx==0: 
+            self.map.yview(tkinter.MOVETO,self.offX)
+            self.map.xview(tkinter.MOVETO,self.offY)
+    def effaceTout(self):
+        self.map.delete(tkinter.ALL)

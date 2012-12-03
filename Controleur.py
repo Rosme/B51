@@ -19,12 +19,12 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        if self.compteur%10==0:
-            self.rechargement()
-        if self.compteur%3==0:
-            self.balle() 
-        if self.compteur%6==0:
-            self.pewpew()
+        #if self.compteur%10==0:
+            #self.rechargement()
+        #if self.compteur%3==0:
+            #self.balle() 
+        #if self.compteur%6==0:
+            #self.pewpew()
             
         self.compteur+=1
         self.app.frameJeu.map.after(10,self.miseAJour)
@@ -84,22 +84,26 @@ class Controleur():
         
         tempx=0
         tempy=0
-        
         tempx, tempy = self.jeu.joueur.bouge(self.mouvement)
-        tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX+tempx,self.jeu.joueur.posMapY+tempy)
         
+        tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX+tempx,self.jeu.joueur.posMapY+tempy)
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w': #and laMap[tempMatY+1][tempMatX-1]!='1':
-            if tempx!=0 or tempy!=0:
-                self.jeu.joueur.posMatX=tempMatX
-                self.jeu.joueur.posMatY=tempMatY
-                self.jeu.joueur.posMapX+=tempx
-                self.jeu.joueur.posMapY+=tempy
-                self.app.frameJeu.depl(tempx,tempy)
-                self.app.frameJeu.affichagePerso(self.jeu.joueur)
+            self.app.frameJeu.effaceTout()
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
+            self.app.frameJeu.affichagePerso(self.jeu.joueur)
+            self.app.frameJeu.depl(-4,-4)
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+            if laMap[tempMatY+1][tempMatX-1]!='1':
+                if tempx!=0 or tempy!=0:
+                    self.jeu.joueur.posMatX=tempMatX
+                    self.jeu.joueur.posMatY=tempMatY
+                    self.jeu.joueur.posMapX+=tempx
+                    self.jeu.joueur.posMapY+=tempy
+                    self.app.frameJeu.depl(tempx,tempy)
+                    self.app.frameJeu.affichagePerso(self.jeu.joueur)
         
         if self.jeu.listeInterrupteur:
             for i in self.jeu.listeInterrupteur:
