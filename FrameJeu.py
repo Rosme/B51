@@ -1,10 +1,13 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
 import math
+import HudHaut
 
 class FrameJeu():
     def __init__(self,parent):
         self.parent = parent
+        
+        self.parent.root.config(bg="#000")
         
         #dimensions du jeu
         self.largeurJeu=4000
@@ -39,6 +42,8 @@ class FrameJeu():
 
         perso.posMatX,perso.posMatY=self.coord(perso.posMapX,perso.posMapY)
         
+        self.hudHaut=HudHaut.HudHaut(self,perso)
+        
         self.dispositionPrincipale()
         
         self.affichageMap(perso,laSalle)
@@ -47,7 +52,8 @@ class FrameJeu():
     
     def dispositionPrincipale(self):
         #creation du fond noir derriere la map
-        self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000")
+        
+        self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000",highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         self.map.config(scrollregion=(0,0,self.largeurJeu,self.hauteurJeu),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
         self.map.pack()
         self.xscrollbar.config(command=self.map.xview)
@@ -65,6 +71,7 @@ class FrameJeu():
         self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
         self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
+        self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
     
     def ajoutEcouteuretBoucle(self):
         self.ajoutEcouteur()
@@ -73,8 +80,8 @@ class FrameJeu():
         self.parent.parent.balle()
     
     def calculPositionDepart(self,laSalle):
-        self.posDepartX=(self.largeurJeu/2)-32
-        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)+16
+        self.posDepartX=(self.largeurJeu/2)
+        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)+32
         
     def calculPositionMilieu(self,laSalle):
         self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
@@ -107,7 +114,8 @@ class FrameJeu():
                     self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 if  map[i][k]=='3':
-                    self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                    #self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
+                    self.map.create_image(posTempX,posTempY-17,image=self.coffre,tags="coffre")
                 
                 if  map[i][k]=='w':
                     self.map.create_text(posTempX, posTempY, text="Switch", fill='white', tags="image")
@@ -138,9 +146,6 @@ class FrameJeu():
         #if self.parent.parent.jeu.listeRoche:
             #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
             #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
-        
-        self.map.create_rectangle(1995,1995,2005,2005,fill='red')
-        #self.dessinehud(perso)
     
     
     def affichagePerso(self,perso):
@@ -151,42 +156,6 @@ class FrameJeu():
         self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.pers,tags="perso")
         self.persoAff=False
         
-    def dessinehud(self,perso):
-        nbSeringue=0
-        poidsJoueur=0
-        grandeurVie=(perso.race.vie*120)/perso.race.max_vie
-        for i in perso.inventaire.items:
-            if i.id==8:
-                grandeurShield=(i.energie*120)/i.max_energie
-            if i.id==7:
-                grandeurArme=(i.energie*120)/i.max_energie
-            if i.id == 3:
-                nbSeringue+=1
-            poidsJoueur+=i.poids
-  
-         # la barre pour la vie du joueur. 
-        self.energy = tkinter.PhotoImage(file='assets/image/energy.gif',width=35,height=35)
-        self.map.create_image(85,40, image= self.energy)
-        self.map.create_rectangle(35, 60,grandeurVie+35, 75,fill="blue",tag="hudhaut")
-        
-        #le shield
-        self.shield = tkinter.PhotoImage(file='assets/image/bouclier.gif',width=45,height=35)
-        self.map.create_image(280,40, image= self.shield)
-        self.map.create_rectangle(235, 60, grandeurShield+235, 75,fill="blue",tag="hudhaut")
-        
-        #le gun power
-        self.gunpower = tkinter.PhotoImage(file='assets/image/gun.gif',width=45,height=35)
-        self.map.create_image(455,40, image= self.gunpower)
-        self.map.create_rectangle(410, 60, grandeurArme+410, 75,fill="blue",tag="hudhaut")
-        
-        #le healing
-        self.healing=tkinter.PhotoImage(file='assets/image/syringe.gif',width=45,height=35)
-        self.map.create_image(610,40, image= self.healing)
-        self.map.create_text(640,40,text=nbSeringue,fill='white',font=("Arial","10"),tag="hudhaut")
-        # le poid que le joueur peut avoir
-        self.poids=tkinter.PhotoImage(file='assets/image/backpack.gif',width=40,height=35)
-        self.map.create_image(785,40, image= self.poids)
-        self.map.create_text(835,40,text=str(poidsJoueur)+" /"+str(perso.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
     
     def tire(self):  
         for i in self.parent.parent.jeu.listeBalle:

@@ -3,11 +3,12 @@
 Classe de base pour les items
 '''
 class Item():
-	def __init__(self, id, poids, nom, description):
-		self.id = id
-		self.poids = poids
-		self.nom = nom
-		self.description = description
+    def __init__(self, id, poids, nom, description,quantite):
+        self.id = id
+        self.poids = poids
+        self.nom = nom
+        self.description = description
+        self.qte=quantite
 
 
 '''
@@ -24,8 +25,8 @@ Classe pour les choses divers(nourriture, stim pack, etc.)
 Les items de divers s'applique uniquement au joueur
 '''
 class Divers(Item):
-	def __init__(self, id, poids, nom, description, qualite):
-		Item.__init__(self, id, poids, nom, description)
+	def __init__(self, id, poids, nom, description, qualite,quantite):
+		Item.__init__(self, id, poids, nom, description,quantite)
 		self.qualite = qualite
 
 	#Augmente la vie du joueur
@@ -36,8 +37,8 @@ class Divers(Item):
 Arme
 '''
 class Arme(Item):
-	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge, vitesseTire):
-		Item.__init__(self, id, poids, nom, description)
+	def __init__(self, id, poids, nom, description, force, energie, cout, vitesseRecharge, vitesseTire,quantite):
+		Item.__init__(self, id, poids, nom, description,quantite)
 		self.force = force
 		self.max_energie = energie
 		self.energie = energie
@@ -55,8 +56,8 @@ class Arme(Item):
 Armure
 '''
 class Armure(Item):
-	def __init__(self, id, poids, nom, description, defense, energie, vitesseRecharge):
-		Item.__init__(self, id, poids, nom, description)
+	def __init__(self, id, poids, nom, description, defense, energie, vitesseRecharge,quantite):
+		Item.__init__(self, id, poids, nom, description,quantite)
 		self.defense = defense
 		self.max_energie = energie
 		self.energie = energie
@@ -72,30 +73,41 @@ class Armure(Item):
 Classe d'Inventaire
 '''
 class Inventaire():
-	def __init__(self, poidsLimite):
-		self.poids = 0
-		self.poidsLimite = poidsLimite
-		self.items = []
+    def __init__(self, poidsLimite):
+        self.poids = 0
+        self.poidsLimite = poidsLimite
+        self.items = []
 
-	'''
-	tente de rajouter l'item a l'Inventaire
-	Si on peut, il le fait et retourne True
-	Sinon retourne False
-	'''
-	def ajouterItem(self, item):
-		if self.poids+item.poids > self.poidsLimite:
-			return False
-		else:
-			self.items.append(item)
-			self.poids += item.poids
-			return True
-
-	'''
-	Va retirer l'item de la liste
-	S'il ne se trouve pas dans la liste, rien ne se passe
-	Sinon la fonction va l'enlever et enlever le poids a l'inventaire
-	'''
-	def retirerItem(self, item):
-		if item in self.items:
-			self.items.remove(item)
-			self.poids -= item.poids
+    '''
+    tente de rajouter l'item a l'Inventaire
+    Si on peut, il le fait et retourne True
+    Sinon retourne False
+    '''
+    
+    def ajouterItem(self,item):
+        if self.poids+(item.poids*item.qte) > self.poidsLimite:
+            item.qte-=1
+            while self.poids+(item.poids*item.qte) > self.poidsLimite:
+                item.qte-=1
+        
+        existe=False
+        
+        for p in self.items:
+            if item.id==p.id:
+                self.poids+=(item.poids*item.qte)
+                existe=True
+                break
+        
+        if existe == False and item.qte > 0:
+            self.items.append(item)
+            self.poids+=(item.poids*item.qte)
+            
+    '''
+    Va retirer l'item de la liste
+    S'il ne se trouve pas dans la liste, rien ne se passe
+    Sinon la fonction va l'enlever et enlever le poids a l'inventaire
+    '''
+    def retirerItem(self, item):
+        if item in self.items:
+            self.items.remove(item)
+            self.poids -= item.poids
