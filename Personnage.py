@@ -16,8 +16,10 @@ class Personnage():
         self.posMapX = 0
         self.posMapY = 0
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
-        self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
+        self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
+        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 5, 20, 1))
+        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
+        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))

@@ -5,15 +5,11 @@ import Item
 class Artisanat():
     def __init__(self, parent):
         self.parent = parent
-        '''
-        Exemple de dictionnaire. Peu être fort utile pour les parchemins.
-        '''
-        self.dictParchemin = dict()
-        self.dictParchemin.update(AB=True)
-        self.dictParchemin.update(DA=True)
-        self.dictParchemin.update(CC=False)
-        self.dictParchemin.update(CCDAAB=True)
-        self.dictParchemin.update(Master=False)
+        self.listeParchemin = list()
+        self.listeParchemin.append(Parchemin(0,1,"Métal avec Électronique", True, True))
+        self.listeParchemin.append(Parchemin(0,2,"Métal avec Batterie", True, True))
+        self.listeParchemin.append(Parchemin(1,2,"Électronique avec Batterie", True, True))
+        self.listeParchemin.append(Parchemin(11,12,"A avec B"))
     
     def fabricationArmure(self):
         self.nbMetal = 0
@@ -99,3 +95,16 @@ class Artisanat():
                 
             self.parent.joueur.inventaire.items = itemASupprimer
             self.parent.joueur.inventaire.poidsLimite+=2
+
+class Parchemin():
+    def __init__(self, itemId1, itemId2, nom, inversable = False, possede = False):
+        self.nom = nom
+        self.itemId1 = itemId1
+        self.itemId2 = itemId2
+        self.inversable = inversable
+        self.possede = possede
+        
+        
+        
+        
+        
