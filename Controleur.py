@@ -115,7 +115,7 @@ class Controleur():
                 if not i.aTerre:
                     i.bouge(self.jeu.joueur)  
             
-           
+        self.app.frameJeu.hudHaut.actualiser() 
 			
     def raceInfo(self, race):
         return self.jeu.info(race)

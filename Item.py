@@ -108,6 +108,4 @@ class Inventaire():
     Sinon la fonction va l'enlever et enlever le poids a l'inventaire
     '''
     def retirerItem(self, item):
-        if item in self.items:
-            self.items.remove(item)
-            self.poids -= item.poids
+        self.poids -= item.poids

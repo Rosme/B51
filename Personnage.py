@@ -110,11 +110,11 @@ class Personnage():
             if i.id == 3:
                 if self.race.vie + i.qualite < self.race.max_vie:
                     i.utiliser(self)
+                    i.qte-=1
                 else:
                     self.race.vie = self.race.max_vie - i.qualite
                     i.utiliser(self)
-                    
-                self.inventaire.retirerItem(i)
+                    i.qte-=1
                 break
     
     def obtenirLimite(self):
