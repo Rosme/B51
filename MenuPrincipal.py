@@ -17,8 +17,6 @@ class MenuPrincipal():
         self.fondEcran.tag_bind("continuer_partie","<Button-1>", self.parent.menuChargerPartie)
         self.fondEcran.tag_bind("quitter","<Button-1>",self.fermerFenetre)
         
-        self.menuPrincipal()
-        
     def menuPrincipal(self):
         self.frameMenuPrincipal.pack()
         

@@ -17,20 +17,16 @@ class MenuConnexion():
         self.ipentry.place(x=200, y=50)
         self.boutonConnexion.place(x=550,y=650)
         self.boutonRetour.place(x=400,y=650)
-        self.menuConnexion()
         
     def menuConnexion(self):
         self.frameMenuConnexion.pack()
         
-    def effacerEcran(self):
-        self.frameMenuConnexion.pack_forget()
-        
     def retour(self):
-        self.effacerEcran()
-        self.parent.menuP.menuPrincipal()
+        self.frameMenuConnexion.pack_forget()
+        self.parent.menuPrincipal()
         
     def debuterPartie(self):
-        self.effacerEcran()
+        self.frameMenuConnexion.pack_forget()
         self.parent.parent.enJeu()
         
     def validerIPort(self):

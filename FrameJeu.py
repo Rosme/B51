@@ -25,9 +25,12 @@ class FrameJeu():
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
         
-        self.offX=0.37
-        self.offY=0.42
-    
+        self.offX=0.5
+        self.offY=0.5
+        self.ajustOffSet()
+        
+        self.dispositionPrincipale()
+        
     def initMap(self,perso,laSalle):       
         #position du joueur centre dans l'ecran
         perso.posMapX=self.largeurJeu/2
@@ -44,21 +47,20 @@ class FrameJeu():
         
         self.hudHaut=HudHaut.HudHaut(self,perso)
         
-        self.dispositionPrincipale()
-        
         self.affichageMap(perso,laSalle)
         
         return perso
     
     def dispositionPrincipale(self):
-        #creation du fond noir derriere la map
         
+        #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000",highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         self.map.config(scrollregion=(0,0,self.largeurJeu,self.hauteurJeu),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
         self.map.pack()
+        self.frameDuJeu.pack()
+        
         self.xscrollbar.config(command=self.map.xview)
         self.yscrollbar.config(command=self.map.yview)
-        self.frameDuJeu.pack()
         self.map.xview(tkinter.MOVETO,self.offX)
         self.map.yview(tkinter.MOVETO,self.offY)
 		
@@ -221,22 +223,14 @@ class FrameJeu():
                                     matx = j
                                     maty = i+1
                                     trouver=True
-                                    matx=salle.nbColonne-matx
-                                    depx+=(32*maty)-(32*matx)+32
-                                    depy+=(16*maty)+(16*matx)-16
-                                    self.offX=(depx/self.largeurJeu)-0.13
-                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
                             except IndexError:
                                 if salle.salle[i-1][j]=='0':#porte en bas
                                     matx = j
                                     maty = i-1
                                     trouver=True
-                                    matx=salle.nbColonne-matx
-                                    depx+=(32*maty)-(32*matx)+64
-                                    depy+=(16*maty)+(16*matx)-32
-                                    self.offX=(depx/self.largeurJeu)-0.13
-                                    self.offY=(depy/self.hauteurJeu)-0.08
+                                    depx+=32
+                                    depy-=16
                                     break
                         else:
                             raise IndexError
@@ -248,32 +242,29 @@ class FrameJeu():
                                     matx = j+1
                                     maty = i
                                     trouver=True
-                                    matx=salle.nbColonne-matx
-                                    depx+=(32*maty)-(32*matx)+32
-                                    depy+=(16*maty)+(16*matx)-16
-                                    self.offX=(depx/self.largeurJeu)-0.13
-                                    self.offY=(depy/self.hauteurJeu)-0.08
                                     break
                             except IndexError:
                                 if salle.salle[i][j-1]=='0':#porte à gauche
                                     matx = j-1
                                     maty = i
-                                    trouver=True
-                                    matx=salle.nbColonne-matx
-                                    depx+=(32*maty)-(32*matx)+32
-                                    depy+=(16*maty)+(16*matx)-16
-                                    self.offX=(depx/self.largeurJeu)-0.13
-                                    self.offY=(depy/self.hauteurJeu)-0.08
+                                    trouver=True                          
                                     break
             if trouver:
                 break
         
+        tempMatX=salle.nbColonne-matx
+        depx+=(32*maty)-(32*tempMatX)+32
+        depy+=(16*maty)+(16*tempMatX)-16
+        
+        self.offX=(depx/self.largeurJeu)
+        self.offY=(depy/self.hauteurJeu)
+        self.ajustOffSet()
+        
         perso.posMatY=maty
-        perso.posMatX=salle.nbColonne-matx
+        perso.posMatX=matx
         perso.posMapX=depx
         perso.posMapY=depy
         
-        self.depl(4,4)
         return perso
         
         
@@ -300,5 +291,10 @@ class FrameJeu():
         if tempy==0 and tempx==0: 
             self.map.yview(tkinter.MOVETO,self.offX)
             self.map.xview(tkinter.MOVETO,self.offY)
+    
+    def ajustOffSet(self):
+        self.offX-=0.13
+        self.offY-=0.08
+    
     def effaceTout(self):
         self.map.delete(tkinter.ALL)

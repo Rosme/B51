@@ -4,6 +4,7 @@ import Modele
 import os
 
 class Controleur():
+    ############################# Methode d'initialisation de l'aplication #############################
     def __init__(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
@@ -17,6 +18,10 @@ class Controleur():
         self.demarrer()
         self.app.root.mainloop()
     
+    def demarrer(self):
+        self.app.menuPrincipal()
+    
+    ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
         self.actualiser()
         if self.compteur%20==0:
@@ -29,6 +34,7 @@ class Controleur():
         self.compteur+=1
         self.app.frameJeu.map.after(10,self.miseAJour)
     
+    ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
         self.jeu.joueur.recharge()
         if self.jeu.listeLevier:
@@ -51,7 +57,7 @@ class Controleur():
         
         self.app.frameJeu.map.delete("balle")
         self.app.frameJeu.tire()
-
+   
     def collision(self, liste):
         temp = self.jeu.listeBalle
         
@@ -70,15 +76,13 @@ class Controleur():
                 temp.remove(i)
                 
         self.jeu.listeBalle = temp
-        
-    def demarrer(self):
-        self.app.menuPrincipal()
     
+    ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.app.jeu()
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s)
-        self.app.frameJeu.ajoutEcouteuretBoucle()
-    
+        self.app.frameJeu.ajoutEcouteuretBoucle() 
+        
     def actualiser(self):
         laMap=self.jeu.carte.s.salle
         
@@ -94,8 +98,11 @@ class Controleur():
             self.app.frameJeu.effaceTout()
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
             self.app.frameJeu.affichagePerso(self.jeu.joueur)
+            
             self.app.frameJeu.depl(-4,-4)
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+            self.app.frameJeu.depl(4,4)
+
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
             if laMap[tempMatY+1][tempMatX-1]!='1':
                 if tempx!=0 or tempy!=0:
                     self.jeu.joueur.posMatX=tempMatX
@@ -116,7 +123,8 @@ class Controleur():
                     i.bouge(self.jeu.joueur)  
             
         self.app.frameJeu.hudHaut.actualiser() 
-			
+	
+    ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
         return self.jeu.info(race)
         
@@ -152,6 +160,7 @@ class Controleur():
     def fabricationDematerialisateur(self):
         self.jeu.artisanat.fabricationDematerialisateur()
     
+    ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):
         key = event.char.upper()
         
@@ -198,13 +207,11 @@ class Controleur():
             self.press = False
         
         if key == 'Z':
-            #print(self.jeu.joueur.posMapX)
-            #print(self.jeu.joueur.posMapY)
             print(self.x)
             print(self.y)
             
         if event.keysym == 'Escape':
-            self.app.root.destroy()
+            self.app.quitter()
         
     def peseTire(self,event):
         self.mouvement[4] = True

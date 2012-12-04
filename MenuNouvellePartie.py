@@ -43,8 +43,18 @@ class MenuNouvellePartie():
         self.boutonRetour.place(x=400,y=650)
         self.nomJoueur.focus_set()
         self.raceInfo()
-        self.menuNouvellePartie()
+   
+    def menuNouvellePartie(self):
+        self.frameMenuNouvellePartie.pack()
 
+    def retour(self):
+        self.frameMenuNouvellePartie.pack_forget()
+        self.parent.menuPrincipal()
+    
+    def connexion(self):
+        self.frameMenuNouvellePartie.pack_forget()
+        self.parent.menuConnexion()
+    
     def raceInfo(self):
         race = self.valRace.get()
         temp= self.parent.parent.raceInfo(race)
@@ -52,22 +62,8 @@ class MenuNouvellePartie():
         self.fondEcran.itemconfig(self.textVie, text='Vie : ' + str(temp[1]))
         self.fondEcran.itemconfig(self.textAtk, text='Attaque : ' + str(temp[2]))
         self.fondEcran.itemconfig(self.textDef, text='Defense : ' + str(temp[3]))
-        self.fondEcran.itemconfig(self.textPL, text='Poids Limite : ' + str(temp[4]))
-         
-    def menuNouvellePartie(self):
-        self.frameMenuNouvellePartie.pack()
-
-    def retour(self):
-        self.effacerMenuNouvellePartie()
-        self.parent.menuP.menuPrincipal()
+        self.fondEcran.itemconfig(self.textPL, text='Poids Limite : ' + str(temp[4]))    
     
-    def connexion(self):
-        self.effacerMenuNouvellePartie()
-        self.parent.menuConnexion()
-        
-    def effacerMenuNouvellePartie(self):  
-        self.frameMenuNouvellePartie.pack_forget()
-        
     def validEntre(self):
         self.profilename=self.nomJoueur.get()
         newvalue=self.validate(self.profilename)
@@ -75,8 +71,8 @@ class MenuNouvellePartie():
             print("nom vide")  
         else:
             self.parent.parent.nouveauJoueur(self.valRace.get(), self.nomJoueur.get())
-            self.parent.parent.sauvegardeJoueur()
-            self.saveChar()
+            #self.parent.parent.sauvegardeJoueur()
+            #self.saveChar()
             self.connexion()
 
     def validate(self, newvalue):
