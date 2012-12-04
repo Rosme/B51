@@ -26,7 +26,8 @@ class Application():
         
     def menuChargerPartie(self,event):
         self.menuP.effaceMenuPrinc()
-        self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
+        #self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
+        self.menuNouvellePartie("allo")
         
     def menuConnexion(self):
         self.menuC=MenuConnexion.MenuConnexion(self)

@@ -27,7 +27,7 @@ class HudHaut():
             if i.id==7:
                 self.grandeurArme=(i.energie*120)/i.max_energie
             if i.id == 3:
-                self.nbSeringue+1
+                self.nbSeringue+=1
             self.poidsJoueur+=i.poids
         
     def affichageImage(self):

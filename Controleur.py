@@ -19,7 +19,7 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        if self.compteur%10==0:
+        if self.compteur%20==0:
             self.rechargement()
         if self.compteur%3==0:
             self.balle() 
@@ -124,10 +124,12 @@ class Controleur():
         self.jeu.nouveauJoueur(race, nom)
         
     def chargerJoueur(self, nom):
-        self.jeu.chargerJoueur(nom)
+        pass
+        #self.jeu.chargerJoueur(nom)
         
     def sauvegardeJoueur(self):
-        self.jeu.sauvegardeJoueur()
+        pass
+        #self.jeu.sauvegardeJoueur()
         
     def autoSoin(self):
         self.jeu.joueur.autoSoin()
