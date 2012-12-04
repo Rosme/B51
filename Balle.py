@@ -45,7 +45,7 @@ class Balle():
                             k+=2
                     j+=2
             try:
-                if map[self.posMatX][self.posMatY]=='1':    
+                if map[self.posMatY][self.posMatX]=='1':    
                     return True
             except IndexError:
                 return True

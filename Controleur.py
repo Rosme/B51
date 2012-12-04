@@ -19,12 +19,12 @@ class Controleur():
     
     def miseAJour(self):
         self.actualiser()
-        #if self.compteur%10==0:
-            #self.rechargement()
-        #if self.compteur%3==0:
-            #self.balle() 
-        #if self.compteur%6==0:
-            #self.pewpew()
+        if self.compteur%10==0:
+            self.rechargement()
+        if self.compteur%3==0:
+            self.balle() 
+        if self.compteur%6==0:
+            self.pewpew()
             
         self.compteur+=1
         self.app.frameJeu.map.after(10,self.miseAJour)
