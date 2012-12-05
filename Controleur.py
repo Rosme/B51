@@ -10,6 +10,7 @@ class Controleur():
         self.app = Vue.Application(self)
         self.press = False
         self.compteur=0
+        self.partieCommencer=False
         self.mouvement = list() 
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
@@ -32,8 +33,9 @@ class Controleur():
             self.pewpew()
             
         self.compteur+=1
-        self.app.frameJeu.map.after(10,self.miseAJour)
-    
+        if self.partieCommencer==True:
+            self.app.frameJeu.map.after(10,self.miseAJour)
+            
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
         self.jeu.joueur.recharge()
@@ -79,9 +81,10 @@ class Controleur():
     
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
+        self.partieCommencer=True
         self.app.jeu()
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s)
-        self.app.frameJeu.ajoutEcouteuretBoucle() 
+        self.miseAJour()
         
     def actualiser(self):
         laMap=self.jeu.carte.s.salle
@@ -95,12 +98,9 @@ class Controleur():
             car=laMap[tempMatY][tempMatX]
             self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
-            self.app.frameJeu.effaceTout()
+            self.app.frameJeu.effaceMap()
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
             self.app.frameJeu.affichagePerso(self.jeu.joueur)
-            
-            self.app.frameJeu.depl(-4,-4)
-            self.app.frameJeu.depl(4,4)
 
         elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
             if laMap[tempMatY+1][tempMatX-1]!='1':
@@ -211,7 +211,8 @@ class Controleur():
             print(self.y)
             
         if event.keysym == 'Escape':
-            self.app.quitter()
+            self.app.frameJeu.effaceTout()
+            self.app.menuPrincipal()
         
     def peseTire(self,event):
         self.mouvement[4] = True

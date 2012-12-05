@@ -17,21 +17,18 @@ class FrameJeu():
         self.largeurTuile=64
         self.hauteurTuile=32
         
+		#assignation de valeur plus tard
+        self.offX=0
+        self.offY=0
+		
         self.importerImage()
         
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        self.frameHudHaut=tkinter.Frame(self.parent.root)
         
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
         
-        self.offX=0.5
-        self.offY=0.5
-        self.ajustOffSet()
-        
-        self.dispositionPrincipale()
-        
-    def initMap(self,perso,laSalle):       
+    def initMap(self,perso,laSalle):               
         #position du joueur centre dans l'ecran
         perso.posMapX=self.largeurJeu/2
         perso.posMapY=self.hauteurJeu/2
@@ -46,9 +43,15 @@ class FrameJeu():
         perso.posMatX,perso.posMatY=self.coord(perso.posMapX,perso.posMapY)
         
         self.hudHaut=HudHaut.HudHaut(self,perso)
+        self.dispositionPrincipale()
+        
+        self.calculOffSet(perso.posMapX,perso.posMapY)
+        self.ajustOffSet()
         
         self.affichageMap(perso,laSalle)
-        
+
+        self.ajoutEcouteur()
+		
         return perso
     
     def dispositionPrincipale(self):
@@ -75,12 +78,6 @@ class FrameJeu():
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
     
-    def ajoutEcouteuretBoucle(self):
-        self.ajoutEcouteur()
-        self.parent.parent.miseAJour()
-        self.parent.parent.rechargement()
-        self.parent.parent.balle()
-    
     def calculPositionDepart(self,laSalle):
         self.posDepartX=(self.largeurJeu/2)
         self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)+32
@@ -88,6 +85,10 @@ class FrameJeu():
     def calculPositionMilieu(self,laSalle):
         self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
         self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
+    
+    def calculOffSet(self,x,y):
+        self.offX=(x/self.largeurJeu)
+        self.offY=(y/self.hauteurJeu)
     
     def affichageMap(self,perso,laSalle):
         map=laSalle.salle
@@ -172,6 +173,7 @@ class FrameJeu():
         self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
         self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
     
+
     def coord(self,x1,y1):
         x=0
         y=0
@@ -256,8 +258,7 @@ class FrameJeu():
         depx+=(32*maty)-(32*tempMatX)+32
         depy+=(16*maty)+(16*tempMatX)-16
         
-        self.offX=(depx/self.largeurJeu)
-        self.offY=(depy/self.hauteurJeu)
+        self.calculOffSet(depx,depy)
         self.ajustOffSet()
         
         perso.posMatY=maty
@@ -295,6 +296,14 @@ class FrameJeu():
     def ajustOffSet(self):
         self.offX-=0.13
         self.offY-=0.08
+        self.depl(-4,-4)
+        self.depl(4,4)
+    
+    def effaceMap(self):
+         self.map.delete(tkinter.ALL)
     
     def effaceTout(self):
         self.map.delete(tkinter.ALL)
+        self.frameDuJeu.pack_forget()
+        self.hudHaut.frameHudHaut.pack_forget()
+        self.parent.parent.enJeu=False
