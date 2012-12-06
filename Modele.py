@@ -19,6 +19,8 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
+        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6"]
+        self.nbObjMap = len(self.listeMap)
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -43,39 +45,37 @@ class Jeu():
         self.listeLogomate.append(pers)
         
     def nouveauSac(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         sac = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeSac.append(sac)
         
     def nouveauCoffre(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         coffre = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeCoffre.append(coffre)
         
     def nouvelleRoche(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeRoche.append(roche) 
            
     def nouveauInterrupt(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False, nomMap)
         self.listeInterrupteur.append(interrupteur)
     
     def nouveauDeclencheur(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
         declencheur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeDeclencheur.append(declencheur)
     
     def nouveauLevier(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posMapX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posMapY+ int(posMap[1])- self.joueur.posMapY)
-        levier = Objet.Levier(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), 5, 100, 2, nomMap)
+        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        levier = Objet.Levier(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), 10, 100, 2, nomMap)
         self.listeLevier.append(levier)
         
     def nouveauJoueur(self, race, nom):
-        
         self.joueur = Personnage()
-        
         if race == "Humain":
             self.joueur.nouveauPersonnage(nom, Race.Humain())
         
