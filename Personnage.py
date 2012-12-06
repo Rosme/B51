@@ -25,6 +25,10 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
     
+    def mort(self):
+        self.nomMap = "MainRoom"
+        self.race.vie=self.race.max_vie/2
+    
     def bouge(self, mouvement):
         tempx = 0
         tempy = 0

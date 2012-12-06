@@ -26,17 +26,18 @@ class FrameJeu():
         self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
-
+    def posInitPerso(self):
+        #position du joueur centre dans l'ecran
+        return self.largeurJeu/2,self.hauteurJeu/2
+    
     def initMap(self,perso,laSalle):
 
         self.frameDuJeu=tkinter.Frame(self.parent.root)
 
-        #position du joueur centre dans l'ecran
-        perso.posMapX=self.largeurJeu/2
-        perso.posMapY=self.hauteurJeu/2
-        
         self.persoAff=True
-        
+         
+        perso.posMapX,perso.posMapY=self.posInitPerso()
+         
         #position des premiers blocs
         self.calculPositionDepart(laSalle,perso)
 

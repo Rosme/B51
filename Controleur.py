@@ -123,7 +123,25 @@ class Controleur():
                     i.bouge(self.jeu.joueur)  
             
         self.app.frameJeu.hudHaut.actualiser() 
-	
+        
+        if self.jeu.joueur.race.vie==0:
+            self.jeu.joueur.posMapX,self.jeu.joueur.posMapY=self.app.frameJeu.posInitPerso()
+            self.jeu.joueur.mort()
+            self.jeu.carte.s.salle=self.jeu.carte.s.dictMap[self.jeu.joueur.nomMap]
+            
+            self.app.frameJeu.calculPositionDepart(self.jeu.carte.s,self.jeu.joueur)
+            self.app.frameJeu.calculPositionMilieu(self.jeu.carte.s,self.jeu.joueur)
+            
+            self.jeu.joueur.posMatX,self.jeu.joueur.posMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)
+
+            self.app.frameJeu.effaceMap()
+            
+            self.app.frameJeu.calculOffSet(self.jeu.joueur.posMapX,self.jeu.joueur.posMapY)
+            self.app.frameJeu.ajustOffSet()
+            
+            self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
+            self.app.frameJeu.affichagePerso(self.jeu.joueur)
+            
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
         return self.jeu.info(race)
@@ -175,7 +193,8 @@ class Controleur():
             self.mouvement[3]=True
             
         if key == 'Q':
-            self.autoSoin()
+            #self.autoSoin()
+            self.jeu.joueur.race.vie-=10
             
         if key == 'E':
             if self.jeu.listeRoche:
