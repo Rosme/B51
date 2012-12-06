@@ -3,36 +3,30 @@ import tkinter
 class MenuConnexion():
     def __init__(self, parent):
         self.parent = parent
-        self.menuConnexion()
-        
-    def menuConnexion(self):
+        self.frameMenuConnexion=tkinter.Frame(self.parent.root)
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
-        self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
-        self.fondEcran.place(x=0,y=0)
+        self.fondEcran= tkinter.Canvas(self.frameMenuConnexion,width=1024,height=768)
+        self.fondEcran.pack()
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
-        
         self.fondEcran.create_text(100,60,text="Adresse IP :",font=("Arial","15"),fill="white",tags="textIP")
-        self.ipentry = tkinter.Entry(self.parent.root, width="14" )
-        self.boutonConnexion= tkinter.Button(self.parent.root, text='Debuter', command=self.validerIPort)
-        self.boutonRetour= tkinter.Button(self.parent.root, text='Retour',command=self.retour)
+        self.ipentry = tkinter.Entry(self.frameMenuConnexion, width="14" )
+        self.boutonConnexion= tkinter.Button(self.frameMenuConnexion, text='Debuter', command=self.validerIPort)
+        self.boutonRetour= tkinter.Button(self.frameMenuConnexion, text='Retour',command=self.retour)
                 
         #place les widget
         self.ipentry.place(x=200, y=50)
         self.boutonConnexion.place(x=550,y=650)
         self.boutonRetour.place(x=400,y=650)
-
-    def effacerEcran(self):
-        self.ipentry.destroy()
-        self.boutonConnexion.destroy()   
-        self.boutonRetour.destroy()
-        self.fondEcran.destroy()
+        
+    def menuConnexion(self):
+        self.frameMenuConnexion.pack()
         
     def retour(self):
-        self.effacerEcran()
-        self.parent.menuP.menuPrincipal()
+        self.frameMenuConnexion.pack_forget()
+        self.parent.menuPrincipal()
         
     def debuterPartie(self):
-        self.effacerEcran()
+        self.frameMenuConnexion.pack_forget()
         self.parent.parent.enJeu()
         
     def validerIPort(self):

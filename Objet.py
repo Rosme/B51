@@ -1,8 +1,9 @@
 # -*- coding: ISO-8859-1 -*-
 
 class Objet():
-    def __init__(self, parent, matX, matY, mapX, mapY, largeur, hauteur):
+    def __init__(self, parent, matX, matY, mapX, mapY, largeur, hauteur, nomMap):
         self.parent = parent
+        self.nomMap = nomMap
         self.posMatX = matX
         self.posMatY = matY
         self.posMapX = mapX
@@ -15,8 +16,8 @@ class Objet():
         return [self.posMapX, self.posMapY, self.posMapX+self.largeur, self.posMapY+self.hauteur]
 
 class Sac(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 10, 10)
+    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
         self.items = []
 
     '''
@@ -27,10 +28,13 @@ class Sac(Objet):
     def retirerItem(self, item):
         if item in self.items:
             self.items.remove(item)
+        
+        if not self.items:
+            self.aTerre = False
 
 class Coffre(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 80, 80)
+    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 80, 80, nomMap)
         self.items = []
         self.ouvert = False
 
@@ -85,14 +89,10 @@ class Coffre(Objet):
     def retirerItem(self, item):
         if item in self.items:
             self.items.remove(item)
-
-class Portail(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)
        
 class Roche(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20)
+    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
         self.depose()
         
     def prendre(self, perso):
@@ -153,8 +153,8 @@ class Roche(Objet):
                 i.aTerre = True
     
 class Interrupteur(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, unique):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)
+    def __init__(self, parent, matX, matY, mapX, mapY, unique, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60, nomMap)
         self.active = False
         self.aTerre = False
         self.usageUnique = unique
@@ -228,10 +228,9 @@ class Interrupteur(Objet):
         map.insert(ligne, temp)
     
 class Declencheur(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, unique):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20)
+    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
         self.active = False
-        self.usageUnique = unique
         
     def collision(self, perso):
         if not self.aTerre:
@@ -274,15 +273,16 @@ class Declencheur(Objet):
             pass
         
 class Levier(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, force, energie, recharge):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60,60)
+    def __init__(self, parent, matX, matY, mapX, mapY, force, energie, contreForce, nomMap):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 80,60, nomMap)
         self.force = force
+        self.max_energie = energie
         self.energie = energie
-        self.recharge = recharge
+        self.contreForce = contreForce
         self.active = False
         
     def collision(self, perso):
-        if not self.aTerre:
+        if not self.active:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
             j=0
@@ -309,23 +309,21 @@ class Levier(Objet):
                         else:
                             valide = False
                         if valide:
-                            self.active = True
                             return True
                         k+=2
                 j+=2
                 
-            self.active = False
             return False
     
     def activer(self):
         if self.parent.carte.nomMap == "F_E1S1":
             #25 par 14-15
             map = self.parent.carte.s.salle
-            if self.posMatX == 22 and self.posMatY == 24:
+            if self.posMatX == 12 and self.posMatY == 19:
                 if self.active:
-                    self.ouvrePorte(25, 14, map, "0", False)
+                    self.ouvrePorte(15, 14, map, "0", False)
                 else:
-                    self.ouvrePorte(25, 14, map, "2", False)
+                    self.ouvrePorte(15, 14, map, "2", False)
                 
             self.parent.carte.s.salle = map
             
@@ -348,8 +346,27 @@ class Levier(Objet):
             i+=1    
         
         map.insert(ligne, temp)
+    
+    def tire(self):
+        if self.energie - self.force <= 0:
+            self.energie=0
+            self.active = True
+            print("La porte est ouverte")
+            return True
+        else:
+            self.energie-=self.force
+            return False
+            
+    def recharge(self):
+        if self.energie + self.contreForce >= self.max_energie:
+            self.energie = self.max_energie
+        else:
+            self.energie+=self.contreForce
         
         
+class Portail(Objet):
+    def __init__(self, parent, matX, matY, mapX, mapY):
+        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)       
         
         
         
