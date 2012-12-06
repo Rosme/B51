@@ -10,6 +10,7 @@ class Personnage():
         
     def nouveauPersonnage(self, nom, race):
         self.nom = nom
+        self.nomMap = "MainRoom"
         self.race = race
         self.posMatX = 0
         self.posMatY = 0

@@ -82,6 +82,7 @@ class Controleur():
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.partieCommencer=True
+        self.jeu.carte.chargeObjets()
         self.app.jeu()
         self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()

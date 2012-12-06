@@ -15,6 +15,7 @@ class Carte():
             print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
+        self.s.salle = self.s.dictMap["MainRoom"]
         ligne = list()
         ligne = liens.read()
 
@@ -90,8 +91,8 @@ class Salle():
                 i.split('\n')
                 self.salle.append(i)
             self.dictMap[j] = self.salle
-            print(j)
-            print(self.salle)
+            #print(j)
+            #print(self.salle)
             self.salle = list()
 
         self.fichier.close()
@@ -103,6 +104,7 @@ class Salle():
         #On va ignorer le \n qui peut se retrouver dans les noms de map
         self.listeTempo = self.nomMap.split('\n')
         self.parent.nomMap = self.listeTempo[0]
+        self.parent.joueur.nomMap = self.parent.nomMap
         
         self.salle = self.dictMap[self.parent.nomMap]
 
