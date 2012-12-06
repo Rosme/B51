@@ -18,9 +18,10 @@ class FrameJeu():
         self.hauteurTuile=32
         
 		#assignation de valeur plus tard
-        self.offX=0
-        self.offY=0
-		
+        self.offX=0.5-0.13
+        self.offY=0.5-0.08
+        #self.ajustOffSet()
+        
         self.importerImage()
         
         self.frameDuJeu=tkinter.Frame(self.parent.root)
@@ -28,7 +29,7 @@ class FrameJeu():
         self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
         
-    def initMap(self,perso,laSalle):               
+    def initMap(self,perso,laSalle):
         #position du joueur centre dans l'ecran
         perso.posMapX=self.largeurJeu/2
         perso.posMapY=self.hauteurJeu/2
@@ -36,17 +37,17 @@ class FrameJeu():
         self.persoAff=True
         
         #position des premiers blocs
-        self.calculPositionDepart(laSalle)
+        self.calculPositionDepart(laSalle,perso)
 
-        self.calculPositionMilieu(laSalle)
+        self.calculPositionMilieu(laSalle,perso)
 
         perso.posMatX,perso.posMatY=self.coord(perso.posMapX,perso.posMapY)
-        
+
         self.hudHaut=HudHaut.HudHaut(self,perso)
         self.dispositionPrincipale()
         
-        self.calculOffSet(perso.posMapX,perso.posMapY)
-        self.ajustOffSet()
+        #self.calculOffSet(perso.posMapX,perso.posMapY)
+        #self.ajustOffSet()
         
         self.affichageMap(perso,laSalle)
 
@@ -78,13 +79,13 @@ class FrameJeu():
         self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
     
-    def calculPositionDepart(self,laSalle):
+    def calculPositionDepart(self,laSalle,perso):
         self.posDepartX=(self.largeurJeu/2)
-        self.posDepartY=(self.hauteurJeu/2)-(laSalle.nbColonne*16)+32
+        self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*16))+32
         
-    def calculPositionMilieu(self,laSalle):
-        self.posMilieuDiagoX=(self.posDepartX-(laSalle.nbColonne-1)*32)-32
-        self.posMilieuDiagoY=(self.posDepartY+(laSalle.nbLigne-1)*16)
+    def calculPositionMilieu(self,laSalle,perso):
+        self.posMilieuDiagoX=(self.posDepartX-(laSalle.dictMap[perso.nomMap + " dimensions"][0]-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(laSalle.dictMap[perso.nomMap + " dimensions"][1]-1)*16)
     
     def calculOffSet(self,x,y):
         self.offX=(x/self.largeurJeu)
@@ -95,7 +96,7 @@ class FrameJeu():
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         posInitX=self.posDepartX
         posInitY=self.posDepartY
-        
+
         #affichage de toutes les tuiles de la map ainsi que le personnage
         #passe toutes les lignes de la map
         for i in range(len(map)):
@@ -140,7 +141,7 @@ class FrameJeu():
         
         #calcul de la position x,y en pixel de la tuile la plus pret de la diagonale dans le tableau
         #si une map est carre, cette valeur represente la position x,y dans l'ecran de la tuile la plus a gauche
-        self.calculPositionMilieu(laSalle)
+        self.calculPositionMilieu(laSalle,perso)
         
         #if self.parent.parent.jeu.listePersonnage:
             #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
@@ -149,8 +150,7 @@ class FrameJeu():
         #if self.parent.parent.jeu.listeRoche:
             #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
             #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
-    
-    
+		
     def affichagePerso(self,perso):
         #affichage du personnage
         self.map.delete("perso")
@@ -207,15 +207,13 @@ class FrameJeu():
         
     def coordProchaineZone(self,salle,char,perso):
         trouver=False
-        
-        self.calculPositionDepart(salle)
-        self.calculPositionMilieu(salle)
+        self.calculPositionDepart(salle,perso)
+        self.calculPositionMilieu(salle,perso)
         
         depx=self.posDepartX
         depy=self.posDepartY
-        
-        for i in range(salle.nbLigne):
-            for j in range(salle.nbColonne):
+        for i in range(len(salle.salle)):
+            for j in range(len(salle.salle[i])):
                 if salle.salle[i][j]==char:
                     try:
                         #si l'autre char à droite
@@ -254,7 +252,7 @@ class FrameJeu():
             if trouver:
                 break
         
-        tempMatX=salle.nbColonne-matx
+        tempMatX=salle.dictMap[perso.nomMap + " dimensions"][0]-matx
         depx+=(32*maty)-(32*tempMatX)+32
         depy+=(16*maty)+(16*tempMatX)-16
         

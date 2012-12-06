@@ -97,13 +97,13 @@ class Controleur():
         tempMatX,tempMatY=self.app.frameJeu.coord(self.jeu.joueur.posMapX+tempx,self.jeu.joueur.posMapY+tempy)
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
-            self.jeu.carte.s.changementCarte(car)
+            self.jeu.joueur.nomMap=self.jeu.carte.s.changementCarte(car)
             self.jeu.joueur=self.app.frameJeu.coordProchaineZone(self.jeu.carte.s,car,self.jeu.joueur)
             self.app.frameJeu.effaceMap()
             self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
             self.app.frameJeu.affichagePerso(self.jeu.joueur)
 
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
             if laMap[tempMatY+1][tempMatX-1]!='1':
                 if tempx!=0 or tempy!=0:
                     self.jeu.joueur.posMatX=tempMatX
