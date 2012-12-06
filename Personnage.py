@@ -3,6 +3,7 @@ import pickle
 import Item
 import Objet
 from Balle import *
+import IA
         
 class Personnage():
     def __init__(self):
@@ -10,20 +11,22 @@ class Personnage():
         
     def nouveauPersonnage(self, nom, race):
         self.nom = nom
-        self.nomMap = "MainRoom"
         self.race = race
         self.posMatX = 0
         self.posMatY = 0
-        self.posMapX = 0
-        self.posMapY = 0
+        self.posEcranX = 612
+        self.posEcranY = 350
+        self.posMapX = 672
+        self.posMapY = 336
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
-        self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
-        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 5, 20, 1))
-        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
-        self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
+        self.inventaire.ajouterItem(Item.Arme(7, 5, "Fusil", "Pewpew", 5, 1000000, 2, 0.5, 500))
+        self.inventaire.ajouterItem(Item.Armure(8, 10, "Armure", "Q.Q", 5, 20, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
+        self.coffre = Objet.Coffre(None, 19,1,640,-32)
+        if self.race.race == "Logomate":
+            self.ia = IA.IA(self)
     
     def bouge(self, mouvement):
         tempx = 0
@@ -49,12 +52,12 @@ class Personnage():
             #Si c'est une armure (ID = 8)
             if i.id == 8:
                 #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
-                if i.energie - degat + i.defense + self.race.defense >= 0:
+                if i.energie - degat >= 0:
                     i.subit(degat)
                     break
                 #Sinon, prend le reste et descend la vie.
                 else:
-                    reste = degat + i.defense + self.race.defense
+                    reste = degat
                     reste -= i.energie
                     degat -= reste
                     i.subit(degat)
@@ -63,15 +66,12 @@ class Personnage():
     
     def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:
-            #ID de l'arme = 7
+            #ID de l'armure = 7
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
                     listeBalle.append(Balle(self, x, y, i.force+self.race.attaque))
-                    if listeBalle[len(listeBalle)-1].valide:
-                        return True
-                    else:
-                        return False
+                    break
             
     def recharge(self):
         #Recharge l'arme
@@ -111,10 +111,10 @@ class Personnage():
         for i in self.inventaire.items:
             #ID de la seringue = 3
             if i.id == 3:
-                if self.race.vie + i.qualite < self.race.max_vie:
+                if self.race.vie + i.qualite < 350:
                     i.utiliser(self)
                 else:
-                    self.race.vie = self.race.max_vie - i.qualite
+                    self.race.vie = 350 - i.qualite
                     i.utiliser(self)
                     
                 self.inventaire.retirerItem(i)

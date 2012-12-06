@@ -11,29 +11,42 @@ class IA():
         self.posMatY = self.parent.posMatY
         self.posMapX = self.parent.posMapX
         self.posMapY = self.parent.posMapY
-        self.destX = None #destination 
-        self.destY = 6 #destination 
+        self.destXMatEcran = 50 #destination en pixel 
+        self.destYMatEcran = 50 #destination en pixel
+        self.destXMat = 0 ##destination dans la matrice
+        self.destYMat = 0 ##destination dans la matrice 
         self.listeOuverte =[]  ## liste qui contient tout les noeud qui n'ont pas été analysé 
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
 
-    def deplacement(self):
+    def choisitAction(self):
+        pass
+        
+    def choisitDeplacement(self,map):
         ## le logomate choisit ce qu'il va faire 
-        if self.listeFerme.pop().posX == self.destX & self.listeFerme.pop().posY == self.destY: 
-            ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
-            self.listeMouvement.pop()
+        ## // je vais tricher et donner un parent a personnage il ne faut pas faire sa trouve une solution
+        if self.listeFerme :
+            noeudTemp = self.listeFerme.pop()
+            if noeudTemp.posX == self.destXMat & noeudTemp.posY == self.destYMat: 
+                ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
+                depX  ## le nombre de pixel déplacer en x
+                depY ## le nombre de pixel déplacer en x
+                
+                depX, depY = calculDeplacement(self.listeMouvement.pop())
+                self.deplacement(depX,depY)
             
-        if self.listeFerme.pop().posX ==  1:
-            pass
+        else:
+            ##// tu va avoir un temps de retard si tu fais pas faire le move après mais pour tester sa va
+            self.chercheChemin(map)
 		
     def chercheChemin(self,map):
         ## venir voir GAB pour le fonctionnement de la sélection de chemin 
         
-        self.h = math.sqrt((self.destX-self.posMatX)**2 + (self.destY-self.posMatY)**2)  
-        self.noedCourant = Noeud(0,self.h,self.posMatX,self.posMatY,None,None)
-        listeFerme.append(noeudCourant)
+        self.h = math.sqrt((self.destXMat-self.posMatX)**2 + (self.destYMat-self.posMatY)**2)  
+        self.noeudCourant = Noeud(0,self.h,self.posMatX,self.posMatY,None,None)
+        self.listeFerme.append(self.noeudCourant)
 
-        while self.noeudCourant.posX != self.destX & self.noeudCourant.posY != self.destY:         
+        while self.noeudCourant.posX != self.destXMat & self.noeudCourant.posY != self.destYMat:         
             i = 1
             while i <10:
                 tempPosX,tempsPosY = calculDirection(i)
@@ -41,7 +54,7 @@ class IA():
                 ##on regarde si ya un mur la ou on va                                                
                 if deplacementPossible(tempPosX,tempPosY,i,map): 
                     self.g = noeudCourant.g+1
-                    self.h = math.sqrt((self.destX-self.posMatX)**2 + (self.destY-self.posMatY)**2) 
+                    self.h = math.sqrt((self.destXMat-self.posMatX)**2 + (self.destYMat-self.posMatY)**2) 
                      ## //je pourrais p-t créer mon noeud plus tard
                     self.noeudTemp = Noeud(self.g,self.h,tempPosX,tempPosY,self.noeudCourant.posX,self.noeudCourant.posY)
                     
@@ -53,7 +66,7 @@ class IA():
                 i +=1
             
             self.noeudCourant = choisirNoeudCourant()
-        deplace(noeudCouran)    
+        self.listeDeplacement(self.noeudCourant)    
  
     def listeDeplacement(self,noeudCourant): 
     ## on fais une liste de tout les déplacements qu'il faut faire pour se rendre à destination 
@@ -66,7 +79,7 @@ class IA():
                     
         if self.listeMouvement[-1] != None:   # si on est pas au point de départ on move
             ## FAIT LE DÉPLACEMENT
-            self.listeMouvement.remove[-1]
+            self.listeMouvement.pop()
     
     def calculDirection(self,direction):
         ## je renvoi la position des cases alentours du noeud courant pour pouvoir les analysé
@@ -157,12 +170,40 @@ class IA():
         self.listeFerme.append(noeudTemp)
         self.listeOuverte.remove(noeudTemp)
         return noeudTemp
-	
+	        
+    def calculDeplacement(self,destination):
+        ## on calcul la direction dans laquelle on doit se déplacer
+        mouvement = list() 
+        #0-haut,1-droite,2-bas,3-gauche
+        for i in range(4):
+            self.mouvement.append(False)
+            
+        if destination.posX > self.posMatX:
+            mouvement[1]= True
+            
+        if destination.posX < self.posMatX:
+            mouvement[3]= True
+            
+        if destination.posY < self.posMatY:
+            mouvement[0]= True
+            
+        if destination.posY > self.posMatY:
+            mouvement[2]= True
+            
+        return self.parent.bouge(mouvement)
+    
+    def deplacement (self, depX,depY):
+        ## on déplace le logomate
+        self.posMapX += depX
+        self.posMapY += depY
+        
+        self.posMatX, self.posMatY = coord(self,posMapX,posMapY)
+        
 class Noeud():
     def __init__(self,g,h,positionX,positionY,parentX,parentY):
         self.g = g   ## distance entre le point de départ et le noeud courrant     
         self.h = h   ## distance entre le noeud courant et l'objectif
-        self.f = calculF(self.g,self.h)  ## distance enre le point de départ et l'arriver si on passe par là
+        self.f = self.calculF()  ## distance enre le point de départ et l'arriver si on passe par là
         self.posX = positionX
         self.posY = positionY
         self.parentX = parentX
