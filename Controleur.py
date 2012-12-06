@@ -83,8 +83,7 @@ class Controleur():
     def enJeu(self):
         self.partieCommencer=True
         self.jeu.carte.chargeObjets()
-        self.app.jeu()
-        self.jeu.joueur=self.app.frameJeu.initMap(self.jeu.joueur,self.jeu.carte.s)
+        self.jeu.joueur=self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()
         
     def actualiser(self):
@@ -131,6 +130,7 @@ class Controleur():
         
     def nouveauJoueur(self, race, nom):
         self.jeu.nouveauJoueur(race, nom)
+        
         
     def chargerJoueur(self, nom):
         pass
@@ -213,6 +213,7 @@ class Controleur():
             
         if event.keysym == 'Escape':
             self.app.frameJeu.effaceTout()
+            self.partieCommencer=False
             self.app.menuPrincipal()
         
     def peseTire(self,event):

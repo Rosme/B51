@@ -16,11 +16,15 @@ class Application():
         
         self.root=tkinter.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.quitter)
-        
+        self.root.config(bg="#000")
+
+        #création de tous les menus
         self.menuP = MenuPrincipal.MenuPrincipal(self)
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         #self.menuP = MenuChargerPartie.MenuChargerPartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
+        #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
+        self.frameJeu=FrameJeu.FrameJeu(self)
         
     def menuPrincipal(self):
         self.menuP.menuPrincipal()
@@ -37,8 +41,8 @@ class Application():
     def menuConnexion(self):
         self.menuC.menuConnexion()
     
-    def jeu(self):
-        self.frameJeu=FrameJeu.FrameJeu(self)
+    def jeu(self,perso,laSalle):
+        return self.frameJeu.initMap(perso,laSalle)
         
     def quitter(self):
         self.root.quit()

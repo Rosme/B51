@@ -5,6 +5,7 @@ import pickle
 class MenuNouvellePartie():
     def __init__(self, parent):
         self.parent = parent
+
         self.frameMenuNouvellePartie=tkinter.Frame(self.parent.root)
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuNouvellePartie,width=1024,height=768)
@@ -45,6 +46,7 @@ class MenuNouvellePartie():
         self.raceInfo()
    
     def menuNouvellePartie(self):
+        self.nomJoueur.delete(0, tkinter.END)
         self.frameMenuNouvellePartie.pack()
 
     def retour(self):
@@ -71,8 +73,6 @@ class MenuNouvellePartie():
             print("nom vide")  
         else:
             self.parent.parent.nouveauJoueur(self.valRace.get(), self.nomJoueur.get())
-            #self.parent.parent.sauvegardeJoueur()
-            #self.saveChar()
             self.connexion()
 
     def validate(self, newvalue):

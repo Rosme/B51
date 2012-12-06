@@ -7,8 +7,6 @@ class FrameJeu():
     def __init__(self,parent):
         self.parent = parent
         
-        self.parent.root.config(bg="#000")
-        
         #dimensions du jeu
         self.largeurJeu=4000
         self.hauteurJeu=4000
@@ -17,19 +15,22 @@ class FrameJeu():
         self.largeurTuile=64
         self.hauteurTuile=32
         
-		#assignation de valeur plus tard
-        self.offX=0.5-0.13
-        self.offY=0.5-0.08
-        #self.ajustOffSet()
-        
+	#assignation de valeur plus tard pour la position des scrollbars
+        self.offX=0
+        self.offY=0
+        #importation des images
         self.importerImage()
         
-        self.frameDuJeu=tkinter.Frame(self.parent.root)
-        
-        self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
-        self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
-        
+    def importerImage(self):
+        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
+        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
+        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
+        self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
+
     def initMap(self,perso,laSalle):
+
+        self.frameDuJeu=tkinter.Frame(self.parent.root)
+
         #position du joueur centre dans l'ecran
         perso.posMapX=self.largeurJeu/2
         perso.posMapY=self.hauteurJeu/2
@@ -43,11 +44,12 @@ class FrameJeu():
 
         perso.posMatX,perso.posMatY=self.coord(perso.posMapX,perso.posMapY)
 
-        self.hudHaut=HudHaut.HudHaut(self,perso)
+        self.hudHaut=HudHaut.HudHaut(self,perso,self.frameDuJeu)
+
         self.dispositionPrincipale()
         
-        #self.calculOffSet(perso.posMapX,perso.posMapY)
-        #self.ajustOffSet()
+        self.calculOffSet(perso.posMapX,perso.posMapY)
+        self.ajustOffSet()
         
         self.affichageMap(perso,laSalle)
 
@@ -56,7 +58,9 @@ class FrameJeu():
         return perso
     
     def dispositionPrincipale(self):
-        
+        self.xscrollbar = tkinter.Scrollbar(self.frameDuJeu, orient=tkinter.HORIZONTAL)
+        self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
+
         #creation du fond noir derriere la map
         self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000",highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         self.map.config(scrollregion=(0,0,self.largeurJeu,self.hauteurJeu),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
@@ -72,12 +76,6 @@ class FrameJeu():
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()
-    
-    def importerImage(self):
-        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
-        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
-        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
-        self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
     
     def calculPositionDepart(self,laSalle,perso):
         self.posDepartX=(self.largeurJeu/2)
@@ -301,7 +299,5 @@ class FrameJeu():
          self.map.delete(tkinter.ALL)
     
     def effaceTout(self):
-        self.map.delete(tkinter.ALL)
-        self.frameDuJeu.pack_forget()
-        self.hudHaut.frameHudHaut.pack_forget()
-        self.parent.parent.enJeu=False
+        self.frameDuJeu.destroy()
+        self.parent.parent.partieCommencer=False
