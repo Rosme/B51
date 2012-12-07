@@ -193,7 +193,9 @@ class Controleur():
             self.mouvement[3]=True
             
         if key == 'Q':
-            #self.autoSoin()
+            self.autoSoin()
+            
+        if key == 'M':
             self.jeu.joueur.race.vie-=10
             
         if key == 'E':
