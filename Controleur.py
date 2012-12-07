@@ -119,8 +119,7 @@ class Controleur():
             
         self.app.frameJeu.hudHaut.actualiser() 
         
-        if self.jeu.joueur.race.vie==0:
-            #self.jeu.joueur.posMapX,self.jeu.joueur.posMapY=self.app.frameJeu.posInitPerso()
+        if self.jeu.joueur.race.vie<=0:
             self.jeu.joueur.mort()
             self.jeu.carte.s.salle=self.jeu.carte.s.dictMap[self.jeu.joueur.nomMap]
             
@@ -133,8 +132,7 @@ class Controleur():
         return self.jeu.info(race)
         
     def nouveauJoueur(self, race, nom):
-        self.jeu.nouveauJoueur(race, nom)
-        
+        self.jeu.nouveauJoueur(race, nom)        
         
     def chargerJoueur(self, nom):
         pass
@@ -182,7 +180,7 @@ class Controleur():
             self.autoSoin()
             
         if key == 'M':
-            self.jeu.joueur.race.vie-=10
+            self.jeu.joueur.touche(20)
             
         if key == 'E':
             if self.jeu.listeRoche:
