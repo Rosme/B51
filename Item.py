@@ -30,7 +30,7 @@ class Divers(Item):
 
 	#Augmente la vie du joueur
 	def utiliser(self, joueur):
-		joueur.vie += self.qualite
+		joueur.race.vie += self.qualite
 
 '''
 Arme

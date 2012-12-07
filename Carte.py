@@ -4,12 +4,8 @@ import os
 class Carte():
     def __init__(self, parent):
         self.parent = parent
-        self.nomMap = "MainRoom"
         self.s = Salle(self)
-        self.s.chargeCarte(self.nomMap)
-        #self.s.changementCarte('v') pour tester seulement
-        #self.s.sauvegarderMap(self.nomMap, ['yo', 'yo', 'yo']) pour tester seulement
-        #self.chargeObjets()
+        self.s.chargeCartes()
         
     def chargeObjets(self):
         try:
@@ -18,129 +14,128 @@ class Carte():
             print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
+        self.s.salle = self.s.dictMap["MainRoom"]
         ligne = list()
         ligne = liens.read()
 
         """Tous les objets possible"""
-        self.listeObjet = ["Logomate", "Sac", "Coffre", "Roche", "Interrupteur", "Declencheur", "Levier"]
-
-        """Liste des positions de chaque objet """
-        self.parent.listeLogomate = list()
-        self.parent.listeSac = list()
-        self.parent.listeCoffre = list()
-        self.parent.listeRoche = list()
-        self.parent.listeInterrupteur = list()
-        self.parent.listeDeclencheur = list()
-        self.parent.listeLevier = list()
+        listeObjet = ["Logomate", "Sac", "Coffre", "Roche", "Interrupteur", "Declencheur", "Levier"]
         
-        self.mapValide = False
-        self.valideAssign = False
-        self.posListeObj = 0
+        mapValide = False
+        valideAssign = False
+        posListeObj = 0
+        posListeMap = 0
 
         """Processus de lecture des objets (Logomate, Sac, Coffre, Roche...)
-            selon la map choisie à partir du fichier lien """
+            à partir du fichier lien """
         for i in ligne.splitlines():
             i.split('\n')
-            if(i == self.nomMap):
-                self.mapValide = True
-                self.valideEmplacement = True
-            if(i == self.listeObjet[self.posListeObj] and self.mapValide == True):
-                self.valideAssign = True
-                self.mapValide = False
-            elif(self.valideAssign == True and i != "break"):
-                if(self.listeObjet[self.posListeObj] == "Logomate"):
-                    self.parent.nouveauLogo(self.convertion(i))
-                elif (self.listeObjet[self.posListeObj] == "Sac"):
-                    self.listeSac.append(self.convertion(i))
-                elif(self.listeObjet[self.posListeObj] == "Coffre"):
-                    self.listeCoffre.append(self.convertion(i))
-                elif(self.listeObjet[self.posListeObj] == "Roche"):
-                    self.parent.nouvelleRoche(self.convertion(i))
-                elif(self.listeObjet[self.posListeObj] == "Interrupteur"):
-                    self.parent.nouveauInterrupt(self.convertion(i))
-                elif(self.listeObjet[self.posListeObj] == "Declencheur"):
-                    self.listeDeclencheur.append(self.convertion(i))
-                elif(self.listeObjet[self.posListeObj] == "Levier"):
-                    self.listeLevier.append(self.convertion(i))
-            elif(self.valideAssign == True and i == "break"):
-                self.valideAssign = False
-                self.mapValide = True
-                self.posListeObj += 1
+            if(i == self.parent.listeMap[posListeMap]):
+                mapValide = True
+            if(i == listeObjet[posListeObj] and mapValide == True):
+                valideAssign = True
+            elif(valideAssign == True and i != "break"):
+                if(listeObjet[posListeObj] == "Logomate"):
+                    self.parent.nouveauLogo(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif (listeObjet[posListeObj] == "Sac"):
+                    self.parent.nouveauSac(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif(listeObjet[posListeObj] == "Coffre"):
+                    self.parent.nouveauCoffre(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif(listeObjet[posListeObj] == "Roche"):
+                    self.parent.nouvelleRoche(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif(listeObjet[posListeObj] == "Interrupteur"):
+                    self.parent.nouveauInterrupt(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif(listeObjet[posListeObj] == "Declencheur"):
+                    self.parent.nouveauDeclencheur(self.convertion(i), self.parent.listeMap[posListeMap])
+                elif(listeObjet[posListeObj] == "Levier"):
+                    self.parent.nouveauLevier(self.convertion(i), self.parent.listeMap[posListeMap])
+            elif(valideAssign == True and i == "break"):
+                valideAssign = False
+                posListeObj += 1
                         
-                if(self.posListeObj >= len(self.listeObjet)):
-                    self.posListeObj -= 1
-            if(i == ";" and self.mapValide == True):
+                if(posListeObj >= len(listeObjet)):
+                    posListeObj -= 1
+            if(i == ";" and posListeMap == self.parent.nbObjMap-1):
                 break
+            elif(i == ";" and posListeMap < self.parent.nbObjMap-1):
+                mapValide = False
+                posListeMap += 1
+                posListeObj = 0
         liens.close()
 
-    def convertion(self, variable): #convertit les positions (5:5) en liste [(5,5) ...]
-        self.var = variable
-        self.tempo = self.var.split(":")
-        return self.tempo
+    def convertion(self, variable): #convertir les positions (5:5) en liste [(5,5) ...]
+        tempo = variable.split(":")
+        return tempo
 
 class Salle():
     def __init__(self, parent):
         self.parent = parent
         self.salle = list()
+        self.dimensionCarte = int()
         self.dictSauvegarde = dict()
-        self.dictionnaireAsso = dict()
-    
-    def chargeCarte(self, nomMap):
-        #On va ignorer le \n qui peut se retrouver dans les noms de map
-        self.laMap = nomMap
-        self.listeTempo = self.laMap.split('\n')
-        self.laMap = self.listeTempo[0]
-        
-        self.ouvertureMap(self.laMap)
+        self.dictMap = dict()
+        self.nomMap = "MainRoom"
 
-        """Dimensions de la carte"""    
-        self.dimensionCarte = self.fichier.readline()
-        self.tempo = self.dimensionCarte.split(":")
-        self.nbColonne = int(self.tempo[0])
-        self.nbLigne = int(self.tempo[1])
-
-        self.fichier.readline()
-        self.fichier.readline()
+    def chargeCartes(self):
+        for j in self.parent.parent.listeMap:
+            self.ouvertureMap(j)
+            self.dimensionsMap(j)
+            self.liensCarte()
+            self.dictMap[j + " liens"] = self.dictionnaireLiens
+            ligne = list()
+            ligne = self.fichier.read()
+            for i in ligne.splitlines():
+                i.split('\n')
+                self.salle.append(i)
+            self.dictMap[j] = self.salle
+            #print(j)
+            #print(self.salle)
+            self.salle = list()
         
-        self.salle = list()
-        ligne = list()
-        ligne = self.fichier.read()
-        
-        for i in ligne.splitlines():
-            i.split('\n')
-            self.salle.append(i)
-
         self.fichier.close()
-        self.parent.nomMap = self.laMap
-        self.parent.chargeObjets()
-
-    def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
-        self.dictSauvegarde[nomMap] = contenuMap
-
-    def ouvertureMap(self, nomMap):
-        try:
-            self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
-            self.nomMap = nomMap
-        except IOError:
-            print ("La map " + nomMap + " n'existe pas.")
-            os._exit(1)
     
-    def changementCarte(self, charactere):
-        #On va ignorer le \n qui peut se retrouver dans les noms de map
-        self.listeTempo = self.nomMap.split('\n')
-        self.nomMap = self.listeTempo[0]
-        
-        self.ouvertureMap(self.nomMap)
-        self.fichier.readline()
-        
+    def liensCarte(self):
+        self.dictionnaireLiens = dict()
         self.assoCarte = self.fichier.readline()
         self.listeAsso = self.assoCarte.split(" ")
         
         i = 0
         while i < len(self.listeAsso):
             self.listeValeur = self.listeAsso[i].split(":")
-            self.dictionnaireAsso[self.listeValeur[0]] = self.listeValeur[1]
+            self.dictionnaireLiens[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
+    
+    def changementCarte(self, caractere):
+        self.liensCarte = self.dictMap[self.nomMap + " liens"]
+        self.nomMap = self.liensCarte[caractere]
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.listeTempo = self.nomMap.split('\n')
+        self.nomMap = self.listeTempo[0]
+        
+        self.salle = self.dictMap[self.nomMap]
+        
+        return self.nomMap
+        
+    def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
+        self.dictSauvegarde[nomMap] = contenuMap
 
-        self.fichier.close()
-        self.chargeCarte(self.dictionnaireAsso[charactere])
+    def ouvertureMap(self, nomMap):
+        try:
+            self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
+        except IOError:
+            print ("La map " + nomMap + " n'existe pas.")
+            os._exit(1)
+
+    def ignoreSlashN(self, nomMap):
+        listeTempo = nomMap.split('\n')
+        nomMap = listeTempo[0]
+        return nomMap
+
+    def dimensionsMap(self,nomMap):
+        self.dimensions = list()
+        self.dimensionCarte = self.fichier.readline()
+        tempo = self.dimensionCarte.split(":")
+        #0-colonne 1-ligne
+        self.dimensions.append(int(tempo[0]))
+        self.dimensions.append(int(tempo[1]))
+        self.dictMap[nomMap + " dimensions"] = self.dimensions 
