@@ -37,6 +37,9 @@ class FrameJeu():
         #position du personnage dans la mainRoom
         perso.posMapX,perso.posMapY=self.posInitPerso()
         
+        #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
+        self.persoAff=True
+		
         #position des premiers blocs
         self.calculPositionDepart(laSalle,perso)
         
@@ -54,8 +57,7 @@ class FrameJeu():
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
         
-        #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
-        self.persoAff=True
+        
          
         #initialisation relatif à la map et au personnage
         perso=self.debutDePartie(perso,laSalle)
@@ -129,6 +131,10 @@ class FrameJeu():
         
     def affichageMap(self,perso,laSalle):
         map=laSalle.salle
+        
+        #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
+        self.persoAff=True
+        
         #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         #position de la tuile la plus haute affiché dans l'écran
         posInitX=self.posDepartX
