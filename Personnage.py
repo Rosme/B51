@@ -3,6 +3,7 @@ import pickle
 import Item
 import Objet
 from Balle import *
+import IA
         
 class Personnage():
     def __init__(self):
@@ -18,12 +19,23 @@ class Personnage():
         self.posMapY = 0
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
-        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 5, 20, 1))
+        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 0.8, 100, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
+		##Code Gab
+        if self.race.race == "Logomate":
+            self.ia = IA.IA(self)
+        
+        
+    def mort(self):
+        self.nomMap = "MainRoom"
+        self.race.vie=self.race.max_vie/2
+        for p in self.inventaire:
+            if p.id==8:
+                pass
     
     def bouge(self, mouvement):
         tempx = 0
@@ -49,17 +61,23 @@ class Personnage():
             #Si c'est une armure (ID = 8)
             if i.id == 8:
                 #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
-                if i.energie - degat + i.defense + self.race.defense >= 0:
+                if i.energie - (degat * i.defense) >= 0:
+                    degat=degat * i.defense
                     i.subit(degat)
                     break
                 #Sinon, prend le reste et descend la vie.
-                else:
-                    reste = degat + i.defense + self.race.defense
-                    reste -= i.energie
+                else:                
+                    reste = degat * i.defense 
+                    reste -= i.energie                    
                     degat -= reste
+                    reste
                     i.subit(degat)
                     self.subit(reste)
                     break
+					
+    def calculDegat(self,item,degat):
+        item.defense*self.race.defense*degat
+        
     
     def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:

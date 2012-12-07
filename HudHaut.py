@@ -1,14 +1,14 @@
 import tkinter
 
 class HudHaut():
-    def __init__(self,parent,perso):
+    def __init__(self,parent,perso,frame):
         self.parent=parent
         self.perso=perso
         
         self.importerImage()
         
         self.frameHudHaut=tkinter.Frame(self.parent.parent.root)
-        self.cHudHaut=tkinter.Canvas(self.frameHudHaut,width=1024,height=80,bg="#000",bd=0,highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
+        self.cHudHaut=tkinter.Canvas(frame,width=1024,height=80,bg="#000",bd=0,highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         
         self.affichageImage()
         
@@ -58,6 +58,7 @@ class HudHaut():
         self.cHudHaut.create_rectangle(410, 60, self.grandeurArme+410, 75,fill="blue",tag="hudhaut")
         self.cHudHaut.create_text(640,40,text=self.nbSeringue,fill='white',font=("Arial","10"),tag="hudhaut")
         self.cHudHaut.create_text(835,40,text=str(self.poidsJoueur)+" /"+str(self.perso.race.poidsLimite),fill='white',font=("Arial","10"),tag="hudhaut")
+
     def actualiser(self):
         self.affichageBarre()
         

@@ -4,7 +4,6 @@ import os
 class Carte():
     def __init__(self, parent):
         self.parent = parent
-        self.nomMap = "MainRoom"
         self.s = Salle(self)
         self.s.chargeCartes()
         
@@ -73,16 +72,14 @@ class Salle():
         self.parent = parent
         self.salle = list()
         self.dimensionCarte = int()
-        self.nbColonne = int()
-        self.nbLigne = int()
         self.dictSauvegarde = dict()
-        self.dictionnaireLiens = dict()
         self.dictMap = dict()
+        self.nomMap = "MainRoom"
 
     def chargeCartes(self):
         for j in self.parent.parent.listeMap:
             self.ouvertureMap(j)
-            self.dimensionsMap()
+            self.dimensionsMap(j)
             self.liensCarte()
             self.dictMap[j + " liens"] = self.dictionnaireLiens
             ligne = list()
@@ -94,32 +91,11 @@ class Salle():
             #print(j)
             #print(self.salle)
             self.salle = list()
-
+        
         self.fichier.close()
-
-    def changementCarte(self, caractere):
-        self.liensCarte = self.dictMap[self.nomMap + " liens"]
-        self.parent.nomMap = self.liensCarte[caractere]
-        
-        #On va ignorer le \n qui peut se retrouver dans les noms de map
-        self.listeTempo = self.nomMap.split('\n')
-        self.parent.nomMap = self.listeTempo[0]
-        self.parent.joueur.nomMap = self.parent.nomMap
-        
-        self.salle = self.dictMap[self.parent.nomMap]
-
-    def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
-        self.dictSauvegarde[nomMap] = contenuMap
-
-    def ouvertureMap(self, nomMap):
-        try:
-            self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
-            self.nomMap = nomMap
-        except IOError:
-            print ("La map " + nomMap + " n'existe pas.")
-            os._exit(1)
     
     def liensCarte(self):
+        self.dictionnaireLiens = dict()
         self.assoCarte = self.fichier.readline()
         self.listeAsso = self.assoCarte.split(" ")
         
@@ -128,14 +104,38 @@ class Salle():
             self.listeValeur = self.listeAsso[i].split(":")
             self.dictionnaireLiens[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
+    
+    def changementCarte(self, caractere):
+        self.liensCarte = self.dictMap[self.nomMap + " liens"]
+        self.nomMap = self.liensCarte[caractere]
+        #On va ignorer le \n qui peut se retrouver dans les noms de map
+        self.listeTempo = self.nomMap.split('\n')
+        self.nomMap = self.listeTempo[0]
+        
+        self.salle = self.dictMap[self.nomMap]
+        
+        return self.nomMap
+        
+    def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
+        self.dictSauvegarde[nomMap] = contenuMap
+
+    def ouvertureMap(self, nomMap):
+        try:
+            self.fichier = open("assets/map/" + nomMap + ".mp", 'r')
+        except IOError:
+            print ("La map " + nomMap + " n'existe pas.")
+            os._exit(1)
 
     def ignoreSlashN(self, nomMap):
         listeTempo = nomMap.split('\n')
         nomMap = listeTempo[0]
         return nomMap
 
-    def dimensionsMap(self):
+    def dimensionsMap(self,nomMap):
+        self.dimensions = list()
         self.dimensionCarte = self.fichier.readline()
         tempo = self.dimensionCarte.split(":")
-        self.nbColonne = int(tempo[0])
-        self.nbLigne = int(tempo[1])
+        #0-colonne 1-ligne
+        self.dimensions.append(int(tempo[0]))
+        self.dimensions.append(int(tempo[1]))
+        self.dictMap[nomMap + " dimensions"] = self.dimensions

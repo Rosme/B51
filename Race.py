@@ -7,6 +7,7 @@ class Race():
         self.max_vie = vie
         self.vie = vie
         self.attaque = attaque
+		#1 étant aucune armure et 0 étant une armure invincible
         self.defense = defense
         self.poidsLimite = poidsLimite
         self.description = ""
@@ -16,28 +17,28 @@ class Race():
         
 class Humain(Race):
     def __init__(self):
-        Race.__init__(self, "Humain", 300, 5, 5, 20)
+        Race.__init__(self, "Humain", 300, 5, 0.5, 20)
         self.description = "Ceci est un humain"
     
 class Irki(Race):
     def __init__(self):
-        Race.__init__(self, "Irki", 300, 5, 5, 20)
+        Race.__init__(self, "Irki", 300, 5, 0.5, 20)
         self.description = "Ceci est un Irki"
     
 class Popamu(Race):
     def __init__(self):
-        Race.__init__(self, "Popamu", 300, 5, 5, 20)
+        Race.__init__(self, "Popamu", 300, 5, 0.5, 20)
         self.description = "Ceci est un Popamu"
         
 class Atarix(Race):
     def __init__(self):
-        Race.__init__(self, "Atarix", 300, 5, 5, 20) 
+        Race.__init__(self, "Atarix", 300, 5, 0.5, 20) 
         self.description = "Ceci est un Atarix"
     
     
 class Logomate(Race):
     def __init__(self):
-        Race.__init__(self, "Logomate", 300, 5, 5, 20) 
+        Race.__init__(self, "Logomate", 300, 5, 0.5, 20) 
         self.description = "Ceci est un Logomate"
     
     def IA(self):

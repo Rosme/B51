@@ -1,11 +1,11 @@
 MainRoom
 Logomate
-572:336
+2000:2000
 break
 Sac
 break
 ;
-EndRoom
+Endroom
 Logomate
 break
 ;
