@@ -103,19 +103,6 @@ class Personnage():
          
     def subit(self, degat):
         self.race.vie -= degat
-                
-    def chargerPersonnage(self, nom):
-        nomFichier = nom + '.plr'
-        with open(nomFichier,'rb') as fichier:
-            joueur = pickle.Unpickler(fichier)
-            self = joueur.load()
-        return self
-        
-    def sauvegardePersonnage(self):
-        nomFichier = self.nom + '.plr'
-        with open(nomFichier,'wb') as fichier:
-            save = pickle.Pickler(fichier)
-            save.dump(self)
     
     def autoSoin(self):
         for i in self.inventaire.items:

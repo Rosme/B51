@@ -326,14 +326,14 @@ class Levier(Objet):
             return False
     
     def activer(self):
-        if self.parent.carte.nomMap == "F_E1S1":
-            #25 par 14-15
+        if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 12 and self.posMatY == 19:
+            if self.posMatX == 12 and self.posMatY == 11:
                 if self.active:
-                    self.ouvrePorte(15, 14, map, "0", False)
-                else:
-                    self.ouvrePorte(15, 14, map, "2", False)
+                    self.ouvrePorte(16, 14, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    return True
+                return False
                 
             self.parent.carte.s.salle = map
             

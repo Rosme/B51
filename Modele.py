@@ -87,13 +87,6 @@ class Jeu():
             
         elif race == "Atarix":
             self.joueur.nouveauPersonnage(nom, Race.Atarix())
-
-    def chargerJoueur(self, nom):        
-        self.joueur = Personnage()
-        self.joueur = self.joueur.chargerPersonnage(nom)
-        
-    def sauvegardeJoueur(self):
-        self.joueur.sauvegardePersonnage()
         
     def rajoutMetal(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(0, "Metal", "Metal Scrap used to craft Guns and Armors"))

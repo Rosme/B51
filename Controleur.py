@@ -15,7 +15,6 @@ class Controleur():
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)
-            
         self.demarrer()
         self.app.root.mainloop()
     
@@ -135,15 +134,7 @@ class Controleur():
         return self.jeu.info(race)
         
     def nouveauJoueur(self, race, nom):
-        self.jeu.nouveauJoueur(race, nom)        
-        
-    def chargerJoueur(self, nom):
-        pass
-        #self.jeu.chargerJoueur(nom)
-        
-    def sauvegardeJoueur(self):
-        pass
-        #self.jeu.sauvegardeJoueur()
+        self.jeu.nouveauJoueur(race, nom)
         
     def autoSoin(self):
         self.jeu.joueur.autoSoin()
@@ -196,7 +187,10 @@ class Controleur():
                 for i in self.jeu.listeLevier:
                     if i.collision(self.jeu.joueur):
                         if i.tire():
-                            i.activer()
+                            if i.activer():
+                                self.app.frameJeu.effaceMap()
+                                self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
+                                
             
             self.press = True
     

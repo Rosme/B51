@@ -21,7 +21,7 @@ break
 Declencheur
 break
 Levier
-1040:400
+2110:2000
 break
 ;
 F_E1S2
