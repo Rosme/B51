@@ -82,6 +82,7 @@ class Controleur():
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.partieCommencer=True
+        self.jeu.joueur=self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
         self.jeu.joueur=self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()
@@ -110,7 +111,9 @@ class Controleur():
         if self.jeu.listeInterrupteur:
             for i in self.jeu.listeInterrupteur:
                 i.collision(self.jeu.joueur)
-                i.activer()
+                if i.activer():
+                    self.app.frameJeu.effaceMap()
+                    self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
                 
         if self.jeu.listeRoche:
             for i in self.jeu.listeRoche:
@@ -213,8 +216,8 @@ class Controleur():
             self.press = False
         
         if key == 'Z':
-            print(self.x)
-            print(self.y)
+            print(self.jeu.joueur.posMapX)
+            print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
             self.app.frameJeu.effaceTout()

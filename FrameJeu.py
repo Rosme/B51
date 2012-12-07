@@ -56,11 +56,9 @@ class FrameJeu():
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        
-        
          
         #initialisation relatif à la map et au personnage
-        perso=self.debutDePartie(perso,laSalle)
+        #perso=self.debutDePartie(perso,laSalle)
         
         #création du hud du haut placé dans frameDuJeu
         self.hudHaut=HudHaut.HudHaut(self,perso,self.frameDuJeu)
@@ -161,7 +159,7 @@ class FrameJeu():
                 #affichage du plancher
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                     self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                    #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                    self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 #affichage des coffres
                 if  map[i][k]=='3':
@@ -195,12 +193,15 @@ class FrameJeu():
         #if self.parent.parent.jeu.listePersonnage:
             #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             #self.map.create_image(perso.posMapX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posMapY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
-        
+        '''
+
         #affichage des roches... mauvaise place a vérifier
-        #if self.parent.parent.jeu.listeRoche:
-            #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
-            #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
-            '''
+        if self.parent.parent.jeu.listeRoche:
+            temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
+            self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        if self.parent.parent.jeu.listeInterrupteur:
+            temp = self.parent.parent.jeu.listeInterrupteur[0].obtenirLimite()
+            self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
 		
     def affichagePerso(self,perso):
         #affichage du personnage

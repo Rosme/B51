@@ -5,10 +5,6 @@ break
 Sac
 break
 ;
-EndRoom
-Logomate
-break
-;
 F_E1S1
 Logomate
 break
@@ -17,10 +13,10 @@ break
 Coffre
 break
 Roche
-845:730
+1984:2328
 break
 Interrupteur
-1505:324
+2576:1934
 break
 Declencheur
 break
