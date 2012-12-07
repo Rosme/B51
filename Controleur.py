@@ -232,7 +232,7 @@ class Controleur():
             print(self.y)
             
         if event.keysym == 'Escape':
-            self.reseau.deconnecter()
+            #self.reseau.deconnecter()
             self.app.frameJeu.effaceTout()
             self.partieCommencer=False
             self.app.menuPrincipal()

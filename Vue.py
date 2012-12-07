@@ -47,5 +47,5 @@ class Application():
         return self.frameJeu.initMap(perso,laSalle)
         
     def quitter(self):
-        self.parent.reseau.deconnecter()
+        #self.parent.reseau.deconnecter()
         self.root.quit()

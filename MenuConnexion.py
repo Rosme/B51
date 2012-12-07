@@ -1,11 +1,8 @@
 import tkinter
 
 class MenuConnexion():
-    def __init__(self, parent, nom):
+    def __init__(self, parent):
         self.parent = parent
-        self.nom = nom
-        
-    def menuConnexion(self):
         self.frameMenuConnexion=tkinter.Frame(self.parent.root)
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuConnexion,width=1024,height=768)
