@@ -30,9 +30,9 @@ class Personnage():
         self.race.vie=self.race.max_vie/2
         for p in self.inventaire:
             if p.id==8:
-                
+                pass
     
-    def bouge(self, mouvement):
+    def bouge(self,mouvement):
         tempx = 0
         tempy = 0
         
