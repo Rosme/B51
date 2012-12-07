@@ -8,12 +8,13 @@ class MenuChargerPartie():
         self.loadChar()
         
     def menuPerso(self):
+        self.frameMenuChargerPartie=tkinter.Frame(self.parent.root)
         self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
-        self.fondEcran= tkinter.Canvas(self.parent.root,width=1024,height=768)
-        self.fondEcran.place(x=0,y=0)
+        self.fondEcran= tkinter.Canvas(self.frameMenuChargerPartie,width=1024,height=768)
+        self.fondEcran.pack()
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
         self.boutonConnexion= tkinter.Button(self.fondEcran, text='Continuer',command=self.getPlayer)
-        self.boutonRetour= tkinter.Button(self.fondEcran, text='Retour',command=self.retour)
+        self.boutonRetour= tkinter.Button(self.fondEcran, text='Retour',command=self.effacerEcran)
         self.boutonConnexion.place(x=550,y=650)
         self.boutonRetour.place(x=400,y=650)   
         
@@ -32,26 +33,25 @@ class MenuChargerPartie():
             ligne = self.file.readline()
             i+=1
         self.boutonListe[0].select()
-            
+        
+        self.menuChargerPartie()
+    
+    def menuChargerPartie(self):
+        self.frameMenuChargerPartie.pack()
+    
+    def effacerEcran(self):
+        self.frameMenuChargerPartie.pack_forget()    
+    
     def loadChar(self):
         try:
             self.file = open("player.dat", 'r')
             self.menuPerso()
         except IOError as e:
             tkinter.messagebox.showwarning("Aucun Joueur", "Aucune sauvegarde n'a ete trouve", command=self.parent.menuP.menuPrincipal())
-    
-    def saveChar(self):
-        pass
-    
-    def retour(self): 
-        self.effacerEcran()
-        self.parent.menuP.menuPrincipal()
-    
-    def effacerEcran(self):
-        self.fondEcran.destroy()
-    
+
     def getPlayer(self):
         self.player = self.v.get()
+        self.effacerEcran()
         self.parent.menuConnexion()
 
     
