@@ -6,6 +6,10 @@ import os
 class Controleur():
     ############################# Methode d'initialisation de l'aplication #############################
     def __init__(self):
+        self.demarrer()
+        self.app.root.mainloop()
+    
+    def demarrer(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
         self.press = False
@@ -15,25 +19,22 @@ class Controleur():
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)
-        self.demarrer()
-        self.app.root.mainloop()
-    
-    def demarrer(self):
         self.app.menuPrincipal()
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
-        self.actualiser()
-        if self.compteur%20==0:
-            self.rechargement()
-        if self.compteur%3==0:
-            self.balle() 
-        if self.compteur%6==0:
-            self.pewpew()
-            
-        self.compteur+=1
-        if self.partieCommencer==True:
-            self.app.frameJeu.map.after(10,self.miseAJour)
+        if self.partieCommencer:
+            self.actualiser()
+            if self.compteur%20==0:
+                self.rechargement()
+            if self.compteur%3==0:
+                self.balle() 
+            if self.compteur%6==0:
+                self.pewpew()
+				
+            self.compteur+=1
+            if self.partieCommencer:
+                self.app.frameJeu.map.after(10,self.miseAJour)
             
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
@@ -214,9 +215,17 @@ class Controleur():
             print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
-            self.app.frameJeu.effaceTout()
-            self.partieCommencer=False
-            self.app.menuPrincipal()
+            self.partieCommencer = False
+            self.app.root.destroy()
+            del self.jeu
+            del self.app
+            del self.mouvement
+            del self.compteur
+            del self.press
+            self.demarrer()
+            #self.app.frameJeu.effaceTout()
+            #self.partieCommencer=False
+            #self.app.menuPrincipal()
         
     def peseTire(self,event):
         self.mouvement[4] = True

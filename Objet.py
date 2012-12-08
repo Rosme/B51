@@ -334,8 +334,18 @@ class Levier(Objet):
                     self.parent.carte.s.salle = map
                     return True
                 return False
-                
-            self.parent.carte.s.salle = map
+            
+        if self.parent.joueur.nomMap == "F_E1S3":
+            print(self.posMatX, self.posMatY)
+            map = self.parent.carte.s.dictMap["F_E1S1"]
+            if self.posMatX == 11 and self.posMatY == -4:
+                if self.active:
+                    self.ouvrePorte(1, 14, map, "m", False)
+                    self.parent.carte.s.dictMap["F_E1S1"] = map
+                    return True
+                return False
+               
+            self.parent.carte.s.dictMap["F_E1S1"] = map
             
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
@@ -361,7 +371,6 @@ class Levier(Objet):
         if self.energie - self.force <= 0:
             self.energie=0
             self.active = True
-            print("La porte est ouverte")
             return True
         else:
             self.energie-=self.force
@@ -371,12 +380,7 @@ class Levier(Objet):
         if self.energie + self.contreForce >= self.max_energie:
             self.energie = self.max_energie
         else:
-            self.energie+=self.contreForce
-        
-        
-class Portail(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)       
+            self.energie+=self.contreForce     
         
         
         
