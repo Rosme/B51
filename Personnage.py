@@ -52,24 +52,24 @@ class Personnage():
         for i in self.inventaire.items:
             #Si c'est une armure (ID = 8)
             if i.id == 8:
-                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
+                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure.
+                #les dégats sont réduits d'un pourcentage égal à la defense de l'armure
                 if i.energie - (degat * i.defense) >= 0:
                     degat=degat * i.defense
                     i.subit(degat)
                     break
-                #Sinon, prend le reste et descend la vie.
-                else:                
-                    reste = degat * i.defense 
-                    reste -= i.energie                    
-                    degat -= reste
-                    reste
-                    i.subit(degat)
+                else:
+                    #on calcul combien d'énergie est nécéssaire pour rendre l'énergie de 
+                    #l'armure à 0 en tenant compte de la defense de l'armure
+                    reste = i.energie / i.defense
+                    #on enleve l'énergie nécéssaire au dégat total
+                    reste = degat - reste
+                    #on réduit les dégats selon la defense du personnage
+                    reste *= self.race.defense
+                    
+                    i.subit(i.energie)
                     self.subit(reste)
                     break
-					
-    def calculDegat(self,item,degat):
-        item.defense*self.race.defense*degat
-        
     
     def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:

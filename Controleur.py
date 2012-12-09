@@ -175,7 +175,7 @@ class Controleur():
             self.autoSoin()
             
         if key == 'M':
-            self.jeu.joueur.touche(20)
+            self.jeu.joueur.touche(10)
             
         if key == 'E':
             if self.jeu.listeRoche:

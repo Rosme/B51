@@ -203,11 +203,11 @@ class FrameJeu():
         for i in self.parent.parent.jeu.listeInterrupteur:
             if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
                 temp = i.obtenirLimite()
-                self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
         for i in self.parent.parent.jeu.listeLevier:
             if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
                 temp = i.obtenirLimite()
-                self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
 		
     def affichagePerso(self,perso):
         #affichage du personnage
