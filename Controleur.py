@@ -210,6 +210,9 @@ class Controleur():
         if key == 'E':
             self.press = False
         
+        if key=='I':
+            self.app.menuInventaire()
+        
         if key == 'Z':
             print(self.jeu.joueur.posMapX)
             print(self.jeu.joueur.posMapY)

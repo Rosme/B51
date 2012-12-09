@@ -2,6 +2,7 @@
 import tkinter
 import math
 import HudHaut
+import MenuInventaire
 
 class FrameJeu():
     def __init__(self,parent):
@@ -61,8 +62,10 @@ class FrameJeu():
         #perso=self.debutDePartie(perso,laSalle)
         
         #création du hud du haut placé dans frameDuJeu
-        self.hudHaut=HudHaut.HudHaut(self,perso,self.frameDuJeu)
-            
+        self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
+        
+        self.menuI= MenuInventaire.MenuInventaire(self)
+        
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
         self.dispositionPrincipale()
         
@@ -93,8 +96,8 @@ class FrameJeu():
         self.xscrollbar.config(command=self.map.xview)
         self.yscrollbar.config(command=self.map.yview)
         self.map.xview(tkinter.MOVETO,self.offX)
-        self.map.yview(tkinter.MOVETO,self.offY)
-		
+        self.map.yview(tkinter.MOVETO,self.offY)        
+        
         '''#chat
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")

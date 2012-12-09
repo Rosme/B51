@@ -42,7 +42,10 @@ class Application():
         #self.menuP.effaceMenuPrinc()
         #self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
         #self.menuN.menuNouvellePartie()
-        
+    
+    def menuInventaire(self):
+        self.frameJeu.menuI.menuInventaire()
+    
     def menuConnexion(self):
         self.menuC.menuConnexion()
         
