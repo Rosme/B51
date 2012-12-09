@@ -10,11 +10,11 @@ class MenuPrincipal():
         self.fondEcran.pack()
         self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
         self.nouvellePartieTexte= self.fondEcran.create_text(512,250,text='Nouvelle partie',fill='white',font=("Arial","30"),tags="nouvelle_partie",activefill='red')
-        self.continuerPartieTexte= self.fondEcran.create_text(512,350,text='Continuer une partie',fill='white',font=("Arial","30"),tags="continuer_partie",activefill='red')
+        #self.continuerPartieTexte= self.fondEcran.create_text(512,350,text='Continuer une partie',fill='white',font=("Arial","30"),tags="continuer_partie",activefill='red')
         self.quitterTexte= self.fondEcran.create_text(512,450,text='Quitter',fill='white',font=("Arial","30"),tags="quitter",activefill='red')
         
         self.fondEcran.tag_bind("nouvelle_partie","<Button-1>",self.parent.menuNouvellePartie)
-        self.fondEcran.tag_bind("continuer_partie","<Button-1>", self.parent.menuChargerPartie)
+        #self.fondEcran.tag_bind("continuer_partie","<Button-1>", self.parent.menuChargerPartie)
         self.fondEcran.tag_bind("quitter","<Button-1>",self.fermerFenetre)
         
     def menuPrincipal(self):

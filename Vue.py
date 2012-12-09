@@ -4,6 +4,7 @@ import MenuPrincipal
 import MenuNouvellePartie
 import MenuChargerPartie
 import MenuConnexion
+import MenuLobby
 import FrameJeu
 
 class Application():
@@ -17,12 +18,16 @@ class Application():
         self.root=tkinter.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.quitter)
         self.root.config(bg="#000")
-
+        
+        self.initialisationInterfaces()
+    
+    def initialisationInterfaces(self):
         #création de tous les menus
         self.menuP = MenuPrincipal.MenuPrincipal(self)
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         #self.menuP = MenuChargerPartie.MenuChargerPartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
+        self.menuL = MenuLobby.MenuLobby(self)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
         self.frameJeu=FrameJeu.FrameJeu(self)
         
@@ -33,14 +38,17 @@ class Application():
         self.menuP.effaceMenuPrinc()
         self.menuN.menuNouvellePartie()
         
-    def menuChargerPartie(self,event):
-        self.menuP.effaceMenuPrinc()
+    #def menuChargerPartie(self,event):
+        #self.menuP.effaceMenuPrinc()
         #self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
-        self.menuN.menuNouvellePartie()
+        #self.menuN.menuNouvellePartie()
         
     def menuConnexion(self):
         self.menuC.menuConnexion()
-    
+        
+    def menuLobby(self):
+        self.menuL.menuLobby()
+        
     def jeu(self,perso,laSalle):
         return self.frameJeu.initMap(perso,laSalle)
         

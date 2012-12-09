@@ -215,17 +215,19 @@ class Controleur():
             print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
-            self.partieCommencer = False
-            self.app.root.destroy()
+            self.app.frameJeu.effaceTout()
+            
             del self.jeu
-            del self.app
-            del self.mouvement
-            del self.compteur
-            del self.press
-            self.demarrer()
-            #self.app.frameJeu.effaceTout()
-            #self.partieCommencer=False
-            #self.app.menuPrincipal()
+            self.jeu = Modele.Jeu(self)
+            
+            self.press = False
+            self.compteur=0
+            self.partieCommencer=False 
+            for i in self.mouvement:
+                i=False
+            
+            self.app.initialisationInterfaces()
+            self.app.menuPrincipal()
         
     def peseTire(self,event):
         self.mouvement[4] = True

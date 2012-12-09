@@ -370,5 +370,5 @@ class FrameJeu():
          self.map.delete(tkinter.ALL)
     
     def effaceTout(self):
-        self.frameDuJeu.destroy()
+        self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False
