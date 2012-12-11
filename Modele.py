@@ -19,7 +19,7 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "I_E1S1", "I_E1S2", "I_E1S3"]
+        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3", "I_E1S1", "I_E1S2", "I_E1S3", "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.joueur = ""
         self.carte = Carte.Carte(self)
