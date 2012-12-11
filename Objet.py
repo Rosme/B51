@@ -1,24 +1,22 @@
 # -*- coding: ISO-8859-1 -*-
 
 class Objet():
-    def __init__(self, parent, matX, matY, mapX, mapY, largeur, hauteur, nomMap):
+    def __init__(self, parent, matX, matY, largeur, hauteur, nomMap):
         self.parent = parent
         self.nomMap = nomMap
         self.posMatX = matX
         self.posMatY = matY
-        self.posMapX = mapX
-        self.posMapY = mapY
         self.largeur = largeur
         self.hauteur = hauteur
         self.aTerre = True
         
     def obtenirLimite(self):
         pass
-        #return [self.posMapX, self.posMapY, self.posMapX+self.largeur, self.posMapY+self.hauteur]
+        #return [self.posMatX-self.largeur, self.posMatY-self.hauteur, self.posMatX+self.largeur, self.posMatY+self.hauteur]
 
 class Sac(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
+    def __init__(self, parent, matX, matY, nomMap):
+        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
         self.items = []
 
     '''
@@ -34,8 +32,8 @@ class Sac(Objet):
             self.aTerre = False
 
 class Coffre(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 80, 80, nomMap)
+    def __init__(self, parent, matX, matY, nomMap):
+        Objet.__init__(self, parent, matX, matY, 80, 80, nomMap)
         self.items = []
         self.ouvert = False
 
@@ -94,8 +92,8 @@ class Coffre(Objet):
             self.items.remove(item)
        
 class Roche(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
+    def __init__(self, parent, matX, matY, nomMap):
+        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
         self.depose()
         
     def prendre(self, perso):
@@ -161,8 +159,8 @@ class Roche(Objet):
                 i.aTerre = True
         '''
 class Interrupteur(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, unique, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60, nomMap)
+    def __init__(self, parent, matX, matY, unique, nomMap):
+        Objet.__init__(self, parent, matX, matY,60, 60, nomMap)
         self.active = False
         self.aTerre = False
         self.usageUnique = unique
@@ -254,8 +252,8 @@ class Interrupteur(Objet):
         '''
     
 class Declencheur(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 20, 20, nomMap)
+    def __init__(self, parent, matX, matY, nomMap):
+        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
         self.active = False
         
     def collision(self, perso):
@@ -302,8 +300,8 @@ class Declencheur(Objet):
             pass
         
 class Levier(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY, force, energie, contreForce, nomMap):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 80,60, nomMap)
+    def __init__(self, parent, matX, matY, force, energie, contreForce, nomMap):
+        Objet.__init__(self, parent, matX, matY,80,60, nomMap)
         self.force = force
         self.max_energie = energie
         self.energie = energie

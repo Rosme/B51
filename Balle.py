@@ -8,7 +8,7 @@ class Balle():
         #finX += self.posMapX-520
         #finY += self.posMapY-290
         self.force = force
-        self.radius = 5
+        self.radius = 1
         self.velocite = 10
         self.distanceMax = 10 #300
         self.distanceParcouru = 0
@@ -56,5 +56,5 @@ class Balle():
         '''
     def obtenirLimite(self):
         pass
-        #return [self.posMapX, self.posMapY, self.posMapX+self.radius, self.posMapY+self.radius]
+        #return [self.posMatX-self.radius, self.posMatY-self.radius, self.posMatX+self.radius, self.posMatY+self.radius]
     

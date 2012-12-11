@@ -141,8 +141,6 @@ class Controleur():
         
         if key == 'Z':
             pass
-            #print(self.jeu.joueur.posMapX)
-            #print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
             self.app.frameJeu.effaceTout()

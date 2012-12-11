@@ -104,7 +104,6 @@ class FrameJeu():
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
         
-        #print(perso.posMapX,perso.posMapY,self.posDepartX,self.posDepartY,self.posMilieuDiagoX,self.posMilieuDiagoY)
         #position de la tuile la plus haute affiché dans l'écran
         posInitX=self.posDepartX
         posInitY=self.posDepartY
@@ -152,7 +151,8 @@ class FrameJeu():
                 #affichage des logomates
                 #for p in self.parent.parent.jeu.listeLogomate:
                    # if p.posMatX<k and p.posMatY<i:
-                        #self.map.create_image(perso.posMapX+(p.posMapX - perso.posMapX),perso.posMapY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
+                        #x,y=self.coordMatriceAEcran(perso)
+                        #self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
                    
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
@@ -161,8 +161,6 @@ class FrameJeu():
         #affichage du personnage
         #on supprime le perso précedement affiché
         self.map.delete("perso")
-        #temp = perso.obtenirLimite()
-        #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
         x,y=self.coordMatriceAEcran(perso)
         self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
         self.calculOffSet(x,y)
