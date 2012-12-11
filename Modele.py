@@ -54,14 +54,9 @@ class Jeu():
             self.joueur=self.parent.app.frameJeu.coordProchaineZone(self.carte.s,car,self.joueur)
             
         elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-            if laMap[tempMatY+1][tempMatX-1]!='1':
-                #if tempx or tempy:
-                self.joueur.posMatX=tempMatX
-                self.joueur.posMatY=tempMatY
-                #self.joueur.posMapX+=tempx
-                #self.joueur.posMapY+=tempy
-                #self.parent.app.frameJeu.deplScrollBar(tempx,tempy)
-                self.parent.app.frameJeu.affichagePerso(self.joueur)
+            self.joueur.posMatX=tempMatX
+            self.joueur.posMatY=tempMatY
+            self.parent.app.frameJeu.affichagePerso(self.joueur)
     
     def activationObjet(self):
         if self.listeInterrupteur:

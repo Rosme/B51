@@ -20,10 +20,11 @@ class Controleur():
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
         if self.partieCommencer:
-            self.jeu.bougePersonnage()
-            self.jeu.activationObjet()
-            self.app.frameJeu.hudHaut.actualiser()
-            self.jeu.gestionMort()
+            if self.compteur%10:
+                self.jeu.bougePersonnage()
+                self.jeu.activationObjet()
+                self.app.frameJeu.hudHaut.actualiser()
+                self.jeu.gestionMort()
             if self.compteur%20==0:
                 self.jeu.rechargement()
             if self.compteur%3==0:
@@ -38,9 +39,9 @@ class Controleur():
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.partieCommencer=True
-        self.jeu.joueur=self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
+        self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
-        self.jeu.joueur=self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
+        self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()
             
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################

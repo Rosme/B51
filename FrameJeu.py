@@ -22,26 +22,17 @@ class FrameJeu():
     
     def debutDePartie(self,perso,laSalle):
         #appelé a chaque fois que l'on meurt ou que l'on débute une partie
-        
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
 		
         #position des premiers blocs
         self.calculPositionDepart(laSalle,perso)
-        
-        #calcul de la position du personnage dans la matrice par rapport a sa position relative au canvas
-        #perso.posMatX,perso.posMatY=self.coordEcranAMatrice(perso.posMapX,perso.posMapY)
-        
-        return perso
     
     def initMap(self,perso,laSalle):
         #appelé une seule fois à la création d'une partie
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-         
-        #initialisation relatif à la map et au personnage
-        #perso=self.debutDePartie(perso,laSalle)
         
         #création du hud du haut placé dans frameDuJeu
         self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
@@ -60,8 +51,6 @@ class FrameJeu():
         
         #ajout des écouteur (souris, clavier)
         self.ajoutEcouteur()
-		
-        return perso
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -126,10 +115,10 @@ class FrameJeu():
             posTempX=posInitX
             posTempY=posInitY
             #passe toutes les elements de la ligne 1 par 1
-            for k in range(len(map[i])-1,-1,-1):
+            for k in range(len(map[i])):
                 #affichage des murs 
                 if map[i][k]=='1' or map[i][k] == '2':
-                    self.map.create_image(posTempX,posTempY-16,image=self.parent.getImage("roche"),tags="image")
+                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("roche"),tags="image")
                 
                 #affichage du personnage s'il na pas déjà été affiché
                 if self.persoAff==True:
@@ -143,12 +132,12 @@ class FrameJeu():
                     #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 if map[i][k]=='f':
-                     self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("feu"),tags="image")
+                     self.map.create_image(posTempX,posTempY,image=self.parent.getImage("feu"),tags="image")
                 
                 #affichage des coffres
                 if  map[i][k]=='3':
                     #self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
-                    self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("coffre"),tags="coffre")
+                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("coffre"),tags="coffre")
                 
                 #affichage des switchs
                 if  map[i][k]=='w':
@@ -175,6 +164,7 @@ class FrameJeu():
         #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
         x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)
         self.map.create_image(x,y,image=self.parent.getImage("pers"),tags="perso")
+        self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
         
