@@ -5,7 +5,6 @@ Classe Serveur pour faire tourner le serveur du jeu
 serveur.py
 '''
 
-
 #Classe Wrapper pour les connexions clientes
 class Client():
 	def __init__(self, conn, address, id):
@@ -15,10 +14,22 @@ class Client():
 
 #Classe Wrapper pour les Joueurs
 class Joueur():
-	def __init__(self, client, events = list()):
+	def __init__(self, client = Client(None, None, None), events = list()):
 		self.client = client
 		self.events = events
 
+
+#Classe Serveur
+class Serveur():
+	def __init__(self, port = 43225):
+		self.port = port
+		self.statut = "demarrer" #Le statut représente l'état du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
+		self.maxConnect = 8
+		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
+		self.qteConnect = len(self.clients)
+
+	def recevoirConnexion():
+		pass
 
 '''
 import select 
