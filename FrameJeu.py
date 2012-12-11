@@ -30,6 +30,7 @@ class FrameJeu():
     
     def initMap(self,perso,laSalle):
         #appelé une seule fois à la création d'une partie
+        self.debutDePartie(perso,laSalle)
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
@@ -168,9 +169,9 @@ class FrameJeu():
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
         
-    def tire(self):
+    def tire(self,listeBalle):
         #affichage de toutes les balles existantes s
-        for i in self.parent.parent.jeu.listeBalle:
+        for i in listeBalle:
             x,y=self.coordMatriceAEcran(i)   
             self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
     

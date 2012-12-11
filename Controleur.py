@@ -48,7 +48,14 @@ class Controleur():
     
     def actusliserPersonnage(self,perso):
         self.app.frameJeu.affichagePerso(perso)
-        
+    
+    def joueurMort(self,perso,laSalle):
+        self.app.frameJeu.debutDePartie(self.joueur,self.carte.s)
+        self.actualiserAffichageComplet(self.joueur,self.carte.s)
+    
+    def actualisationBalle(self,listeBalle):
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire(listeBalle)
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
         return self.jeu.info(race)

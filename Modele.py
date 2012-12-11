@@ -111,8 +111,7 @@ class Jeu():
                 for i in self.listeInterrupteur:
                     i.collision(self.joueur)
                     if i.activer():
-                        self.parent.app.frameJeu.effaceMap()
-                        self.parent.app.frameJeu.affichageMap(self.joueur,self.carte.s)
+                        self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
                     
         if self.listeRoche:
             for i in self.listeRoche:
@@ -123,10 +122,8 @@ class Jeu():
         if self.joueur.race.vie<=0:
             self.joueur.mort()
             self.carte.s.salle=self.carte.s.dictMap[self.joueur.nomMap]
-            
-            self.joueur=self.parent.app.frameJeu.debutDePartie(self.joueur,self.carte.s)
-            self.parent.app.frameJeu.changementDeMap(self.carte.s,self.joueur)
-    
+            self.parent.joueurMort(self.joueur,self.carte.s)
+
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
         self.joueur.recharge()
@@ -147,8 +144,7 @@ class Jeu():
         self.collision(self.listePersonnage)
         self.collision(self.listeLogomate)
         
-        self.parent.app.frameJeu.map.delete("balle")
-        self.parent.app.frameJeu.tire()
+        self.parent.actualisationBalle(self.listeBalle)
    
     def collision(self, liste):
         pass
