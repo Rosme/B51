@@ -10,6 +10,10 @@ import Objet
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
+        self.mouvement = list() 
+        #0-haut,1-droite,2-bas,3-gauche,4-tire
+        for i in range(5):
+            self.mouvement.append(False)
         self.listeInterrupteur = list()
         self.listeDeclencheur = list()
         self.listePersonnage = list()
@@ -24,6 +28,8 @@ class Jeu():
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
+        self.sourisX = 0
+        self.sourisY = 0
         
     def info(self, race):
         if race == "Humain":
@@ -36,7 +42,92 @@ class Jeu():
             raceInfo = Race.Atarix()
             
         return raceInfo.info()
+    
+    def bougePersonnage(self):
+        laMap=self.carte.s.salle
+        
+        tempx, tempy = self.joueur.bouge(self.mouvement)
+        
+        tempMatX,tempMatY=self.parent.app.frameJeu.coordEcranAMatrice(self.joueur.posMapX+tempx,self.joueur.posMapY+tempy)
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+            car=laMap[tempMatY][tempMatX]
+            self.joueur.nomMap=self.carte.s.changementCarte(car)
+            self.joueur=self.parent.app.frameJeu.coordProchaineZone(self.carte.s,car,self.joueur)
+            
+        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+            if laMap[tempMatY+1][tempMatX-1]!='1':
+                if tempx!=0 or tempy!=0:
+                    self.joueur.posMatX=tempMatX
+                    self.joueur.posMatY=tempMatY
+                    self.joueur.posMapX+=tempx
+                    self.joueur.posMapY+=tempy
+                    self.parent.app.frameJeu.deplScrollBar(tempx,tempy)
+                    self.parent.app.frameJeu.affichagePerso(self.joueur)
+    
+    def activationObjet(self):
+        if self.listeInterrupteur:
+                for i in self.listeInterrupteur:
+                    i.collision(self.joueur)
+                    if i.activer():
+                        self.parent.app.frameJeu.effaceMap()
+                        self.parent.app.frameJeu.affichageMap(self.joueur,self.carte.s)
+                    
+        if self.listeRoche:
+            for i in self.listeRoche:
+                if not i.aTerre:
+                    i.bouge(self.joueur)
+    
+    def gestionMort(self):
+        if self.joueur.race.vie<=0:
+            self.joueur.mort()
+            self.carte.s.salle=self.carte.s.dictMap[self.joueur.nomMap]
+            
+            self.joueur=self.parent.app.frameJeu.debutDePartie(self.joueur,self.carte.s)
+            self.parent.app.frameJeu.changementDeMap(self.carte.s,self.joueur)
+    
+    ############################# Méthode en lien avec les balles et le tire du joueur #############################
+    def rechargement(self):
+        self.joueur.recharge()
+        if self.listeLevier:
+            for i in self.listeLevier:
+                if i.energie != i.max_energie:
+                    i.recharge()
+                    
+    def tire(self):
+        if self.mouvement[4]:
+            if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
+                balle = self.listeBalle[len(self.listeBalle)-1]
+                balle.posMatX,balle.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(balle.posMapX+(balle.veloX)*2,balle.posMapY+(balle.veloY)*2)
+            else:
+                balle = self.listeBalle[len(self.listeBalle)-1]
+                self.listeBalle.remove(balle);
 
+    def balle(self):
+        self.collision(self.listePersonnage)
+        self.collision(self.listeLogomate)
+        
+        self.parent.app.frameJeu.map.delete("balle")
+        self.parent.app.frameJeu.tire()
+   
+    def collision(self, liste):
+        temp = self.listeBalle
+        
+        for i in self.listeBalle:
+            i.bouge(self.joueur)
+            if i.veloY<0 and i.veloX<0:
+                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
+            elif i.veloY>0 and i.veloX>0:
+                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+10,(i.posMapY+(i.veloY)*2)+10)
+            elif i.veloY<0 and i.veloX>0:
+                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
+            else:
+                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
+
+            if i.collision(liste, self.carte.s.salle):
+                temp.remove(i)
+                
+        self.listeBalle = temp
+    
     def nouveauLogo(self, posMap, nomMap):
         pers = Personnage()
         pers.nouveauPersonnage("Logo", Race.Logomate())
