@@ -2,15 +2,16 @@
 import Vue
 import Modele
 import os
-import ConnecteurReseau
-import Netdata as nd
 
 class Controleur():
     ############################# Methode d'initialisation de l'aplication #############################
     def __init__(self):
+        self.demarrer()
+        self.app.root.mainloop()
+    
+    def demarrer(self):
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
-        self.reseau = ConnecteurReseau.ConnecteurReseau()
         self.press = False
         self.compteur=0
         self.partieCommencer=False
@@ -18,26 +19,22 @@ class Controleur():
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)
-            
-        self.demarrer()
-        self.app.root.mainloop()
-    
-    def demarrer(self):
         self.app.menuPrincipal()
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
-        self.actualiser()
-        if self.compteur%20==0:
-            self.rechargement()
-        if self.compteur%3==0:
-            self.balle() 
-        if self.compteur%6==0:
-            self.pewpew()
-            
-        self.compteur+=1
-        if self.partieCommencer==True:
-            self.app.frameJeu.map.after(10,self.miseAJour)
+        if self.partieCommencer:
+            self.actualiser()
+            if self.compteur%20==0:
+                self.rechargement()
+            if self.compteur%3==0:
+                self.balle() 
+            if self.compteur%6==0:
+                self.pewpew()
+				
+            self.compteur+=1
+            if self.partieCommencer:
+                self.app.frameJeu.map.after(10,self.miseAJour)
             
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
@@ -62,7 +59,7 @@ class Controleur():
         
         self.app.frameJeu.map.delete("balle")
         self.app.frameJeu.tire()
-
+   
     def collision(self, liste):
         temp = self.jeu.listeBalle
         
@@ -85,6 +82,7 @@ class Controleur():
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.partieCommencer=True
+        self.jeu.joueur=self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
         self.jeu.joueur=self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()
@@ -113,7 +111,9 @@ class Controleur():
         if self.jeu.listeInterrupteur:
             for i in self.jeu.listeInterrupteur:
                 i.collision(self.jeu.joueur)
-                i.activer()
+                if i.activer():
+                    self.app.frameJeu.effaceMap()
+                    self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
                 
         if self.jeu.listeRoche:
             for i in self.jeu.listeRoche:
@@ -121,16 +121,6 @@ class Controleur():
                     i.bouge(self.jeu.joueur)  
             
         self.app.frameJeu.hudHaut.actualiser() 
-        
-        '''
-        donneesReseau = self.reseau.recevoirDonnees()
-
-        if donneesReseau:
-            if isinstance(donneesReseau, nd.PersoInfo):
-                print("Nouveau client: " + donneesReseau.nom + "(" + str(donneesReseau.id) + ")")
-            else:
-                print(donneesReseau.message)
-        '''
         
         if self.jeu.joueur.race.vie<=0:
             self.jeu.joueur.mort()
@@ -145,15 +135,7 @@ class Controleur():
         return self.jeu.info(race)
         
     def nouveauJoueur(self, race, nom):
-        self.jeu.nouveauJoueur(race, nom)        
-        
-    def chargerJoueur(self, nom):
-        pass
-        #self.jeu.chargerJoueur(nom)
-        
-    def sauvegardeJoueur(self):
-        pass
-        #self.jeu.sauvegardeJoueur()
+        self.jeu.nouveauJoueur(race, nom)
         
     def autoSoin(self):
         self.jeu.joueur.autoSoin()
@@ -193,7 +175,7 @@ class Controleur():
             self.autoSoin()
             
         if key == 'M':
-            self.jeu.joueur.touche(20)
+            self.jeu.joueur.touche(10)
             
         if key == 'E':
             if self.jeu.listeRoche:
@@ -206,7 +188,10 @@ class Controleur():
                 for i in self.jeu.listeLevier:
                     if i.collision(self.jeu.joueur):
                         if i.tire():
-                            i.activer()
+                            if i.activer():
+                                self.app.frameJeu.effaceMap()
+                                self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
+                                
             
             self.press = True
     
@@ -224,15 +209,27 @@ class Controleur():
         
         if key == 'E':
             self.press = False
-            
+        
+        if key=='I':
+            self.app.menuInventaire()
+        
         if key == 'Z':
-            print(self.x)
-            print(self.y)
+            print(self.jeu.joueur.posMapX)
+            print(self.jeu.joueur.posMapY)
             
         if event.keysym == 'Escape':
-            #self.reseau.deconnecter()
             self.app.frameJeu.effaceTout()
-            self.partieCommencer=False
+            
+            del self.jeu
+            self.jeu = Modele.Jeu(self)
+            
+            self.press = False
+            self.compteur=0
+            self.partieCommencer=False 
+            for i in self.mouvement:
+                i=False
+            
+            self.app.initialisationInterfaces()
             self.app.menuPrincipal()
         
     def peseTire(self,event):

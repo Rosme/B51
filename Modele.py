@@ -19,7 +19,7 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6"]
+        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3", "I_E1S1", "I_E1S2", "I_E1S3", "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.joueur = ""
         self.carte = Carte.Carte(self)
@@ -45,32 +45,32 @@ class Jeu():
         self.listeLogomate.append(pers)
         
     def nouveauSac(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         sac = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeSac.append(sac)
         
     def nouveauCoffre(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         coffre = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeCoffre.append(coffre)
         
     def nouvelleRoche(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         roche = Objet.Roche(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeRoche.append(roche) 
            
     def nouveauInterrupt(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         interrupteur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), False, nomMap)
         self.listeInterrupteur.append(interrupteur)
     
     def nouveauDeclencheur(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         declencheur = Objet.Interrupteur(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), nomMap)
         self.listeDeclencheur.append(declencheur)
     
     def nouveauLevier(self, posMap, nomMap):
-        posMatX, posMatY = self.parent.app.frameJeu.coord(self.joueur.posEcranX+ int(posMap[0])- self.joueur.posMapX, self.joueur.posEcranY+ int(posMap[1])- self.joueur.posMapY)
+        posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         levier = Objet.Levier(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), 10, 100, 2, nomMap)
         self.listeLevier.append(levier)
         
@@ -87,13 +87,6 @@ class Jeu():
             
         elif race == "Atarix":
             self.joueur.nouveauPersonnage(nom, Race.Atarix())
-
-    def chargerJoueur(self, nom):        
-        self.joueur = Personnage()
-        self.joueur = self.joueur.chargerPersonnage(nom)
-        
-    def sauvegardeJoueur(self):
-        self.joueur.sauvegardePersonnage()
         
     def rajoutMetal(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(0, "Metal", "Metal Scrap used to craft Guns and Armors"))
@@ -103,3 +96,4 @@ class Jeu():
         
     def rajoutBatterie(self):
         self.joueur.inventaire.ajouterItem(Item.Upgradable(2, "Batterie", "Battery used to craft Guns and Dematerializator"))
+>>>>>>> origin/vuescroll

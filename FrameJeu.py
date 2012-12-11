@@ -2,6 +2,7 @@
 import tkinter
 import math
 import HudHaut
+import MenuInventaire
 
 class FrameJeu():
     def __init__(self,parent):
@@ -18,15 +19,6 @@ class FrameJeu():
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
         self.offY=0
-        
-        #importation des images
-        self.importerImage()
-        
-    def importerImage(self):
-        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
-        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
-        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
-        self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
         
     def posInitPerso(self):
         #position du joueur centrer dans l'ecran et dans le canvas
@@ -56,15 +48,15 @@ class FrameJeu():
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        
-        
          
         #initialisation relatif à la map et au personnage
-        perso=self.debutDePartie(perso,laSalle)
+        #perso=self.debutDePartie(perso,laSalle)
         
         #création du hud du haut placé dans frameDuJeu
-        self.hudHaut=HudHaut.HudHaut(self,perso,self.frameDuJeu)
-            
+        self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
+        
+        self.menuI= MenuInventaire.MenuInventaire(self)
+        
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
         self.dispositionPrincipale()
         
@@ -95,8 +87,8 @@ class FrameJeu():
         self.xscrollbar.config(command=self.map.xview)
         self.yscrollbar.config(command=self.map.yview)
         self.map.xview(tkinter.MOVETO,self.offX)
-        self.map.yview(tkinter.MOVETO,self.offY)
-		
+        self.map.yview(tkinter.MOVETO,self.offY)        
+        
         '''#chat
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
@@ -150,7 +142,7 @@ class FrameJeu():
             for k in range(len(map[i])-1,-1,-1):
                 #affichage des murs 
                 if map[i][k]=='1' or map[i][k] == '2':
-                    self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
+                    self.map.create_image(posTempX,posTempY-16,image=self.parent.getImage("roche"),tags="image")
                 
                 #affichage du personnage s'il na pas déjà été affiché
                 if self.persoAff==True:
@@ -160,13 +152,16 @@ class FrameJeu():
                     
                 #affichage du plancher
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
-                    self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
+                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("gazon"),tags="image")
                     #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                
+                if map[i][k]=='f':
+                     self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("feu"),tags="image")
                 
                 #affichage des coffres
                 if  map[i][k]=='3':
                     #self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
-                    self.map.create_image(posTempX,posTempY-17,image=self.coffre,tags="coffre")
+                    self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("coffre"),tags="coffre")
                 
                 #affichage des switchs
                 if  map[i][k]=='w':
@@ -194,12 +189,21 @@ class FrameJeu():
         #if self.parent.parent.jeu.listePersonnage:
             #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
             #self.map.create_image(perso.posMapX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posMapY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
-        
+        '''
+
         #affichage des roches... mauvaise place a vérifier
-        #if self.parent.parent.jeu.listeRoche:
-            #temp = self.parent.parent.jeu.listeRoche[0].obtenirLimite()
-            #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
-            '''
+        for i in self.parent.parent.jeu.listeRoche:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        for i in self.parent.parent.jeu.listeInterrupteur:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        for i in self.parent.parent.jeu.listeLevier:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
 		
     def affichagePerso(self,perso):
         #affichage du personnage
@@ -207,7 +211,7 @@ class FrameJeu():
         self.map.delete("perso")
         #temp = perso.obtenirLimite()
         #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
-        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.pers,tags="perso")
+        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.parent.getImage("pers"),tags="perso")
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
         
@@ -362,5 +366,5 @@ class FrameJeu():
          self.map.delete(tkinter.ALL)
     
     def effaceTout(self):
-        self.frameDuJeu.destroy()
+        self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False

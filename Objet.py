@@ -158,6 +158,7 @@ class Interrupteur(Objet):
         self.active = False
         self.aTerre = False
         self.usageUnique = unique
+        self.out = True
     
     def collision(self, perso):
         if not self.aTerre:
@@ -191,21 +192,30 @@ class Interrupteur(Objet):
                             return True
                         k+=2
                 j+=2
-                
+            
             self.active = False
             return False
     
     def activer(self):
-        if self.parent.carte.nomMap == "F_E1S1":
+        if self.parent.joueur.nomMap == "F_E1S1":
             #25 par 14-15
             map = self.parent.carte.s.salle
-            if self.posMatX == 22 and self.posMatY == 24:
+            if self.posMatX == 22 and self.posMatY == 16:
                 if self.active:
-                    self.ouvrePorte(25, 14, map, "0", False)
+                    self.ouvrePorte(26, 14, map, "0", False)
+                    if self.out:
+                        self.out = not self.out
+                        self.parent.carte.s.salle = map
+                        return True
                 else:
-                    self.ouvrePorte(25, 14, map, "2", False)
-                
+                    self.ouvrePorte(26, 14, map, "2", False)
+                    if not self.out:
+                        self.out = not self.out
+                        self.parent.carte.s.salle = map
+                        return True
+             
             self.parent.carte.s.salle = map
+            return False
             
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
@@ -316,16 +326,26 @@ class Levier(Objet):
             return False
     
     def activer(self):
-        if self.parent.carte.nomMap == "F_E1S1":
-            #25 par 14-15
+        if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 12 and self.posMatY == 19:
+            if self.posMatX == 12 and self.posMatY == 11:
                 if self.active:
-                    self.ouvrePorte(15, 14, map, "0", False)
-                else:
-                    self.ouvrePorte(15, 14, map, "2", False)
-                
-            self.parent.carte.s.salle = map
+                    self.ouvrePorte(16, 14, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    return True
+                return False
+            
+        if self.parent.joueur.nomMap == "F_E1S3":
+            print(self.posMatX, self.posMatY)
+            map = self.parent.carte.s.dictMap["F_E1S1"]
+            if self.posMatX == 11 and self.posMatY == -4:
+                if self.active:
+                    self.ouvrePorte(1, 14, map, "m", False)
+                    self.parent.carte.s.dictMap["F_E1S1"] = map
+                    return True
+                return False
+               
+            self.parent.carte.s.dictMap["F_E1S1"] = map
             
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
@@ -351,7 +371,6 @@ class Levier(Objet):
         if self.energie - self.force <= 0:
             self.energie=0
             self.active = True
-            print("La porte est ouverte")
             return True
         else:
             self.energie-=self.force
@@ -361,12 +380,7 @@ class Levier(Objet):
         if self.energie + self.contreForce >= self.max_energie:
             self.energie = self.max_energie
         else:
-            self.energie+=self.contreForce
-        
-        
-class Portail(Objet):
-    def __init__(self, parent, matX, matY, mapX, mapY):
-        Objet.__init__(self, parent, matX, matY, mapX, mapY, 60, 60)       
+            self.energie+=self.contreForce     
         
         
         
