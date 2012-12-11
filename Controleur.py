@@ -42,7 +42,13 @@ class Controleur():
         self.jeu.carte.chargeObjets()
         self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
         self.miseAJour()
-            
+    
+    def actualiserAffichageComplet(self,perso,map):
+        self.app.frameJeu.actualiserAffichage(perso,map)
+    
+    def actusliserPersonnage(self,perso):
+        self.app.frameJeu.affichagePerso(perso)
+        
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
         return self.jeu.info(race)

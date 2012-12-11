@@ -58,7 +58,7 @@ class Application():
         self.menuL.menuLobby()
         
     def jeu(self,perso,laSalle):
-        return self.frameJeu.initMap(perso,laSalle)
+        self.frameJeu.initMap(perso,laSalle)
     
     def getImage(self,nomImage):
         return self.gestionnaireImage.getImage(nomImage)

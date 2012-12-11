@@ -51,12 +51,60 @@ class Jeu():
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
-            self.joueur=self.parent.app.frameJeu.coordProchaineZone(self.carte.s,car,self.joueur)
+            self.coordProchaineZone(car)
+            self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
             
         elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
             self.joueur.posMatX=tempMatX
             self.joueur.posMatY=tempMatY
-            self.parent.app.frameJeu.affichagePerso(self.joueur)
+            self.parent.actusliserPersonnage(self.joueur)
+    
+    def coordProchaineZone(self,char):
+        laMap=self.carte.s.salle
+        
+        trouver=False
+        
+        for i in range(len(laMap)):
+            for j in range(len(laMap[i])):
+                if laMap[i][j]==char:
+                    try:
+                        #si l'autre char à droite
+                        if laMap[i][j+1]==char:
+                            try:
+                                if laMap[i+1][j]=='0':#porte en haut
+                                    matx = j
+                                    maty = i+1
+                                    trouver=True
+                                    break
+                            except IndexError:
+                                if laMap[i-1][j]=='0':#porte en bas
+                                    matx = j
+                                    maty = i-1
+                                    trouver=True
+                                    break
+                        else:
+                            raise IndexError
+                    except IndexError: 
+                        #sil'autre char est en dessous
+                        if laMap[i+1][j]==char:
+                            try:
+                                if laMap[i][j+1]=='0':#porte à droite
+                                    matx = j+1
+                                    maty = i
+                                    trouver=True
+                                    break
+                            except IndexError:
+                                if laMap[i][j-1]=='0':#porte à gauche
+                                    matx = j-1
+                                    maty = i
+                                    trouver=True                          
+                                    break
+            if trouver:
+                break
+
+        self.joueur.posMatY=maty
+        self.joueur.posMatX=matx        
+        
     
     def activationObjet(self):
         if self.listeInterrupteur:
@@ -160,7 +208,7 @@ class Jeu():
         posMatX, posMatY = self.parent.app.frameJeu.coordEcranAMatrice(int(posMap[0]), int(posMap[1]))
         levier = Objet.Levier(self, posMatX, posMatY, int(posMap[0]), int(posMap[1]), 10, 100, 2, nomMap)
         self.listeLevier.append(levier)
-        
+    
     def nouveauJoueur(self, race, nom):
         self.joueur = Personnage()
         if race == "Humain":

@@ -43,7 +43,7 @@ class FrameJeu():
         self.dispositionPrincipale()
         
         #calcul de la position de la scrollbar pour voir le personnage
-        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)
+        x,y=self.coordMatriceAEcran(perso)
         self.calculOffSet(x,y)
         
         #affichage de la map, des objets et du personnage à l'écran
@@ -162,8 +162,8 @@ class FrameJeu():
         self.map.delete("perso")
         #temp = perso.obtenirLimite()
         #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
-        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)
-        self.map.create_image(x,y,image=self.parent.getImage("pers"),tags="perso")
+        x,y=self.coordMatriceAEcran(perso)
+        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
@@ -171,7 +171,7 @@ class FrameJeu():
     def tire(self):
         #affichage de toutes les balles existantes s
         for i in self.parent.parent.jeu.listeBalle:
-            x,y=self.coordMatriceAEcran(i.posMatX,i.posMatY)   
+            x,y=self.coordMatriceAEcran(i)   
             self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
     
     def ajoutEcouteur(self):
@@ -183,77 +183,26 @@ class FrameJeu():
         self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
         self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
     
-    def coordEcranAMatrice(self,x1,y1):
+    def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
-        resteX = math.floor(x1-self.posDepartX/self.largeurTuile)
-        resteY = math.floor(y1-self.posDepartY/self.hauteurTuile)
+        resteX = math.floor((x-self.posDepartX)/self.largeurTuile)
+        resteY = math.floor((y-self.posDepartY)/self.hauteurTuile)
         
         return resteY,resteX
-        
-    def coordProchaineZone(self,salle,char,perso):
-        #permet le changement de zone
-        tempX=0
-        tempY=0
-        trouver=False
-        
-        self.calculPositionDepart(salle,perso)
-        
-        for i in range(len(salle.salle)):
-            for j in range(len(salle.salle[i])):
-                if salle.salle[i][j]==char:
-                    try:
-                        #si l'autre char à droite
-                        if salle.salle[i][j+1]==char:
-                            try:
-                                if salle.salle[i+1][j]=='0':#porte en haut
-                                    matx = j
-                                    maty = i+1
-                                    trouver=True
-                                    break
-                            except IndexError:
-                                if salle.salle[i-1][j]=='0':#porte en bas
-                                    matx = j
-                                    maty = i-1
-                                    trouver=True
-                                    break
-                        else:
-                            raise IndexError
-                    except IndexError: 
-                        #sil'autre char est en dessous
-                        if salle.salle[i+1][j]==char:
-                            try:
-                                if salle.salle[i][j+1]=='0':#porte à droite
-                                    matx = j+1
-                                    maty = i
-                                    trouver=True
-                                    break
-                            except IndexError:
-                                if salle.salle[i][j-1]=='0':#porte à gauche
-                                    matx = j-1
-                                    maty = i
-                                    trouver=True                          
-                                    break
-            if trouver:
-                break
-
-        perso.posMatY=maty
-        perso.posMatX=matx
-        
-        self.changementDeMap(salle,perso)
-        
-        return perso
     
-    def coordMatriceAEcran(self,x,y):
+    def coordMatriceAEcran(self,divers):
         depx=self.posDepartX
         depy=self.posDepartY
-        depx+=self.largeurTuile*x
-        depy+=self.hauteurTuile*y
+        
+        depx+=self.largeurTuile*divers.posMatX
+        depy+=self.hauteurTuile*divers.posMatY
         
         return depx,depy
     
-    def changementDeMap(self,laSalle,perso):
+    def actualiserAffichage(self,perso,laSalle):
         self.effaceMap()
-        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)    
+        
+        x,y=self.coordMatriceAEcran(perso)    
         self.calculOffSet(x,y)
             
         self.affichageMap(perso,laSalle)
