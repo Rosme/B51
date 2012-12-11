@@ -19,6 +19,7 @@ class Application():
         self.root.protocol("WM_DELETE_WINDOW", self.quitter)
         self.root.config(bg="#000")
         self.root.resizable(0,0)
+        self.root.title("AreaB51")
         
         self.initialisationInterfaces()
     
