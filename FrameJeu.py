@@ -162,7 +162,7 @@ class FrameJeu():
                 #affichage du plancher
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
                     self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
-                    self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                    #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
                 
                 #affichage des coffres
                 if  map[i][k]=='3':
