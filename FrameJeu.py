@@ -171,7 +171,8 @@ class FrameJeu():
     def tire(self):
         #affichage de toutes les balles existantes s
         for i in self.parent.parent.jeu.listeBalle:
-            self.map.create_oval(i.posMapX-5, i.posMapY-5, i.posMapX, i.posMapY, fill='red', tags="balle")
+            x,y=self.coordMatriceAEcran(i.posMatX,i.posMatY)   
+            self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
     
     def ajoutEcouteur(self):
         #ecouteur lié au clavier       
@@ -252,8 +253,8 @@ class FrameJeu():
     
     def changementDeMap(self,laSalle,perso):
         self.effaceMap()
-            
-        self.calculOffSet(perso.posMapX,perso.posMapY)
+        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)    
+        self.calculOffSet(x,y)
             
         self.affichageMap(perso,laSalle)
     

@@ -91,7 +91,6 @@ class Jeu():
         if self.mouvement[4]:
             if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
                 balle = self.listeBalle[len(self.listeBalle)-1]
-                balle.posMatX,balle.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(balle.posMapX+(balle.veloX)*2,balle.posMapY+(balle.veloY)*2)
             else:
                 balle = self.listeBalle[len(self.listeBalle)-1]
                 self.listeBalle.remove(balle);
@@ -104,6 +103,8 @@ class Jeu():
         self.parent.app.frameJeu.tire()
    
     def collision(self, liste):
+        pass
+        '''
         temp = self.listeBalle
         
         for i in self.listeBalle:
@@ -121,6 +122,7 @@ class Jeu():
                 temp.remove(i)
                 
         self.listeBalle = temp
+        '''
     
     def nouveauLogo(self, posMap, nomMap):
         pers = Personnage()

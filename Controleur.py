@@ -20,11 +20,10 @@ class Controleur():
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
         if self.partieCommencer:
-            if self.compteur%10:
-                self.jeu.bougePersonnage()
-                self.jeu.activationObjet()
-                self.app.frameJeu.hudHaut.actualiser()
-                self.jeu.gestionMort()
+            self.jeu.bougePersonnage()
+            self.jeu.activationObjet()
+            self.app.frameJeu.hudHaut.actualiser()
+            self.jeu.gestionMort()
             if self.compteur%20==0:
                 self.jeu.rechargement()
             if self.compteur%3==0:
