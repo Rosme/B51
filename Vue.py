@@ -6,6 +6,7 @@ import MenuChargerPartie
 import MenuConnexion
 import MenuLobby
 import FrameJeu
+import GestionImage
 
 class Application():
     def __init__(self, parent):
@@ -20,6 +21,8 @@ class Application():
         self.root.config(bg="#000")
         self.root.resizable(0,0)
         self.root.title("AreaB51")
+        
+        self.gestionnaireImage = GestionImage.GestionImage()
         
         self.initialisationInterfaces()
     
@@ -56,6 +59,9 @@ class Application():
         
     def jeu(self,perso,laSalle):
         return self.frameJeu.initMap(perso,laSalle)
+    
+    def getImage(self,nomImage):
+        return self.gestionnaireImage.getImage(nomImage)
         
     def quitter(self):
         self.root.quit()

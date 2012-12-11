@@ -8,10 +8,9 @@ class MenuLobby():
         self.frameMenuLobby = tkinter.Frame(self.parent.root)
         
         #Image de fond
-        self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuLobby,width=1024,height=768)
         self.fondEcran.pack()
-        self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
+        self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         
         #creation de la fenetre lobby
         

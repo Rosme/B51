@@ -5,10 +5,9 @@ class MenuConnexion():
         self.parent = parent
         self.frameMenuConnexion=tkinter.Frame(self.parent.root)
         
-        self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuConnexion,width=1024,height=768)
         self.fondEcran.pack()
-        self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
+        self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         self.fondEcran.create_text(100,60,text="Adresse IP :",font=("Arial","15"),fill="white",tags="textIP")
         self.ipentry = tkinter.Entry(self.frameMenuConnexion, width="14" )
         self.boutonNouveauServeur = tkinter.Button(self.frameMenuConnexion, text='Nouveau serveur', command=self.nouveauServeur)

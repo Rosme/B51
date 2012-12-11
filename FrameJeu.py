@@ -20,15 +20,6 @@ class FrameJeu():
         self.offX=0
         self.offY=0
         
-        #importation des images
-        self.importerImage()
-        
-    def importerImage(self):
-        self.roche=tkinter.PhotoImage(file="assets/image/rock1.gif")
-        self.gazon=tkinter.PhotoImage(file="assets/image/grass.gif")
-        self.pers=tkinter.PhotoImage(file="assets/image/f1.gif")
-        self.coffre=tkinter.PhotoImage(file="assets/image/coffre.gif")
-        
     def posInitPerso(self):
         #position du joueur centrer dans l'ecran et dans le canvas
         return self.largeurJeu/2,self.hauteurJeu/2
@@ -151,7 +142,7 @@ class FrameJeu():
             for k in range(len(map[i])-1,-1,-1):
                 #affichage des murs 
                 if map[i][k]=='1' or map[i][k] == '2':
-                    self.map.create_image(posTempX,posTempY-16,image=self.roche,tags="image")
+                    self.map.create_image(posTempX,posTempY-16,image=self.parent.getImage("roche"),tags="image")
                 
                 #affichage du personnage s'il na pas déjà été affiché
                 if self.persoAff==True:
@@ -161,13 +152,16 @@ class FrameJeu():
                     
                 #affichage du plancher
                 if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
-                    self.map.create_image(posTempX,posTempY,image=self.gazon,tags="image")
+                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("gazon"),tags="image")
                     #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
+                
+                if map[i][k]=='f':
+                     self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("feu"),tags="image")
                 
                 #affichage des coffres
                 if  map[i][k]=='3':
                     #self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
-                    self.map.create_image(posTempX,posTempY-17,image=self.coffre,tags="coffre")
+                    self.map.create_image(posTempX,posTempY-17,image=self.parent.getImage("coffre"),tags="coffre")
                 
                 #affichage des switchs
                 if  map[i][k]=='w':
@@ -218,7 +212,7 @@ class FrameJeu():
         self.map.delete("perso")
         #temp = perso.obtenirLimite()
         #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
-        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.pers,tags="perso")
+        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.parent.getImage("pers"),tags="perso")
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
         
