@@ -5,6 +5,22 @@ Classe Serveur pour faire tourner le serveur du jeu
 serveur.py
 '''
 
+
+#Classe Wrapper pour les connexions clientes
+class Client():
+	def __init__(self, conn, address, id):
+		self.conn = conn
+		self.address = address
+		self.id = id
+
+#Classe Wrapper pour les Joueurs
+class Joueur():
+	def __init__(self, client, events = list()):
+		self.client = client
+		self.events = events
+
+
+'''
 import select 
 import socket
 import pickle
@@ -103,16 +119,6 @@ class Serveur():
 							self.queueEnvoie.append(info)
 						elif isinstance(data, nd.ClientData):
 							self.clientsEvents.append(data)
-						'''
-						elif isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
-							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
-							if estCommande == True:											
-								self.appliquerCommande(message, client, donnees)			
-							else:
-								print(message)
-						else:
-							print("Type de donnees inconnu")
-						'''
 					except EOFError as eof:
 						print("Erreur sur le serveur: ", eof)
 						self.clients = []
@@ -156,3 +162,4 @@ while serveur.statut == "demarrer":
 	serveur.envoyerMessage()
 
 serveur.deconnecterClients()
+'''
