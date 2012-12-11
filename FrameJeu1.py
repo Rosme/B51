@@ -13,15 +13,21 @@ class FrameJeu():
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=40
-        self.hauteurTuile=40
+        self.largeurTuile=64
+        self.hauteurTuile=32
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
         self.offY=0
+        
+    def posInitPerso(self):
+        #position du joueur centrer dans l'ecran et dans le canvas
+        return self.largeurJeu/2,self.hauteurJeu/2
     
     def debutDePartie(self,perso,laSalle):
         #appelé a chaque fois que l'on meurt ou que l'on débute une partie
+        #position du personnage dans la mainRoom
+        perso.posMapX,perso.posMapY=self.posInitPerso()
         
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
@@ -29,8 +35,11 @@ class FrameJeu():
         #position des premiers blocs
         self.calculPositionDepart(laSalle,perso)
         
+        #calcul du point le plus à gauche de la map
+        self.calculPositionMilieu(laSalle,perso)
+        
         #calcul de la position du personnage dans la matrice par rapport a sa position relative au canvas
-        #perso.posMatX,perso.posMatY=self.coordEcranAMatrice(perso.posMapX,perso.posMapY)
+        perso.posMatX,perso.posMatY=self.coordEcranAMatrice(perso.posMapX,perso.posMapY)
         
         return perso
     
@@ -52,8 +61,7 @@ class FrameJeu():
         self.dispositionPrincipale()
         
         #calcul de la position de la scrollbar pour voir le personnage
-        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)
-        self.calculOffSet(x,y)
+        self.calculOffSet(perso.posMapX,perso.posMapY)
         
         #affichage de la map, des objets et du personnage à l'écran
         self.affichageMap(perso,laSalle)
@@ -89,10 +97,15 @@ class FrameJeu():
     def calculPositionDepart(self,laSalle,perso):
         #calcul la position de la première tuile a être affiché de la map
         #calcul du centre de l'écran sur les X
-        self.posDepartX=(self.largeurJeu/2)-(laSalle.dictMap[perso.nomMap + " dimensions"][1]*self.largeurTuile/2)
+        self.posDepartX=(self.largeurJeu/2)
         #calcul du centre de l'écran sur les y moins le nombre de colonne de la matrice 
-        self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*self.hauteurTuile/2))
+        self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*16))+32
         
+    def calculPositionMilieu(self,laSalle,perso):
+        #calcul les coordonnées du point dans le canvas le plus à gauche ou à la position (0,0) de la matrice
+        self.posMilieuDiagoX=(self.posDepartX-(laSalle.dictMap[perso.nomMap + " dimensions"][0]-1)*32)-32
+        self.posMilieuDiagoY=(self.posDepartY+(laSalle.dictMap[perso.nomMap + " dimensions"][1]-1)*16)
+    
     def calculOffSet(self,x,y):
         #calcul du pourcentage sur les 2 axe de la position du personnage
         self.offX=(x/self.largeurJeu)
@@ -163,18 +176,43 @@ class FrameJeu():
                 #for p in self.parent.parent.jeu.listeLogomate:
                    # if p.posMatX<k and p.posMatY<i:
                         #self.map.create_image(perso.posMapX+(p.posMapX - perso.posMapX),perso.posMapY+(p.posMapY - perso.posMapY)-32,image=self.pers,tags="logo")
+                     
                    
-                posTempX+=(self.largeurTuile)
-            posInitY+=(self.hauteurTuile)
+                #apres chaque affichage, on se se déplace d'une tuile en bas a gauche
+                posTempX-=(self.largeurTuile/2)
+                posTempY+=(self.hauteurTuile/2)
+            #apres chaque ligne, on calcul la position de le premiere tuile de la prochaine ligne a etre affiche situé en haut à droite
+            posInitX+=(self.largeurTuile/2)
+            posInitY+=(self.hauteurTuile/2)
         
+        '''
+        #affichage des logomates 2... mauvaise place a vérifier
+        #if self.parent.parent.jeu.listePersonnage:
+            #temp = self.parent.parent.jeu.listePersonnage[0].obtenirLimite()
+            #self.map.create_image(perso.posMapX+(self.parent.parent.jeu.listePersonnage[0].posMapX - perso.posMapX),perso.posMapY+(self.parent.parent.jeu.listePersonnage[0].posMapY- perso.posMapY)-32, image=self.pers, tags="p")
+        '''
+
+        #affichage des roches... mauvaise place a vérifier
+        for i in self.parent.parent.jeu.listeRoche:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        for i in self.parent.parent.jeu.listeInterrupteur:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+        for i in self.parent.parent.jeu.listeLevier:
+            if self.parent.parent.jeu.joueur.nomMap == i.nomMap:
+                temp = i.obtenirLimite()
+                #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='blue', tags="p")
+		
     def affichagePerso(self,perso):
         #affichage du personnage
         #on supprime le perso précedement affiché
         self.map.delete("perso")
         #temp = perso.obtenirLimite()
         #self.map.create_rectangle(perso.posMapX+ temp[0]- perso.posMapX, perso.posMapY+temp[1]- perso.posMapY, perso.posMapX+temp[2]- perso.posMapX, perso.posMapY+temp[3]- perso.posMapY, fill='red', tags="perso")
-        x,y=self.coordMatriceAEcran(perso.posMatX,perso.posMatY)
-        self.map.create_image(x,y,image=self.parent.getImage("pers"),tags="perso")
+        self.map.create_image(perso.posMapX,perso.posMapY-32,image=self.parent.getImage("pers"),tags="perso")
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
         
@@ -194,10 +232,35 @@ class FrameJeu():
     
     def coordEcranAMatrice(self,x1,y1):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
-        resteX = math.floor(x1-self.posDepartX/self.largeurTuile)
-        resteY = math.floor(y1-self.posDepartY/self.hauteurTuile)
-        
-        return resteY,resteX
+        x=0
+        y=0
+        mily=self.posMilieuDiagoY-self.posDepartY
+        x1-=self.posMilieuDiagoX
+        y1-=self.posDepartY
+
+        tempx=math.floor(x1/(self.largeurTuile/2))*self.largeurTuile/2
+        tempy=math.floor(y1/(self.hauteurTuile/2))*self.hauteurTuile/2        
+        if tempy==mily:
+            tempx = math.floor(tempx/self.largeurTuile)
+            x=tempx
+            y=tempx
+        elif tempy<mily:
+            while tempy!=mily:
+                tempx-=(self.largeurTuile/2)
+                tempy+=(self.hauteurTuile/2)
+                x+=1
+            tempx = math.floor(tempx/self.largeurTuile)
+            x+=tempx
+            y+=tempx
+        elif tempy>mily:
+            while tempy!=mily:
+                tempx-=(self.largeurTuile/2)
+                tempy-=(self.hauteurTuile/2)
+                y+=1
+            tempx = math.floor(tempx/self.largeurTuile)
+            x+=tempx
+            y+=tempx
+        return x,y
         
     def coordProchaineZone(self,salle,char,perso):
         #permet le changement de zone
@@ -206,6 +269,7 @@ class FrameJeu():
         trouver=False
         
         self.calculPositionDepart(salle,perso)
+        self.calculPositionMilieu(salle,perso)
         
         for i in range(len(salle.salle)):
             for j in range(len(salle.salle[i])):
@@ -224,6 +288,8 @@ class FrameJeu():
                                     matx = j
                                     maty = i-1
                                     trouver=True
+                                    tempX+=32
+                                    tempY-=16
                                     break
                         else:
                             raise IndexError
@@ -244,9 +310,15 @@ class FrameJeu():
                                     break
             if trouver:
                 break
-
+        
+        tempMatX=salle.dictMap[perso.nomMap + " dimensions"][0]-matx
+        
         perso.posMatY=maty
         perso.posMatX=matx
+        
+        perso.posMapX,perso.posMapY=self.coordMatriceAEcran(tempMatX,maty)
+        perso.posMapX+=tempX
+        perso.posMapY+=tempY
         
         self.changementDeMap(salle,perso)
         
@@ -255,8 +327,8 @@ class FrameJeu():
     def coordMatriceAEcran(self,x,y):
         depx=self.posDepartX
         depy=self.posDepartY
-        depx+=self.largeurTuile*x
-        depy+=self.hauteurTuile*y
+        depx+=(32*y)-(32*x)+32
+        depy+=(16*y)+(16*x)-16
         
         return depx,depy
     

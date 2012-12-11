@@ -12,10 +12,10 @@ class Personnage():
         self.nom = nom
         self.nomMap = "MainRoom"
         self.race = race
-        self.posMatX = 0
-        self.posMatY = 0
-        self.posMapX = 0
-        self.posMapY = 0
+        self.posMatX = 11
+        self.posMatY = 11
+        #self.posMapX = 0
+        #self.posMapY = 0
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 0.8, 100, 1))
@@ -34,14 +34,17 @@ class Personnage():
         tempy = 0
         
         if mouvement[0]:
-            tempy-=4
+            tempy-=1
         if mouvement[1]:
-            tempx+=4
+            tempx+=1
         if mouvement[2]:
-            tempy+=4
+            tempy+=1
         if mouvement[3]:
-            tempx-=4
-            
+            tempx-=1
+        
+        tempx+=self.posMatX
+        tempy+=self.posMatY
+        
         return tempx, tempy
     
     '''
@@ -118,5 +121,6 @@ class Personnage():
                 break
     
     def obtenirLimite(self):
-        return [self.posMapX-26, self.posMapY-35, self.posMapX+26, self.posMapY+10]
+        pass
+        #return [self.posMapX-26, self.posMapY-35, self.posMapX+26, self.posMapY+10]
     

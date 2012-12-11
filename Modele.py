@@ -46,9 +46,8 @@ class Jeu():
     def bougePersonnage(self):
         laMap=self.carte.s.salle
         
-        tempx, tempy = self.joueur.bouge(self.mouvement)
+        tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
         
-        tempMatX,tempMatY=self.parent.app.frameJeu.coordEcranAMatrice(self.joueur.posMapX+tempx,self.joueur.posMapY+tempy)
         if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
@@ -56,13 +55,13 @@ class Jeu():
             
         elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
             if laMap[tempMatY+1][tempMatX-1]!='1':
-                if tempx!=0 or tempy!=0:
-                    self.joueur.posMatX=tempMatX
-                    self.joueur.posMatY=tempMatY
-                    self.joueur.posMapX+=tempx
-                    self.joueur.posMapY+=tempy
-                    self.parent.app.frameJeu.deplScrollBar(tempx,tempy)
-                    self.parent.app.frameJeu.affichagePerso(self.joueur)
+                #if tempx or tempy:
+                self.joueur.posMatX=tempMatX
+                self.joueur.posMatY=tempMatY
+                #self.joueur.posMapX+=tempx
+                #self.joueur.posMapY+=tempy
+                #self.parent.app.frameJeu.deplScrollBar(tempx,tempy)
+                self.parent.app.frameJeu.affichagePerso(self.joueur)
     
     def activationObjet(self):
         if self.listeInterrupteur:
