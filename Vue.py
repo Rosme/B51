@@ -25,17 +25,17 @@ class Application():
         self.gestionnaireImage = GestionImage.GestionImage()
         
         self.initialisationInterfaces()
-    
+    #############################Initialisation de tous les éléments de base de toutes les interfaces#############################
     def initialisationInterfaces(self):
         #création de tous les menus
         self.menuP = MenuPrincipal.MenuPrincipal(self)
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
-        #self.menuP = MenuChargerPartie.MenuChargerPartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
         self.menuL = MenuLobby.MenuLobby(self)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
         self.frameJeu=FrameJeu.FrameJeu(self)
-        
+    
+    #############################Appel pour afficher les interfaces#############################
     def menuPrincipal(self):
         self.menuP.menuPrincipal()
         
@@ -43,11 +43,6 @@ class Application():
         self.menuP.effaceMenuPrinc()
         self.menuN.menuNouvellePartie()
         
-    #def menuChargerPartie(self,event):
-        #self.menuP.effaceMenuPrinc()
-        #self.menuCP = MenuChargerPartie.MenuChargerPartie(self)
-        #self.menuN.menuNouvellePartie()
-    
     def menuInventaire(self):
         self.frameJeu.menuI.menuInventaire()
     
@@ -60,8 +55,10 @@ class Application():
     def jeu(self,perso,laSalle):
         self.frameJeu.initMap(perso,laSalle)
     
+    #############################Retourne l'objet de l'image#############################
     def getImage(self,nomImage):
         return self.gestionnaireImage.getImage(nomImage)
-        
+    
+    #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
         self.root.quit()

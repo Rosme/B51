@@ -5,6 +5,7 @@ import HudHaut
 import MenuInventaire
 
 class FrameJeu():
+    #############################Initialisation de variables#############################
     def __init__(self,parent):
         self.parent = parent
         
@@ -21,7 +22,6 @@ class FrameJeu():
         self.offY=0
     
     def debutDePartie(self,perso,laSalle):
-        #appelé a chaque fois que l'on meurt ou que l'on débute une partie
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
 		
@@ -31,6 +31,7 @@ class FrameJeu():
     def initMap(self,perso,laSalle):
         #appelé une seule fois à la création d'une partie
         self.debutDePartie(perso,laSalle)
+        
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
@@ -42,10 +43,6 @@ class FrameJeu():
         
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
         self.dispositionPrincipale()
-        
-        #calcul de la position de la scrollbar pour voir le personnage
-        x,y=self.coordMatriceAEcran(perso)
-        self.calculOffSet(x,y)
         
         #affichage de la map, des objets et du personnage à l'écran
         self.affichageMap(perso,laSalle)
@@ -60,7 +57,7 @@ class FrameJeu():
         self.yscrollbar = tkinter.Scrollbar(self.frameDuJeu)
 
         #creation du canvas contenant la map, perso...
-        self.map=tkinter.Canvas(self.frameDuJeu,width=1024,height=700,  bg="#000",highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
+        self.map=tkinter.Canvas(self.frameDuJeu,width=self.parent.largeurFrame,height=self.parent.hauteurFrame,  bg="#000",highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         self.map.config(scrollregion=(0,0,self.largeurJeu,self.hauteurJeu),xscrollcommand=self.xscrollbar.set,yscrollcommand=self.yscrollbar.set)
         self.map.pack()
         self.frameDuJeu.pack()
@@ -76,30 +73,23 @@ class FrameJeu():
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()'''
     
-    def calculPositionDepart(self,laSalle,perso):
-        #calcul la position de la première tuile a être affiché de la map
-        #calcul du centre de l'écran sur les X
-        self.posDepartX=(self.largeurJeu/2)-(laSalle.dictMap[perso.nomMap + " dimensions"][1]*self.largeurTuile/2)
-        #calcul du centre de l'écran sur les y moins le nombre de colonne de la matrice 
-        self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*self.hauteurTuile/2))
+    #############################Ajout d'ecouteur#############################
+    def ajoutEcouteur(self):
+        #ecouteur lié au clavier       
+        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
+        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
+        #ecouteur lié à la souris
+        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
+        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
+        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
         
-    def calculOffSet(self,x,y):
-        #calcul du pourcentage sur les 2 axe de la position du personnage
-        self.offX=(x/self.largeurJeu)
-        self.offY=(y/self.hauteurJeu)
-        #ajustement de la position de la scrollbar
-        self.ajustOffSet()
-    
-    def ajustOffSet(self):
-        #ajustement de la position de la scrollbar
-        self.offX-=0.13
-        self.offY-=0.08
-        #fix un problème de clignement lors des premiers mouvement en x,y du joueur
-        self.deplScrollBar(-4,-4)
-        self.deplScrollBar(4,4)
-        
+    #############################Affichage à l'écran#############################
     def affichageMap(self,perso,laSalle):
         map=laSalle.salle
+        
+        #calcul de la position de la scrollbar pour voir le personnage
+        x,y=self.coordMatriceAEcran(perso)
+        self.calculOffSet(x,y)
         
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
@@ -111,55 +101,52 @@ class FrameJeu():
         #affichage de toutes les tuiles de la map ainsi que le personnage et les objets
         #passe toutes les lignes de la map
         for i in range(len(map)):
-            #retour en haut a droite de l'ecran
             posTempX=posInitX
             posTempY=posInitY
-            #passe toutes les elements de la ligne 1 par 1
             for k in range(len(map[i])):
-                #affichage des murs 
-                if map[i][k]=='1' or map[i][k] == '2':
-                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("roche"),tags="image")
+                
+                self.affichageImage(map[i][k],posTempX,posTempY)
                 
                 #affichage du personnage s'il na pas déjà été affiché
                 if self.persoAff==True:
                     #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
                     if perso.posMatX<k and perso.posMatY<i: 
                         self.affichagePerso(perso)
-                    
-                #affichage du plancher
-                if map[i][k]=='0' or map[i][k]=='v' or map[i][k]=='b' or map[i][k]=='n' or map[i][k]=='m':
-                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("gazon"),tags="image")
-                    #self.map.create_text(posTempX,posTempY,text=str(i)+","+str(k),tags="text")
-                
-                if map[i][k]=='f':
-                     self.map.create_image(posTempX,posTempY,image=self.parent.getImage("feu"),tags="image")
-                
-                #affichage des coffres
-                if  map[i][k]=='3':
-                    #self.map.create_text(posTempX, posTempY, text="Coffre", fill='white', tags="image")
-                    self.map.create_image(posTempX,posTempY,image=self.parent.getImage("coffre"),tags="coffre")
-                
-                #affichage des switchs
-                if  map[i][k]=='w':
-                    self.map.create_text(posTempX, posTempY, text="Switch", fill='white', tags="image")
-                        
-                        
-                #affichage des leviers
-                if  map[i][k]=='e':
-                    self.map.create_text(posTempX, posTempY, text="Levier", fill='white', tags="image")
-                
+                '''
                 #affichage des logomates
-                #for p in self.parent.parent.jeu.listeLogomate:
-                   # if p.posMatX<k and p.posMatY<i:
-                        #x,y=self.coordMatriceAEcran(perso)
-                        #self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
-                   
+                for p in self.parent.parent.jeu.listeLogomate:
+                    if p.posMatX<k and p.posMatY<i:
+                        x,y=self.coordMatriceAEcran(perso)
+                        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
+                '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
     
-
-    def affichageEnvironnement(self,char,pos):
-        pass
+    def affichageImage(self,car,posX,posY):
+        nomImage=None
+        tag="image"
+        text=None
+        
+        if car=='0' or car=='v' or car=='b' or car=='n' or car=='m':
+            nomImage="gazon"
+            #x,y=self.coordEcranAMatrice(posX,posY)
+            #texte=str(y)+","+str(x)
+        elif car=='1' or car=='2':
+            nomImage="roche"
+        elif car=='3':
+            tag="coffre"
+            nomImage="coffre"
+        elif car=='e':
+            texte="Levier"
+        elif car=='w':
+            texte="Switch"
+        elif car=='f':
+            nomImage="feu"
+        
+        if nomImage:
+            self.map.create_image(posX,posY,image=self.parent.getImage(nomImage),tags=tag)
+        if texte:
+            self.map.create_text(posX, posY, text=texte, fill='white', tags=tag)
     
     def affichagePerso(self,perso):
         #affichage du personnage
@@ -177,15 +164,18 @@ class FrameJeu():
             x,y=self.coordMatriceAEcran(i)   
             self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
     
-    def ajoutEcouteur(self):
-        #ecouteur lié au clavier       
-        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
-        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
-        #ecouteur lié à la souris
-        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
-        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
-        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
+    def actualiserAffichage(self,perso,laSalle):
+        self.map.delete(tkinter.ALL)
+        self.affichageMap(perso,laSalle)
     
+    #############################Calcul de postion#############################
+    def calculPositionDepart(self,laSalle,perso):
+        #calcul la position de la première tuile a être affiché de la map
+        #calcul du centre de l'écran sur les X
+        self.posDepartX=(self.largeurJeu/2)-(laSalle.dictMap[perso.nomMap + " dimensions"][1]*self.largeurTuile/2)
+        #calcul du centre de l'écran sur les y moins le nombre de colonne de la matrice 
+        self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*self.hauteurTuile/2))
+        
     def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
         resteX = math.floor((x-self.posDepartX)/self.largeurTuile)
@@ -202,13 +192,21 @@ class FrameJeu():
         
         return depx,depy
     
-    def actualiserAffichage(self,perso,laSalle):
-        self.effaceMap()
-        
-        x,y=self.coordMatriceAEcran(perso)    
-        self.calculOffSet(x,y)
-            
-        self.affichageMap(perso,laSalle)
+    #############################Modification des scrollbars#############################
+    def calculOffSet(self,x,y):
+        #calcul du pourcentage sur les 2 axe de la position du personnage
+        self.offX=(x/self.largeurJeu)
+        self.offY=(y/self.hauteurJeu)
+        #ajustement de la position de la scrollbar
+        self.ajustOffSet()
+    
+    def ajustOffSet(self):
+        #ajustement de la position de la scrollbar
+        self.offX-=0.13
+        self.offY-=0.08
+        #fix un problème de clignement lors des premiers mouvement en x,y du joueur
+        self.deplScrollBar(-4,-4)
+        self.deplScrollBar(4,4)
     
     def deplScrollBar(self,tempx,tempy):
         incr=0.001
@@ -233,10 +231,8 @@ class FrameJeu():
         if tempy==0 and tempx==0: 
             self.map.yview(tkinter.MOVETO,self.offX)
             self.map.xview(tkinter.MOVETO,self.offY)
-        
-    def effaceMap(self):
-         self.map.delete(tkinter.ALL)
     
+    #############################Supression de masse#############################    
     def effaceTout(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False

@@ -50,14 +50,16 @@ class Controleur():
     
     def actusliserPersonnage(self,perso):
         self.app.frameJeu.affichagePerso(perso)
+
+    def actualisationBalle(self,listeBalle):
+        self.app.frameJeu.map.delete("balle")
+        self.app.frameJeu.tire(listeBalle)    
     
+    #############################Gestion de la mort#############################    
     def joueurMort(self,perso,laSalle):
         self.app.frameJeu.debutDePartie(self.joueur,self.carte.s)
         self.actualiserAffichageComplet(self.joueur,self.carte.s)
     
-    def actualisationBalle(self,listeBalle):
-        self.app.frameJeu.map.delete("balle")
-        self.app.frameJeu.tire(listeBalle)
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
         return self.jeu.info(race)
@@ -117,8 +119,7 @@ class Controleur():
                         if i.collision(self.jeu.joueur):
                             if i.tire():
                                 if i.activer():
-                                    self.app.frameJeu.effaceMap()
-                                    self.app.frameJeu.affichageMap(self.jeu.joueur,self.jeu.carte.s)
+                                    self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
                                     
                 
                 self.press = True
@@ -177,7 +178,8 @@ class Controleur():
         
     def relacheTire(self,event):
         self.jeu.mouvement[4] = False
-        
+    
+    #prend a chaque deplacement de souris la nouvelle position en x,y de la souris
     def tireCoord(self,event):
         if self.jeu.mouvement[4]:
             self.jeu.sourisX = event.x
