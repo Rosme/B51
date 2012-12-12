@@ -11,8 +11,7 @@ class Objet():
         self.aTerre = True
         
     def obtenirLimite(self):
-        pass
-        #return [self.posMatX-self.largeur, self.posMatY-self.hauteur, self.posMatX+self.largeur, self.posMatY+self.hauteur]
+        return [self.posMatX-self.largeur, self.posMatY-self.hauteur, self.posMatX+self.largeur, self.posMatY+self.hauteur]
 
 class Sac(Objet):
     def __init__(self, parent, matX, matY, nomMap):
@@ -38,8 +37,6 @@ class Coffre(Objet):
         self.ouvert = False
 
     def ouvrir(self, perso):
-        pass
-        '''
         if self.aTerre:
             if not self.ouvert:
                 limitePerso = perso.obtenirLimite()
@@ -68,6 +65,7 @@ class Coffre(Objet):
                             else:
                                 valide = False
                             if valide:
+                                
                                 self.ouvert = True
                                 return True
                             k+=2
@@ -75,7 +73,7 @@ class Coffre(Objet):
         
         self.ouvert = False
         return False
-        '''
+
     '''
     Rajout d'un item au coffre
     '''
@@ -97,8 +95,6 @@ class Roche(Objet):
         self.depose()
         
     def prendre(self, perso):
-        pass
-        '''
         if self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
@@ -133,11 +129,11 @@ class Roche(Objet):
                 
         self.aTerre = True
         return True
-        '''
+
     def bouge(self, perso):
         pass
         
-        '''if not self.aTerre:
+        if not self.aTerre:
             for i in self.parent.listeInterrupteur:
                 self.aTerre = True
                 if not self.prendre(i):
@@ -146,18 +142,16 @@ class Roche(Objet):
                 else:
                     self.aTerre = False
         self.posMatX = perso.posMatX
-        self.posMatY = perso.posMatY'''
+        self.posMatY = perso.posMatY
         
         
     def depose(self):
-        pass
-        '''
         self.aTerre = True
         for i in self.parent.listeInterrupteur:
             if not self.prendre(i):
                 self.aTerre = True
                 i.aTerre = True
-        '''
+
 class Interrupteur(Objet):
     def __init__(self, parent, matX, matY, unique, nomMap):
         Objet.__init__(self, parent, matX, matY,60, 60, nomMap)
@@ -167,8 +161,6 @@ class Interrupteur(Objet):
         self.out = True
     
     def collision(self, perso):
-        pass
-        '''
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
@@ -203,11 +195,8 @@ class Interrupteur(Objet):
             
             self.active = False
             return False
-            '''
     
     def activer(self):
-        pass
-        '''
         if self.parent.joueur.nomMap == "F_E1S1":
             #25 par 14-15
             map = self.parent.carte.s.salle
@@ -227,10 +216,8 @@ class Interrupteur(Objet):
              
             self.parent.carte.s.salle = map
             return False
-            '''
+
     def ouvrePorte(self, ligne, colonne, map, car, simple):
-        pass
-        '''
         temp=[]
         tempLigne = map.pop(ligne)
         i = 0
@@ -249,7 +236,6 @@ class Interrupteur(Objet):
             i+=1    
         
         map.insert(ligne, temp)
-        '''
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
@@ -257,8 +243,6 @@ class Declencheur(Objet):
         self.active = False
         
     def collision(self, perso):
-        pass
-        '''
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
@@ -293,7 +277,6 @@ class Declencheur(Objet):
                 
             self.active = False
             return False
-            '''
         
     def active(self, nomMap):
         if nomMap == "F_E1S1":
@@ -309,8 +292,7 @@ class Levier(Objet):
         self.active = False
         
     def collision(self, perso):
-        pass
-        '''
+        
         if not self.active:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
@@ -343,10 +325,8 @@ class Levier(Objet):
                 j+=2
                 
             return False
-        '''
+    
     def activer(self):
-        pass
-        '''
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
             if self.posMatX == 12 and self.posMatY == 11:
@@ -368,10 +348,8 @@ class Levier(Objet):
                 return False
                
             self.parent.carte.s.dictMap["F_E1S1"] = map
-        '''
+
     def ouvrePorte(self, ligne, colonne, map, car, simple):
-        pass
-        '''
         temp=[]
         tempLigne = map.pop(ligne)
         i = 0
@@ -390,7 +368,7 @@ class Levier(Objet):
             i+=1    
         
         map.insert(ligne, temp)
-        '''
+
     def tire(self):
         if self.energie - self.force <= 0:
             self.energie=0
