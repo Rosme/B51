@@ -156,7 +156,11 @@ class FrameJeu():
                    
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-        
+    
+
+    def affichageEnvironnement(self,char,pos):
+        pass
+    
     def affichagePerso(self,perso):
         #affichage du personnage
         #on supprime le perso précedement affiché

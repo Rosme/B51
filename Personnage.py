@@ -119,6 +119,5 @@ class Personnage():
                 break
     
     def obtenirLimite(self):
-        pass
-        #return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
+        return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
     

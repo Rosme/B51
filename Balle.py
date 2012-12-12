@@ -23,13 +23,11 @@ class Balle():
             self.valide = False
         
     def bouge(self, perso):
-        self.distanceParcouru += math.sqrt(abs((self.veloX)**2)+abs((self.veloY)**2))
+        self.distanceParcouru +=1 #math.sqrt(abs((self.veloX)**2)+abs((self.veloY)**2))
         self.posMatX += self.veloX
         self.posMatY += self.veloY
         
-    def collision(self, liste, map):
-        pass
-        '''
+    def collision(self, liste, map):        
         if self.distanceParcouru < self.distanceMax:
             for i in liste:
                 rectPerso = i.obtenirLimite()
@@ -53,8 +51,7 @@ class Balle():
             return True
         
         return False
-        '''
+        
     def obtenirLimite(self):
-        pass
-        #return [self.posMatX-self.radius, self.posMatY-self.radius, self.posMatX+self.radius, self.posMatY+self.radius]
+        return [self.posMatX-self.radius, self.posMatY-self.radius, self.posMatX+self.radius, self.posMatY+self.radius]
     

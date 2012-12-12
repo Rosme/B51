@@ -146,13 +146,12 @@ class Jeu():
         
         self.parent.actualisationBalle(self.listeBalle)
    
-    def collision(self, liste):
-        pass
-        '''
+    def collision(self, liste):  
         temp = self.listeBalle
         
         for i in self.listeBalle:
             i.bouge(self.joueur)
+            '''
             if i.veloY<0 and i.veloX<0:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
             elif i.veloY>0 and i.veloX>0:
@@ -161,12 +160,12 @@ class Jeu():
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
             else:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
-
+            '''
             if i.collision(liste, self.carte.s.salle):
                 temp.remove(i)
                 
         self.listeBalle = temp
-        '''
+        
     
     def nouveauLogo(self, posMat,nomMap):
         pers = Personnage()
