@@ -125,7 +125,7 @@ class FrameJeu():
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
-        text=None
+        texte=None
         
         if car=='0' or car=='v' or car=='b' or car=='n' or car=='m':
             nomImage="gazon"
@@ -159,7 +159,7 @@ class FrameJeu():
         self.persoAff=False
         
     def tire(self,listeBalle):
-        #affichage de toutes les balles existantes s
+        #affichage de toutes les balles existantes 
         for i in listeBalle:
             x,y=self.coordMatriceAEcran(i)   
             self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
