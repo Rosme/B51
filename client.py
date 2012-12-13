@@ -5,6 +5,39 @@ Classe Client pour se connecter au serveur et communiquer avec les autres client
 client.py
 '''
 
+import socket
+import select
+import pickle
+
+class Client():
+	def __init__(self):
+		self.host = 'localhost'
+		self.port = 43225
+		self.address = (self.host, self.port)
+		self.buffersize = 4096
+
+	def receive(self):
+		try:
+			bData = self.socket.recv(self.buffersize)
+			if bData:
+				data = pickle.loads(bData)
+				print(data)
+		except socket.timeout:
+			pass
+		except socket.error:
+			print("Erreur sur la connexion au serveur")
+
+	def connecter(self):
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.connect(self.address)
+		self.socket.settimeout(0.1)
+
+c = Client()
+c.connecter()
+while True:
+	c.receive()
+
+'''
 import socket	
 import select
 import sys
@@ -67,11 +100,13 @@ class Client():
 
 	def appliquerCommande(self):
 		pass
-
+'''
 ''' MAIN '''
+'''
 if __name__ == "__main__":
 	j = Client()
 	j.connecter()
 	while j.clientOn:
 		j.envoyerMessage()
 		j.recevoirMessage()
+'''

@@ -5,6 +5,7 @@ Par Jean-Sebastien Fauteux
 netdata.py
 '''
 
+'''
 class PersoInfo():
 	def __init__(self, nom):
 		self.nom = nom
@@ -24,3 +25,8 @@ class ClientData():
 		self.id = id
 		self.frame = frame
 		self.commandes = commandes
+'''
+
+class StartGameMsg():
+	def __init__(self):
+		self.message = "StartGame"
