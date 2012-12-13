@@ -7,10 +7,9 @@ class MenuNouvellePartie():
         self.parent = parent
 
         self.frameMenuNouvellePartie=tkinter.Frame(self.parent.root)
-        self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuNouvellePartie,width=1024,height=768)
         self.fondEcran.pack()
-        self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
+        self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         self.fondEcran.create_text(100,60,text="Nom de Joueur:",fill='white',font=("Arial","15"),tags="nomText")
         self.nomJoueur = tkinter.Entry( self.frameMenuNouvellePartie,  width="18")
         self.fondEcran.create_text(100,100,text="Race :",fill='white',font=("Arial","15"),tags="raceText")

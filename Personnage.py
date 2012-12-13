@@ -13,10 +13,8 @@ class Personnage():
         self.nom = nom
         self.nomMap = "MainRoom"
         self.race = race
-        self.posMatX = 0
-        self.posMatY = 0
-        self.posMapX = 0
-        self.posMapY = 0
+        self.posMatX = 11
+        self.posMatY = 11
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 0.8, 100, 1))
@@ -28,28 +26,27 @@ class Personnage():
 		##Code Gab
         if self.race.race == "Logomate":
             self.ia = IA.IA(self)
-        
-        
+    
     def mort(self):
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
-        for p in self.inventaire:
-            if p.id==8:
-                pass
     
-    def bouge(self, mouvement):
+    def bouge(self,mouvement):
         tempx = 0
         tempy = 0
         
         if mouvement[0]:
-            tempy-=4
+            tempy-=1
         if mouvement[1]:
-            tempx+=4
+            tempx+=1
         if mouvement[2]:
-            tempy+=4
+            tempy+=1
         if mouvement[3]:
-            tempx-=4
-            
+            tempx-=1
+        
+        tempx+=self.posMatX
+        tempy+=self.posMatY
+        
         return tempx, tempy
     
     '''
@@ -60,24 +57,24 @@ class Personnage():
         for i in self.inventaire.items:
             #Si c'est une armure (ID = 8)
             if i.id == 8:
-                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
+                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure.
+                #les dégats sont réduits d'un pourcentage égal à la defense de l'armure
                 if i.energie - (degat * i.defense) >= 0:
                     degat=degat * i.defense
                     i.subit(degat)
                     break
-                #Sinon, prend le reste et descend la vie.
-                else:                
-                    reste = degat * i.defense 
-                    reste -= i.energie                    
-                    degat -= reste
-                    reste
-                    i.subit(degat)
+                else:
+                    #on calcul combien d'énergie est nécéssaire pour rendre l'énergie de 
+                    #l'armure à 0 en tenant compte de la defense de l'armure
+                    reste = i.energie / i.defense
+                    #on enleve l'énergie nécéssaire au dégat total
+                    reste = degat - reste
+                    #on réduit les dégats selon la defense du personnage
+                    reste *= self.race.defense
+                    
+                    i.subit(i.energie)
                     self.subit(reste)
                     break
-					
-    def calculDegat(self,item,degat):
-        item.defense*self.race.defense*degat
-        
     
     def tire(self, listeBalle, x, y):
         for i in self.inventaire.items:
@@ -111,19 +108,6 @@ class Personnage():
          
     def subit(self, degat):
         self.race.vie -= degat
-                
-    def chargerPersonnage(self, nom):
-        nomFichier = nom + '.plr'
-        with open(nomFichier,'rb') as fichier:
-            joueur = pickle.Unpickler(fichier)
-            self = joueur.load()
-        return self
-        
-    def sauvegardePersonnage(self):
-        nomFichier = self.nom + '.plr'
-        with open(nomFichier,'wb') as fichier:
-            save = pickle.Pickler(fichier)
-            save.dump(self)
     
     def autoSoin(self):
         for i in self.inventaire.items:
@@ -139,5 +123,5 @@ class Personnage():
                 break
     
     def obtenirLimite(self):
-        return [self.posMapX-26, self.posMapY-35, self.posMapX+26, self.posMapY+10]
+        return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
     

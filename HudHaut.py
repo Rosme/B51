@@ -8,7 +8,7 @@ class HudHaut():
         self.importerImage()
         
         self.frameHudHaut=tkinter.Frame(self.parent.parent.root)
-        self.cHudHaut=tkinter.Canvas(frame,width=1024,height=80,bg="#000",bd=0,highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
+        self.cHudHaut=tkinter.Canvas(self.frameHudHaut,width=1024,height=80,bg="#000",bd=0,highlightbackground="#000",highlightcolor="#000",highlightthickness=0)
         
         self.affichageImage()
         
