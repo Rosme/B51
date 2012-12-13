@@ -25,6 +25,7 @@ class Jeu():
         self.listeSac = list()
         self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_E1S1", "HELL"]
         self.nbObjMap = len(self.listeMap)
+        self.subDivision = 1
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -108,10 +109,11 @@ class Jeu():
     
     def activationObjet(self):
         if self.listeInterrupteur:
-                for i in self.listeInterrupteur:
-                    i.collision(self.joueur)
-                    if i.activer():
-                        self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+            for i in self.listeInterrupteur:
+                i.collision(self.joueur)
+                if i.activer():
+                    print("win")
+                    self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
                     
         if self.listeRoche:
             for i in self.listeRoche:
