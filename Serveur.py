@@ -78,11 +78,47 @@ class Serveur():
 					client.conn.send(bListClient)
 			self.newClient = False
 
+	def getListConn(self):
+		listConn = []
+		for client in self.clients:
+			listConn.append(client.conn)
+		return listConn
+
+	def findClientByConnection(self, conn):
+		for client in self.clients:
+			if client.conn == conn:
+				return client
+		return None
+
+	def removeClient(self, conn):
+		client = self.findClientByConnection(conn)
+		self.boolIdConnect[client.id] = False
+		self.clients.remove(client)
+		self.updateQteClients()
+
+	def recvData(self):
+		if self.statut == "demarrer" and self.clients:
+			toRead = []
+			try:
+				listConn = self.getListConn()
+				toRead, wlist, xlist = select.select(listConn, [], [], 0.05)
+			except select.error as serror:
+				print("Select error: ", serror)
+			else:
+				for client in toRead:
+					try:
+						data = pickle.loads(client.recv(4096))
+						print(data)
+					except Exception as ex:
+						print("Erreur sur lecture de client. Deconnection: ", ex)
+						self.removeClient(client)
+
 
 serveur = Serveur()
 while True:
 	serveur.recevoirConnexion()
 	serveur.sendData()
+	serveur.recvData()
 
 '''
 import select 
@@ -142,6 +178,7 @@ class Serveur():
 	def retirerClient(self, client):
 		if client:
 			client.conn.close()
+
 			self.clients.remove(client)
 			self.idConnect[client.id] = False 
 
