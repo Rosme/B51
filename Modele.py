@@ -121,7 +121,7 @@ class Jeu():
         ### logomate deplacement ###
         if self.listeLogomate:
             for i in self.listeLogomate:
-                i.ia.choisitDeplacement(self.carte)
+                i.ia.choisitDeplacement(self.carte.s.salle)
     
     def gestionMort(self):
         if self.joueur.race.vie<=0:

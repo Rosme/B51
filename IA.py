@@ -9,8 +9,8 @@ class IA():
         self.parent = parent
         self.posMatX = 11
         self.posMatY = 11
-        self.destMatX = self.parent.posMatX +5 ##destination dans la matrice
-        self.destMatY = self.parent.posMatX +5 ##destination dans la matrice 
+        self.destMatX = 16 ##destination dans la matrice
+        self.destMatY = 16 ##destination dans la matrice 
         self.listeOuverte =[]  ## liste qui contient tout les noeud qui n'ont pas été analysé 
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
@@ -28,8 +28,9 @@ class IA():
         self.chercheChemin(map)
         #depX  ## le nombre de pixel déplacer en x
         #depY ## le nombre de pixel déplacer en x
-        depX, depY = self.calculDeplacement(self.listeMouvement[-1])
-        self.deplacement(depX,depY)
+        #print(self.destMatX,self.destMatY)
+        self.calculDeplacement(self.listeMouvement[-1])
+
            
         #else:
             ##// tu va avoir un temps de retard si tu fais pas faire le move après mais pour tester sa va
@@ -43,11 +44,10 @@ class IA():
         self.listeFerme.append(self.noeudCourant)
         self.oldDestX = self.destMatX
         self.oldDestY = self.destMatY
-
+        premierefois = True
         while self.noeudCourant.posX != self.destMatX and self.noeudCourant.posY != self.destMatY:         
             i = 1
             while i <10:
-                print(self.noeudCourant.posX,self.noeudCourant.posY)
                 tempPosX,tempPosY = self.calculDirection(i)
                 ##on regarde si ya un mur la ou on va                                                
                 if self.deplacementPossible(tempPosX,tempPosY,i,map): 
@@ -62,7 +62,9 @@ class IA():
                         else:
                             self.listeOuverte.append(self.noeudTemp)
                 i +=1
-            
+            print("liste")
+            for i in self.listeOuverte:
+                print(i.posX,i.posY)
             self.noeudCourant = self.choisirNoeudCourant()
         self.listeDeplacement(self.noeudCourant)  
  
@@ -104,7 +106,6 @@ class IA():
     def deplacementPossible(self,posX,posY,direction,map):
         #je vérifie s'il est possible de se déplacer dans cette direction
         #//p-t essayer de rendre sa beau 
-		
         if map[posX][posY] == 1:
             return False
             
@@ -145,8 +146,10 @@ class IA():
             
     def dansListeOuverte(self,noeud):
     ## si le noeud est dans la liste ouverte et que le g est plus petit je change les parent du noeud dans la liste
+
         for i in self.listeOuverte:
             if i.posX == noeud.posX and i.posY == noeud.posY:
+                self.noeudCourant.posX
                 if noeud.g < i.g:   ## si la distance du noeud courant entre lui et le début est plus petit que celui du noeud dans la liste
                     i.parentX = noeud.parentX
                     i.parentY = noeud.parentY
@@ -170,44 +173,20 @@ class IA():
 	        
     def calculDeplacement(self,destination):
         ## on calcul la direction dans laquelle on doit se déplacer
-        mouvement = list() 
         #0-haut,1-droite,2-bas,3-gauche
-        for i in range(4):
-            mouvement.append(False)
-            
+
         if destination.posX > self.posMatX:
-            mouvement[1]= True
+            self.posMatX +=1
             
-        if destination.posX < self.posMatX:
-            mouvement[3]= True
+        elif destination.posX < self.posMatX:
+            self.posMatX -=1
             
         if destination.posY < self.posMatY:
-            mouvement[0]= True
+            self.posMatY -=1
             
-        if destination.posY > self.posMatY:
-            mouvement[2]= True
-            
-        return self.parent.bouge(mouvement)
-    
-    def deplacement (self, depX,depY):
-        ## on déplace le logomate
-        self.posMatX += depX
-        self.posMatY += depY
+        elif destination.posY > self.posMatY:
+            self.posMatY +=1   
         
-    def bouge(self, mouvement):
-        tempx = 0
-        tempy = 0
-        
-        if mouvement[0]:
-            tempy-=1
-        if mouvement[1]:
-            tempx+=1
-        if mouvement[2]:
-            tempy+=1
-        if mouvement[3]:
-            tempx-=1
-            
-        return tempx, tempy
         
 class Noeud():
     def __init__(self,g,h,positionX,positionY,parentX,parentY):
