@@ -28,8 +28,38 @@ class Serveur():
 		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
 		self.qteConnect = len(self.clients)
 
-	def recevoirConnexion():
-		pass
+		#Liste de booléen pour les id des joueurs
+		#Mis à False par défaut pour pouvoir les attribuer
+		self.boolIdConnect = []
+		for i in range(self.maxConnect):
+			self.boolIdConnect.append(False)
+
+		#Création du socket pour les connexions, ainsi que son paramétrage
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.bind(('', self.port))
+		s.listen(5)
+		self.socket = s
+
+	def recevoirConnexion(self):
+		#On va accepter les connexions uniquement si on est en-dessous du nombre de joueur maximal ou la partie n'est pas commencé
+		if self.qteConnect < self.maxConnect and self.statut != "jeu":
+			incoming, wlist, xlist = select.select([self.socket], [], [], 0.05) #Obtention de connexion
+			for connection in incoming:
+				conn, address = self.socket.accept()
+				client = Client(conn, address, self.generateId())
+				self.clients.append(client)
+				self.updateQteClients()
+
+
+	def generateId(self):
+		for i in range(self.maxConnect):
+			if self.boolIdConnect[i] == False:
+				self.boolIdConnect[i] = True
+				return i
+		return -1 #Aucun ID Disponible
+
+	def updateQteClients(self):
+		self.qteConnect = self.boolIdConnect.count(True)
 
 '''
 import select 
