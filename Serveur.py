@@ -5,6 +5,10 @@ Classe Serveur pour faire tourner le serveur du jeu
 serveur.py
 '''
 
+import socket
+import select
+import pickle
+
 #Classe Wrapper pour les connexions clientes
 class Client():
 	def __init__(self, conn, address, id):
@@ -18,7 +22,6 @@ class Joueur():
 		self.client = client
 		self.events = events
 
-
 #Classe Serveur
 class Serveur():
 	def __init__(self, port = 43225):
@@ -27,6 +30,7 @@ class Serveur():
 		self.maxConnect = 8
 		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
 		self.qteConnect = len(self.clients)
+		self.newClient = False
 
 		#Liste de booléen pour les id des joueurs
 		#Mis à False par défaut pour pouvoir les attribuer
@@ -50,7 +54,6 @@ class Serveur():
 				self.clients.append(client)
 				self.updateQteClients()
 
-
 	def generateId(self):
 		for i in range(self.maxConnect):
 			if self.boolIdConnect[i] == False:
@@ -58,8 +61,28 @@ class Serveur():
 				return i
 		return -1 #Aucun ID Disponible
 
+	#Met à jour le nombre de clients et les id dans la liste
 	def updateQteClients(self):
 		self.qteConnect = self.boolIdConnect.count(True)
+		self.newClient = True
+		self.listIdClient = []
+		for client in self.clients:
+			self.listIdClient.append(client.id)
+
+	def sendData(self):
+		#On est pas encore dans le jeu, la seule chose qu'on envoie c'est la liste des clients
+		if self.statut == "demarrer":
+			if self.newClient == True:
+				bListClient = pickle.dumps(self.listIdClient)
+				for client in self.clients:
+					client.conn.send(bListClient)
+			self.newClient = False
+
+
+serveur = Serveur()
+while True:
+	serveur.recevoirConnexion()
+	serveur.sendData()
 
 '''
 import select 
