@@ -23,7 +23,7 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_E1S1", "HELL"]
+        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_E1S1", "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.subDivision = 1
         self.joueur = ""
@@ -69,16 +69,22 @@ class Jeu():
             for j in range(len(laMap[i])):
                 if laMap[i][j]==char:
                     try:
+                        print("win1")
                         #si l'autre char à droite
                         if laMap[i][j+1]==char:
                             try:
+                                print(laMap[i+1][j])
                                 if laMap[i+1][j]=='0':#porte en haut
+                                    print("win2")
                                     matx = j
                                     maty = i+1
                                     trouver=True
                                     break
+                                elif laMap[i+1][j] == ' ':
+                                    raise IndexError
                             except IndexError:
                                 if laMap[i-1][j]=='0':#porte en bas
+                                    print("win3")
                                     matx = j
                                     maty = i-1
                                     trouver=True
@@ -94,6 +100,8 @@ class Jeu():
                                     maty = i
                                     trouver=True
                                     break
+                                elif laMap[i+1][j] == ' ':
+                                    raise IndexError
                             except IndexError:
                                 if laMap[i][j-1]=='0':#porte à gauche
                                     matx = j-1
