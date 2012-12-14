@@ -121,7 +121,7 @@ class FrameJeu():
                 '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-    
+        
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
@@ -157,7 +157,9 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
-        for i in self.parent.parent.jeu.listeRoche:
+    
+    def affichageRoche(self,perso,listeRoche):
+        for i in listeRoche:
             if i.nomMap == perso.nomMap:
                 tempPosX, tempPosY = self.coordMatriceAEcran(i)
                 self.map.create_rectangle(tempPosX, tempPosY, tempPosX+40, tempPosY+40, fill='blue', tags="perso")

@@ -20,14 +20,22 @@ class Controleur():
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
+        #si la partie est commencé
         if self.partieCommencer:
+            #on bouge le personnage
             self.jeu.bougePersonnage()
+            #on active les switchs,leviers,etc
             self.jeu.activationObjet()
+            #on actualise le hud du haut
             self.app.frameJeu.hudHaut.actualiser()
+            #on vérifie que le joueur n'est pas mort
             self.jeu.gestionMort()
+            
             if self.compteur%20==0:
+                #recharge de l'énergie de l'arme
                 self.jeu.rechargement()
             if self.compteur%6==0:
+                #vérifie les collions du personnage et des balles
                 self.jeu.balle() 
             if self.compteur%6==0:
                 self.jeu.tire()
@@ -47,9 +55,11 @@ class Controleur():
     
     def actualiserAffichageComplet(self,perso,map):
         self.app.frameJeu.actualiserAffichage(perso,map)
+        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
     def actusliserPersonnage(self,perso):
         self.app.frameJeu.affichagePerso(perso)
+        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")
