@@ -51,6 +51,8 @@ class Controleur():
         self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
         self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
+        #ajout des écouteur (souris, clavier)
+        self.ajoutEcouteur()
         self.miseAJour()
     
     def actualiserAffichageComplet(self,perso,map):
@@ -97,6 +99,16 @@ class Controleur():
         
     def fabricationDematerialisateur(self):
         self.jeu.artisanat.fabricationDematerialisateur()
+    
+    #############################Ajout d'ecouteur#############################
+    def ajoutEcouteur(self):
+        #ecouteur lié au clavier       
+        self.app.root.bind("<KeyPress>",self.peseKeyGestion)
+        self.app.root.bind("<KeyRelease>",self.relacheKeyGestion)
+        #ecouteur lié à la souris
+        self.app.frameJeu.map.bind("<Button-1>", self.peseTire)
+        self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
+        self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
     
     ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):

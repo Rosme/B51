@@ -46,9 +46,6 @@ class FrameJeu():
         
         #affichage de la map, des objets et du personnage à l'écran
         self.affichageMap(perso,laSalle)
-        
-        #ajout des écouteur (souris, clavier)
-        self.ajoutEcouteur()
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -72,16 +69,6 @@ class FrameJeu():
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()'''
-    
-    #############################Ajout d'ecouteur#############################
-    def ajoutEcouteur(self):
-        #ecouteur lié au clavier       
-        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
-        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
-        #ecouteur lié à la souris
-        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
-        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
-        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
         
     #############################Affichage à l'écran#############################
     def affichageMap(self,perso,laSalle):
