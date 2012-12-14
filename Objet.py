@@ -45,10 +45,10 @@ class Coffre(Objet):
                 limiteCoffre = self.obtenirLimite()
                 j=0
                 while j < 4:
-                    if limiteCoffre[j] > limitePerso[0] and limiteCoffre[j] < limitePerso[2]:
+                    if limiteCoffre[j] >= limitePerso[0] and limiteCoffre[j] <= limitePerso[2]:
                         valide = True
                     elif j == 0:
-                        if limiteCoffre[j] < limitePerso[0] and limiteCoffre[j+2] > limitePerso[2]:
+                        if limiteCoffre[j] <= limitePerso[0] and limiteCoffre[j+2] >= limitePerso[2]:
                             valide = True
                         else:
                             valide = False
@@ -57,10 +57,10 @@ class Coffre(Objet):
                     if valide:
                         k=1
                         while k < 4:
-                            if limiteCoffre[k] > limitePerso[1] and limiteCoffre[k] < limitePerso[3]:
+                            if limiteCoffre[k] >= limitePerso[1] and limiteCoffre[k] <= limitePerso[3]:
                                 valide = True
                             elif k == 1:
-                                if limiteCoffre[k] < limitePerso[1] and limiteCoffre[k+2] > limitePerso[3]:
+                                if limiteCoffre[k] <= limitePerso[1] and limiteCoffre[k+2] >= limitePerso[3]:
                                     valide = True
                                 else:
                                     valide = False
@@ -102,10 +102,10 @@ class Roche(Objet):
             limiteObjet = self.obtenirLimite()
             j=0
             while j < 4:
-                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
                     valide = True
                 elif j == 0:
-                    if limiteObjet[j] > limitePerso[0] and limiteObjet[j+2] < limitePerso[2]:
+                    if limiteObjet[j] >= limitePerso[0] and limiteObjet[j+2] <= limitePerso[2]:
                         valide = True
                     else:
                         valide = False
@@ -114,10 +114,10 @@ class Roche(Objet):
                 if valide:
                     k=1
                     while k < 4:
-                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                        if limiteObjet[k] >= limitePerso[1] and limiteObjet[k] <= limitePerso[3]:
                             valide = True
                         elif k == 1:
-                            if limiteObjet[k] > limitePerso[1] and limiteObjet[k+2] < limitePerso[3]:
+                            if limiteObjet[k] >= limitePerso[1] and limiteObjet[k+2] <= limitePerso[3]:
                                 valide = True
                             else:
                                 valide = False

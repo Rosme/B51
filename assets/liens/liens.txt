@@ -13,7 +13,7 @@ break
 Coffre
 break
 Roche
-4:25
+3:21
 break
 Interrupteur
 26:21

@@ -112,7 +112,6 @@ class Jeu():
             for i in self.listeInterrupteur:
                 i.collision(self.joueur)
                 if i.activer():
-                    print("win")
                     self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
                     
         if self.listeRoche:

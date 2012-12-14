@@ -157,6 +157,10 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
+        for i in self.parent.parent.jeu.listeRoche:
+            if i.nomMap == perso.nomMap:
+                tempPosX, tempPosY = self.coordMatriceAEcran(i)
+                self.map.create_rectangle(tempPosX, tempPosY, tempPosX+40, tempPosY+40, fill='blue', tags="perso")
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
