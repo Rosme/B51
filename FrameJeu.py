@@ -104,7 +104,7 @@ class FrameJeu():
                 '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-        
+
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
@@ -119,7 +119,7 @@ class FrameJeu():
             posY-=14
             '''elif car=='3':
             tag="coffre"
-            nomImage="coffre"'''
+            nomImage=d"coffre"'''
         elif car=='e':
             texte="Levier"
         elif car=='w':
@@ -146,7 +146,26 @@ class FrameJeu():
         for i in listeRoche:
             if i.nomMap == perso.nomMap:
                 tempPosX, tempPosY = self.coordMatriceAEcran(i)
-                self.map.create_rectangle(tempPosX, tempPosY, tempPosX+40, tempPosY+40, fill='blue', tags="perso")
+                self.map.create_rectangle(tempPosX, tempPosY, tempPosX+31, tempPosY+31, fill='blue', tags="perso")
+                
+    def test(self,i):
+        for k in self.parent.parent.jeu.listeInterrupteur:
+            if k.nomMap == "F_E1S1":
+                x,y,x1,y1=k.obtenirLimite()
+ 
+        depx=self.posDepartX
+        depy=self.posDepartY
+        
+        depx+=self.largeurTuile*x
+        depy+=self.hauteurTuile*y
+        depx1=self.posDepartX
+        depy1=self.posDepartY
+        
+        depx1+=self.largeurTuile*x1
+        depy1+=self.hauteurTuile*y1        
+        print(depx1,depy1,depx,depy)
+        self.map.create_rectangle(depx1, depy1, depx, depy, fill='red', tags="perso")
+                
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
@@ -226,3 +245,10 @@ class FrameJeu():
     def effacer(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False
+
+'''       
+class Test():
+    def __init__(self,p,o):
+        self.posMatX=p
+        self.posMatY=o
+'''     

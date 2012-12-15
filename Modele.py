@@ -54,12 +54,18 @@ class Jeu():
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
             self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
-            
-        elif laMap[tempMatY+2][tempMatX]!='1':
-            if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                self.joueur.posMatX=tempMatX
-                self.joueur.posMatY=tempMatY
-                self.parent.actusliserPersonnage(self.joueur)
+        else:
+            try:    
+                if laMap[tempMatY+2][tempMatX]!='1':
+                    if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                        self.joueur.posMatX=tempMatX
+                        self.joueur.posMatY=tempMatY
+                        self.parent.actusliserPersonnage(self.joueur)
+            except:
+                if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                    self.joueur.posMatX=tempMatX
+                    self.joueur.posMatY=tempMatY
+                    self.parent.actusliserPersonnage(self.joueur)
     
     def coordProchaineZone(self,char):
         laMap=self.carte.s.salle
@@ -119,6 +125,9 @@ class Jeu():
                 i.collision(self.joueur)
                 if i.activer():
                     self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                    break
+                    
+                    
                     
         if self.listeRoche:
             for i in self.listeRoche:

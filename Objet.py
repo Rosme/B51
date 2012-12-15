@@ -94,7 +94,7 @@ class Coffre(Objet):
        
 class Roche(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)# -1, -1, -2, -2 (subDivision à 4)
+        Objet.__init__(self, parent, matX, matY, -1, -1, 2, 2, nomMap)# -1, -1, -2, -2 (subDivision à 4)
         self.depose()
         
     def prendre(self, perso):
@@ -133,9 +133,7 @@ class Roche(Objet):
         self.aTerre = True
         return True
 
-    def bouge(self, perso):
-        pass
-        
+    def bouge(self, perso):        
         if not self.aTerre:
             for i in self.parent.listeInterrupteur:
                 self.aTerre = True
@@ -157,7 +155,7 @@ class Roche(Objet):
 
 class Interrupteur(Objet):
     def __init__(self, parent, matX, matY, unique, nomMap):
-        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)
+        Objet.__init__(self, parent, matX, matY, -2, -2, 2, 2, nomMap)
         self.active = False
         self.aTerre = False
         self.usageUnique = unique
