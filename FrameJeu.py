@@ -120,7 +120,7 @@ class FrameJeu():
             #texte=str(y)+","+str(x)
         elif car=='1' or car=='2':
             nomImage="roche"
-            posY-=31
+            posY-=14
             '''elif car=='3':
             tag="coffre"
             nomImage="coffre"'''
