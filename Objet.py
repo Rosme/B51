@@ -67,12 +67,13 @@ class Coffre(Objet):
                             else:
                                 valide = False
                             if valide:
-                                
+                                print("ouvre coffre")
                                 self.ouvert = True
                                 return True
                             k+=2
                     j+=2
         
+        print("ferme coffre")
         self.ouvert = False
         return False
 
@@ -331,17 +332,14 @@ class Levier(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            print(self.posMatX, self.posMatY)
             if self.posMatX == 17 and self.posMatY == 16:
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.salle = map
                     return True
                 return False
-        
             
         if self.parent.joueur.nomMap == "F_E1S3":
-            print(self.posMatX, self.posMatY)
             map = self.parent.carte.s.dictMap["F_E1S1"]
             if self.posMatX == 16 and self.posMatY == 2:
                 if self.active:
@@ -351,7 +349,27 @@ class Levier(Objet):
                 return False
                
             self.parent.carte.s.dictMap["F_E1S1"] = map
-
+        
+        if self.parent.joueur.nomMap == "F_E1S5":
+            map = self.parent.carte.s.salle
+            if self.posMatX == 1 and self.posMatY == 24:
+                if self.active:
+                    self.ouvrePorte(13, 28, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    print("win1")
+                    return True
+                return False
+            
+        if self.parent.joueur.nomMap == "F_E2S3":
+            map = self.parent.carte.s.salle
+            if self.posMatX == 42 and self.posMatY == 35:
+                if self.active:
+                    self.ouvrePorte(17, 21, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    print("win2")
+                    return True
+                return False
+        
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
         tempLigne = map.pop(ligne)

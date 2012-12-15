@@ -131,19 +131,26 @@ class Controleur():
             
             if key == 'E':
                 if self.jeu.listeRoche:
-                    if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
-                        self.jeu.listeRoche[0].bouge(self.jeu.joueur)
-                    else:
-                        self.jeu.listeRoche[0].depose()
+                    for i in self.jeu.listeRoche:
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            if not i.prendre(self.jeu.joueur):
+                                i.bouge(self.jeu.joueur)
+                            else:
+                                i.depose()
                 
                 if self.jeu.listeLevier and not self.press:
                     for i in self.jeu.listeLevier:
-                        if i.collision(self.jeu.joueur):
-                            if i.tire():
-                                if i.activer():
-                                    self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            if i.collision(self.jeu.joueur):
+                                if i.tire():
+                                    if i.activer():
+                                        self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
                                     
-                
+                if self.jeu.listeCoffre:
+                    for i in self.jeu.listeCoffre:
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            i.ouvrir(self.jeu.joueur)
+                        
                 self.press = True
     
     def relacheKeyGestion(self, event):

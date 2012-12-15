@@ -69,13 +69,11 @@ class Jeu():
             for j in range(len(laMap[i])):
                 if laMap[i][j]==char:
                     try:
-                        print("win1")
                         #si l'autre char à droite
                         if laMap[i][j+1]==char:
                             try:
                                 print(laMap[i+1][j])
                                 if laMap[i+1][j]=='0':#porte en haut
-                                    print("win2")
                                     matx = j
                                     maty = i+1
                                     trouver=True
@@ -84,7 +82,6 @@ class Jeu():
                                     raise IndexError
                             except IndexError:
                                 if laMap[i-1][j]=='0':#porte en bas
-                                    print("win3")
                                     matx = j
                                     maty = i-1
                                     trouver=True
@@ -184,11 +181,11 @@ class Jeu():
         self.listeLogomate.append(pers)
         
     def nouveauSac(self,posMat, nomMap):
-        sac = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), nomMap)
+        sac = Objet.Sac(self, int(posMat[0]), int(posMat[1]), nomMap)
         self.listeSac.append(sac)
         
     def nouveauCoffre(self, posMat, nomMap):
-        coffre = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), nomMap)
+        coffre = Objet.Coffre(self, int(posMat[0]), int(posMat[1]), nomMap)
         self.listeCoffre.append(coffre)
         
     def nouvelleRoche(self, posMat, nomMap):
@@ -200,7 +197,7 @@ class Jeu():
         self.listeInterrupteur.append(interrupteur)
     
     def nouveauDeclencheur(self, posMat, nomMap):
-        declencheur = Objet.Interrupteur(self,  int(posMat[0]), int(posMat[1]), nomMap)
+        declencheur = Objet.Declencheur(self,  int(posMat[0]), int(posMat[1]), nomMap)
         self.listeDeclencheur.append(declencheur)
     
     def nouveauLevier(self, posMat, nomMap):
