@@ -1,7 +1,6 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
 import math
-import HudHaut
 import MenuInventaire
 
 class FrameJeu():
@@ -35,9 +34,6 @@ class FrameJeu():
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        
-        #création du hud du haut placé dans frameDuJeu
-        self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
         
         self.menuI= MenuInventaire.MenuInventaire(self)
         
@@ -227,6 +223,6 @@ class FrameJeu():
             self.map.xview(tkinter.MOVETO,self.offY)
     
     #############################Supression de masse#############################    
-    def effaceTout(self):
+    def effacer(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False

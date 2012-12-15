@@ -17,6 +17,7 @@ class Controleur():
         self.compteur=0
         self.partieCommencer=False
         self.app.menuPrincipal()
+        
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
@@ -27,7 +28,7 @@ class Controleur():
             #on active les switchs,leviers,etc
             self.jeu.activationObjet()
             #on actualise le hud du haut
-            self.app.frameJeu.hudHaut.actualiser()
+            self.app.hudH.actualiser(self.jeu.joueur)
             #on vérifie que le joueur n'est pas mort
             self.jeu.gestionMort()
             
@@ -169,7 +170,7 @@ class Controleur():
                 self.press = False
             
             if event.keysym == 'Escape':
-                self.app.frameJeu.effaceTout()
+                self.app.effaceTout()
                 
                 del self.jeu
                 self.jeu = Modele.Jeu(self)
