@@ -55,10 +55,11 @@ class Jeu():
             self.coordProchaineZone(car)
             self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
             
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-            self.joueur.posMatX=tempMatX
-            self.joueur.posMatY=tempMatY
-            self.parent.actusliserPersonnage(self.joueur)
+        elif laMap[tempMatY+2][tempMatX]!='1':
+            if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                self.joueur.posMatX=tempMatX
+                self.joueur.posMatY=tempMatY
+                self.parent.actusliserPersonnage(self.joueur)
     
     def coordProchaineZone(self,char):
         laMap=self.carte.s.salle

@@ -10,11 +10,11 @@ class GestionImage():
         self.dictImage["partiElectronique"] = tkinter.PhotoImage(file='assets/image/gun.gif',width=45,height=35)
         self.dictImage["seringue"]=tkinter.PhotoImage(file='assets/image/syringe.gif',width=45,height=35)  
         #map
-        self.dictImage["roche"]=tkinter.PhotoImage(file="assets/image/wall.gif")
-        self.dictImage["gazon"]=tkinter.PhotoImage(file="assets/image/gazon.gif")
+        self.dictImage["roche"]=tkinter.PhotoImage(file="assets/image/mur_haut_bas2.gif")
+        self.dictImage["gazon"]=tkinter.PhotoImage(file="assets/image/plancher_roche1.gif")
         self.dictImage["pers"]=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.dictImage["coffre"]=tkinter.PhotoImage(file="assets/image/vie.gif")
-        self.dictImage["wall2"]=tkinter.PhotoImage(file="assets/image/wall1.gif")
+        #self.dictImage["wall2"]=tkinter.PhotoImage(file="assets/image/mur_gauche_droite.gif")
         #self.dictImage["feu"]=tkinter.PhotoImage(file="assets/image/feu.gif")
         #menu
         self.dictImage["backgroundImage"] = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)

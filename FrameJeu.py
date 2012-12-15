@@ -14,8 +14,8 @@ class FrameJeu():
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=40
-        self.hauteurTuile=40
+        self.largeurTuile=31
+        self.hauteurTuile=31
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
@@ -120,9 +120,10 @@ class FrameJeu():
             #texte=str(y)+","+str(x)
         elif car=='1' or car=='2':
             nomImage="roche"
-        elif car=='3':
+            posY-=31
+            '''elif car=='3':
             tag="coffre"
-            nomImage="coffre"
+            nomImage="coffre"'''
         elif car=='e':
             texte="Levier"
         elif car=='w':
