@@ -21,7 +21,7 @@ class GestionImage():
         self.dictImage["simonBleu"]=tkinter.PhotoImage(file="assets/image/Simon/SimonBleu.gif")
         self.dictImage["simonVert"]=tkinter.PhotoImage(file="assets/image/Simon/SimonVert.gif")
         self.dictImage["simonRouge"]=tkinter.PhotoImage(file="assets/image/Simon/SimonRouge.gif")
-        #self.dictImage["feu"]=tkinter.PhotoImage(file="assets/image/feu.gif")
+        self.dictImage["feu"]=tkinter.PhotoImage(file="assets/image/feu.gif")
         
         #menu
         self.dictImage["backgroundImage"] = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
