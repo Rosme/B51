@@ -8,6 +8,7 @@ import MenuLobby
 import HudHaut
 import FrameJeu
 import GestionImage
+import GestionSon
 
 class Application():
     def __init__(self, parent):
@@ -23,6 +24,7 @@ class Application():
         self.root.resizable(0,0)
         self.root.title("AreaB51")
         
+        self.gestionnaireSon = GestionSon.GestionSon()
         self.gestionnaireImage = GestionImage.GestionImage()
         
         self.initialisationInterfaces()
@@ -40,6 +42,7 @@ class Application():
     
     #############################Appel pour afficher les interfaces#############################
     def menuPrincipal(self):
+        self.gestionnaireSon.startTest("hello")
         self.menuP.menuPrincipal()
         
     def menuNouvellePartie(self,event):
@@ -56,6 +59,7 @@ class Application():
         self.menuL.menuLobby()
         
     def jeu(self,perso,laSalle):
+        self.gestionnaireSon.startTest("inGame")
         self.hudHaut(perso)
         self.frameJeu.initMap(perso,laSalle)
         
@@ -72,4 +76,5 @@ class Application():
     
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
-        self.root.quit()
+        self.gestionnaireSon.stopAll()
+        self.root.destroy()
