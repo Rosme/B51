@@ -126,6 +126,15 @@ class FrameJeu():
             texte="Switch"
         elif car=='f':
             nomImage="feu"
+        elif car=="u":
+            nomImage="simonBleu"
+        elif car=="i":
+            nomImage="simonJaune"
+        elif car=="o":
+            nomImage="simonRouge"
+        elif car=="p":
+            nomImage="simonVert"
+        
         
         if nomImage:
             self.map.create_image(posX,posY,image=self.parent.getImage(nomImage),tags=tag)

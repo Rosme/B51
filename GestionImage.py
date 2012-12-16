@@ -17,6 +17,10 @@ class GestionImage():
         self.dictImage["gazon"]=tkinter.PhotoImage(file="assets/image/plancher_roche1.gif")
         self.dictImage["pers"]=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.dictImage["coffre"]=tkinter.PhotoImage(file="assets/image/vie.gif")
+        self.dictImage["simonJaune"]=tkinter.PhotoImage(file="assets/image/Simon/SimonJaune.gif")
+        self.dictImage["simonBleu"]=tkinter.PhotoImage(file="assets/image/Simon/SimonBleu.gif")
+        self.dictImage["simonVert"]=tkinter.PhotoImage(file="assets/image/Simon/SimonVert.gif")
+        self.dictImage["simonRouge"]=tkinter.PhotoImage(file="assets/image/Simon/SimonRouge.gif")
         #self.dictImage["feu"]=tkinter.PhotoImage(file="assets/image/feu.gif")
         
         #menu
