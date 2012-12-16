@@ -134,6 +134,8 @@ class FrameJeu():
             nomImage="simonRouge"
         elif car=="p":
             nomImage="simonVert"
+        elif car=="y":
+            nomImage="eau"
         
         
         if nomImage:
