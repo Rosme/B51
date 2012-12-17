@@ -77,4 +77,4 @@ class Application():
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
         self.gestionnaireSon.stopAll()
-        self.root.destroy()
+        self.root.quit()
