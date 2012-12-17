@@ -262,4 +262,4 @@ class Test():
     def __init__(self,p,o):
         self.posMatX=p
         self.posMatY=o
-'''     
+''' 

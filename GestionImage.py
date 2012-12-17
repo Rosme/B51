@@ -29,4 +29,3 @@ class GestionImage():
         
     def getImage(self,imageRechercher):
         return self.dictImage[imageRechercher]
-        
