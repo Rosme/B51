@@ -110,10 +110,12 @@ class FrameJeu():
         tag="image"
         texte=None
         
-        if car=='0' or car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
-            nomImage="gazon"
+        if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
+            nomImage="zoning"
             #x,y=self.coordEcranAMatrice(posX,posY)
             #texte=str(y)+","+str(x)
+        elif car=='0':
+            nomImage="gazon"
         elif car=='1' or car=='2':
             nomImage="roche"
             posY-=14
