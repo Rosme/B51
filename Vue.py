@@ -79,4 +79,6 @@ class Application():
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
         self.gestionnaireSon.stopAll()
+        if self.parent.network.socket != None:
+            self.parent.network.disconnect()
         self.root.quit()

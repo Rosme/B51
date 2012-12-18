@@ -3,12 +3,14 @@ import socket
 import pickle
 import Netdata as nd
 
+
 class ConnecteurReseau():
 	def __init__(self):
 		self.port = None
 		self.adresse = None
 		self.id = -1
 		self.socket = None
+		self.nom = None
 
 	def connecter(self, adresse, port, nom):
 		#Mise à jour des informations du client
@@ -16,7 +18,11 @@ class ConnecteurReseau():
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((adresse, port))
+		self.socket.settimeout(0.01)
 
+		self.nom = nom
+
+		'''
 		#On envoie les informations de connection pour générer un ID et avoir une connection
 		infoJoueur = nd.PersoInfo(nom)
 		infoBinaire = pickle.dumps(infoJoueur)
@@ -27,10 +33,10 @@ class ConnecteurReseau():
 		infoJoueur = pickle.loads(infoBinaire)
 		self.id = infoJoueur.id
 
-		self.socket.settimeout(0.01)
-
 		return infoJoueur
+		'''
 
+	'''
 	def deconnecter(self):
 		cmd = nd.Message("/quit")
 		cmdBinaire = pickle.dumps(cmd)
@@ -41,11 +47,32 @@ class ConnecteurReseau():
 		bin = pickle.dumps(donnees)
 		self.socket.send(bin)
 
+	'''
+
 	def recevoirDonnees(self):
 		try:
-			bin = self.socket.recv(4096)
-			if bin:
-				donnees = pickle.loads(bin)
-				return donnees
+			bData = self.socket.recv(4096)
+			if bData:
+				data = pickle.loads(bData)
+				if isinstance(data, nd.ClientId):
+					self.id = data.id
+					clientInfo = nd.ClientInfo(self.id, self.nom)
+					self.sendData(clientInfo)
+					return True
+				elif isinstance(data, nd.ListClientInfo):
+					for client in data.list:
+						print(client.nom)
+				elif isinstance(data, nd.ClientDisconnect):
+					self.socket.close()
 		except socket.timeout:
 			return None
+		except socket.error:
+			print("Erreur sur la connexion au serveur")
+
+	def sendData(self, data = None):
+		if data != None:
+			bData = pickle.dumps(data)
+			self.socket.send(bData)
+
+	def disconnect(self):
+		self.sendData(nd.ClientDisconnect(self.id))

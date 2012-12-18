@@ -42,9 +42,9 @@ class MenuConnexion():
         
     def validerIPort(self):
         #validation non implanté, mais prete à l'être voir le commentaire ci-bas
-        self.rejoindreUnePartie()
+        #self.rejoindreUnePartie()
 
-        '''
+        
         adresse = self.ipentry.get()
 
         temp = adresse.split(':')
@@ -52,8 +52,13 @@ class MenuConnexion():
         port = temp[1]
         port = int(port)
 
-        self.parent.parent.reseau.connecter(adresse, port, self.nom)
+        network = self.parent.parent.network
+        network.connecter(adresse, port, self.parent.parent.jeu.joueur.nom)
+        if network.recevoirDonnees() == True:
+            self.rejoindreUnePartie()
 
+
+        '''
         temp = adresse.split('.')
         
         if len(temp) != 4:

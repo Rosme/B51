@@ -13,8 +13,8 @@ class GestionSon():
     
     def startTest(self,nomSon):
         self.nomSon=nomSon
-        self.t=threading.Thread(target=self.playTest)
-        self.t.start()
+        #self.t=threading.Thread(target=self.playTest)
+        #self.t.start()
     
     def stopSon(self,nomSon):
          winsound.PlaySound(self.dictSon[nomSon],winsound.SND_PURGE)

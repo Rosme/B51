@@ -8,6 +8,7 @@ serveur.py
 import socket
 import select
 import pickle
+import Netdata as nd
 
 #Classe Wrapper pour les connexions clientes
 class Client():
@@ -15,6 +16,7 @@ class Client():
 		self.conn = conn
 		self.address = address
 		self.id = id
+		self.nom = ""
 
 #Classe Wrapper pour les Joueurs
 class Joueur():
@@ -31,6 +33,7 @@ class Serveur():
 		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
 		self.qteConnect = len(self.clients)
 		self.newClient = False
+		self.listIdClient = nd.ListClientInfo()
 
 		#Liste de booléen pour les id des joueurs
 		#Mis à False par défaut pour pouvoir les attribuer
@@ -52,7 +55,11 @@ class Serveur():
 				conn, address = self.socket.accept()
 				client = Client(conn, address, self.generateId())
 				self.clients.append(client)
-				self.updateQteClients()
+
+				#Envoi du Id au joueur
+				clientId = nd.ClientId(client.id)
+				bClientId = pickle.dumps(clientId)
+				client.conn.send(bClientId)
 
 	def generateId(self):
 		for i in range(self.maxConnect):
@@ -65,9 +72,9 @@ class Serveur():
 	def updateQteClients(self):
 		self.qteConnect = self.boolIdConnect.count(True)
 		self.newClient = True
-		self.listIdClient = []
+		self.listIdClient = nd.ListClientInfo()
 		for client in self.clients:
-			self.listIdClient.append(client.id)
+			self.listIdClient.list.append(nd.ClientInfo(client.id, client.nom))
 
 	def sendData(self):
 		#On est pas encore dans le jeu, la seule chose qu'on envoie c'est la liste des clients
@@ -105,13 +112,24 @@ class Serveur():
 			except select.error as serror:
 				print("Select error: ", serror)
 			else:
-				for client in toRead:
+				for conn in toRead:
 					try:
-						data = pickle.loads(client.recv(4096))
-						print(data)
+						bData = conn.recv(4096)
+						if bData:
+							data = pickle.loads(bData)
+							if isinstance(data, nd.ClientInfo): #Récupération des infos du joueur
+								print("New client: " + str(data.nom))
+								client = self.findClientByConnection(conn)
+								client.nom = data.nom
+								self.updateQteClients()
+							elif isinstance(data, nd.ClientDisconnect):
+								print("Client disconnected")
+								bDisco = pickle.dumps(nd.ClientDisconnect(data.id))
+								conn.send(bDisco)
+								self.removeClient(conn)
 					except Exception as ex:
-						print("Erreur sur lecture de client. Deconnection: ", ex)
-						self.removeClient(client)
+						print("Erreur sur lecture de client. Deconnection: ")
+						self.removeClient(conn)
 
 
 serveur = Serveur()

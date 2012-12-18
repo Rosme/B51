@@ -2,6 +2,7 @@
 import Vue
 import Modele
 import os
+import ConnecteurReseau as Network
 
 class Controleur():
     ############################# Methode d'initialisation de l'aplication #############################
@@ -10,6 +11,7 @@ class Controleur():
         self.app.root.mainloop()
     
     def demarrer(self):
+        self.network = Network.ConnecteurReseau()
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
         self.press = False
@@ -42,8 +44,11 @@ class Controleur():
                 self.jeu.tire()
                 
             self.compteur+=1
-            if self.partieCommencer:
-                self.app.frameJeu.map.after(50,self.miseAJour)
+            self.app.frameJeu.map.after(50,self.miseAJour)
+
+            self.network.recevoirDonnees()
+
+
     
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
