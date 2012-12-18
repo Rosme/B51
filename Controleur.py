@@ -17,17 +17,26 @@ class Controleur():
         self.compteur=0
         self.partieCommencer=False
         self.app.menuPrincipal()
+        
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
+        #si la partie est commencé
         if self.partieCommencer:
+            #on bouge le personnage
             self.jeu.bougePersonnage()
+            #on active les switchs,leviers,etc
             self.jeu.activationObjet()
-            self.app.frameJeu.hudHaut.actualiser()
+            #on actualise le hud du haut
+            self.app.hudH.actualiser(self.jeu.joueur)
+            #on vérifie que le joueur n'est pas mort
             self.jeu.gestionMort()
+            
             if self.compteur%20==0:
+                #recharge de l'énergie de l'arme
                 self.jeu.rechargement()
             if self.compteur%6==0:
+                #vérifie les collions du personnage et des balles
                 self.jeu.balle() 
             if self.compteur%6==0:
                 self.jeu.tire()
@@ -43,13 +52,17 @@ class Controleur():
         self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
         self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
+        #ajout des écouteur (souris, clavier)
+        self.ajoutEcouteur()
         self.miseAJour()
     
     def actualiserAffichageComplet(self,perso,map):
         self.app.frameJeu.actualiserAffichage(perso,map)
+        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
     def actusliserPersonnage(self,perso):
         self.app.frameJeu.affichagePerso(perso)
+        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")
@@ -88,6 +101,16 @@ class Controleur():
     def fabricationDematerialisateur(self):
         self.jeu.artisanat.fabricationDematerialisateur()
     
+    #############################Ajout d'ecouteur#############################
+    def ajoutEcouteur(self):
+        #ecouteur lié au clavier       
+        self.app.root.bind("<KeyPress>",self.peseKeyGestion)
+        self.app.root.bind("<KeyRelease>",self.relacheKeyGestion)
+        #ecouteur lié à la souris
+        self.app.frameJeu.map.bind("<Button-1>", self.peseTire)
+        self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
+        self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
+    
     ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):
         key = event.char.upper()
@@ -109,19 +132,26 @@ class Controleur():
             
             if key == 'E':
                 if self.jeu.listeRoche:
-                    if not self.jeu.listeRoche[0].prendre(self.jeu.joueur):
-                        self.jeu.listeRoche[0].bouge(self.jeu.joueur)
-                    else:
-                        self.jeu.listeRoche[0].depose()
+                    for i in self.jeu.listeRoche:
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            if not i.prendre(self.jeu.joueur):
+                                i.bouge(self.jeu.joueur)
+                            else:
+                                i.depose()
                 
                 if self.jeu.listeLevier and not self.press:
                     for i in self.jeu.listeLevier:
-                        if i.collision(self.jeu.joueur):
-                            if i.tire():
-                                if i.activer():
-                                    self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            if i.collision(self.jeu.joueur):
+                                if i.tire():
+                                    if i.activer():
+                                        self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
                                     
-                
+                if self.jeu.listeCoffre:
+                    for i in self.jeu.listeCoffre:
+                        if i.nomMap == self.jeu.joueur.nomMap:
+                            i.ouvrir(self.jeu.joueur)
+                        
                 self.press = True
     
     def relacheKeyGestion(self, event):
@@ -140,7 +170,7 @@ class Controleur():
                 self.press = False
             
             if event.keysym == 'Escape':
-                self.app.frameJeu.effaceTout()
+                self.app.effaceTout()
                 
                 del self.jeu
                 self.jeu = Modele.Jeu(self)

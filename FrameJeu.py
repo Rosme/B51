@@ -1,7 +1,6 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
 import math
-import HudHaut
 import MenuInventaire
 
 class FrameJeu():
@@ -14,8 +13,8 @@ class FrameJeu():
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=40
-        self.hauteurTuile=40
+        self.largeurTuile=31
+        self.hauteurTuile=31
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
@@ -36,9 +35,6 @@ class FrameJeu():
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
         
-        #création du hud du haut placé dans frameDuJeu
-        self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
-        
         self.menuI= MenuInventaire.MenuInventaire(self)
         
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
@@ -46,9 +42,6 @@ class FrameJeu():
         
         #affichage de la map, des objets et du personnage à l'écran
         self.affichageMap(perso,laSalle)
-        
-        #ajout des écouteur (souris, clavier)
-        self.ajoutEcouteur()
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -72,16 +65,6 @@ class FrameJeu():
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()'''
-    
-    #############################Ajout d'ecouteur#############################
-    def ajoutEcouteur(self):
-        #ecouteur lié au clavier       
-        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
-        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
-        #ecouteur lié à la souris
-        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
-        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
-        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
         
     #############################Affichage à l'écran#############################
     def affichageMap(self,perso,laSalle):
@@ -122,7 +105,7 @@ class FrameJeu():
                 '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-    
+
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
@@ -134,15 +117,27 @@ class FrameJeu():
             #texte=str(y)+","+str(x)
         elif car=='1' or car=='2':
             nomImage="roche"
-        elif car=='3':
+            posY-=14
+            '''elif car=='3':
             tag="coffre"
-            nomImage="coffre"
+            nomImage=d"coffre"'''
         elif car=='e':
             texte="Levier"
         elif car=='w':
             texte="Switch"
         elif car=='f':
             nomImage="feu"
+        elif car=="u":
+            nomImage="simonBleu"
+        elif car=="i":
+            nomImage="simonJaune"
+        elif car=="o":
+            nomImage="simonRouge"
+        elif car=="p":
+            nomImage="simonVert"
+        elif car=="y":
+            nomImage="eau"
+        
         
         if nomImage:
             self.map.create_image(posX,posY,image=self.parent.getImage(nomImage),tags=tag)
@@ -158,6 +153,31 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
+    
+    def affichageRoche(self,perso,listeRoche):
+        for i in listeRoche:
+            if i.nomMap == perso.nomMap:
+                tempPosX, tempPosY = self.coordMatriceAEcran(i)
+                self.map.create_rectangle(tempPosX, tempPosY, tempPosX+31, tempPosY+31, fill='blue', tags="perso")
+                
+    def test(self,i):
+        for k in self.parent.parent.jeu.listeInterrupteur:
+            if k.nomMap == "F_E1S1":
+                x,y,x1,y1=k.obtenirLimite()
+ 
+        depx=self.posDepartX
+        depy=self.posDepartY
+        
+        depx+=self.largeurTuile*x
+        depy+=self.hauteurTuile*y
+        depx1=self.posDepartX
+        depy1=self.posDepartY
+        
+        depx1+=self.largeurTuile*x1
+        depy1+=self.hauteurTuile*y1        
+        print(depx1,depy1,depx,depy)
+        self.map.create_rectangle(depx1, depy1, depx, depy, fill='red', tags="perso")
+                
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
@@ -234,6 +254,13 @@ class FrameJeu():
             self.map.xview(tkinter.MOVETO,self.offY)
     
     #############################Supression de masse#############################    
-    def effaceTout(self):
+    def effacer(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False
+
+'''       
+class Test():
+    def __init__(self,p,o):
+        self.posMatX=p
+        self.posMatY=o
+''' 

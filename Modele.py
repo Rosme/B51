@@ -23,8 +23,9 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3", "I_E1S1", "I_E1S2", "I_E1S3", "HELL"]
+        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_E1S1", "HELL"]
         self.nbObjMap = len(self.listeMap)
+        self.subDivision = 1
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -53,11 +54,18 @@ class Jeu():
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
             self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
-            
-        elif laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-            self.joueur.posMatX=tempMatX
-            self.joueur.posMatY=tempMatY
-            self.parent.actusliserPersonnage(self.joueur)
+        else:
+            try:    
+                if laMap[tempMatY+1][tempMatX]!='1':
+                    if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                        self.joueur.posMatX=tempMatX
+                        self.joueur.posMatY=tempMatY
+                        self.parent.actusliserPersonnage(self.joueur)
+            except:
+                if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                    self.joueur.posMatX=tempMatX
+                    self.joueur.posMatY=tempMatY
+                    self.parent.actusliserPersonnage(self.joueur)
     
     def coordProchaineZone(self,char):
         laMap=self.carte.s.salle
@@ -71,11 +79,14 @@ class Jeu():
                         #si l'autre char à droite
                         if laMap[i][j+1]==char:
                             try:
+                                print(laMap[i+1][j])
                                 if laMap[i+1][j]=='0':#porte en haut
                                     matx = j
                                     maty = i+1
                                     trouver=True
                                     break
+                                elif laMap[i+1][j] == ' ':
+                                    raise IndexError
                             except IndexError:
                                 if laMap[i-1][j]=='0':#porte en bas
                                     matx = j
@@ -93,6 +104,8 @@ class Jeu():
                                     maty = i
                                     trouver=True
                                     break
+                                elif laMap[i+1][j] == ' ':
+                                    raise IndexError
                             except IndexError:
                                 if laMap[i][j-1]=='0':#porte à gauche
                                     matx = j-1
@@ -108,10 +121,13 @@ class Jeu():
     
     def activationObjet(self):
         if self.listeInterrupteur:
-                for i in self.listeInterrupteur:
-                    i.collision(self.joueur)
-                    if i.activer():
-                        self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+            for i in self.listeInterrupteur:
+                i.collision(self.joueur)
+                if i.activer():
+                    self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                    break
+                    
+                    
                     
         if self.listeRoche:
             for i in self.listeRoche:
@@ -175,11 +191,11 @@ class Jeu():
         self.listeLogomate.append(pers)
         
     def nouveauSac(self,posMat, nomMap):
-        sac = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), nomMap)
+        sac = Objet.Sac(self, int(posMat[0]), int(posMat[1]), nomMap)
         self.listeSac.append(sac)
         
     def nouveauCoffre(self, posMat, nomMap):
-        coffre = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), nomMap)
+        coffre = Objet.Coffre(self, int(posMat[0]), int(posMat[1]), nomMap)
         self.listeCoffre.append(coffre)
         
     def nouvelleRoche(self, posMat, nomMap):
@@ -191,7 +207,7 @@ class Jeu():
         self.listeInterrupteur.append(interrupteur)
     
     def nouveauDeclencheur(self, posMat, nomMap):
-        declencheur = Objet.Interrupteur(self,  int(posMat[0]), int(posMat[1]), nomMap)
+        declencheur = Objet.Declencheur(self,  int(posMat[0]), int(posMat[1]), nomMap)
         self.listeDeclencheur.append(declencheur)
     
     def nouveauLevier(self, posMat, nomMap):

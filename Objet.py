@@ -1,21 +1,23 @@
 # -*- coding: ISO-8859-1 -*-
 
 class Objet():
-    def __init__(self, parent, matX, matY, largeur, hauteur, nomMap):
+    def __init__(self, parent, matX, matY, padGauche, padHaut, padDroit, padBas, nomMap):
         self.parent = parent
         self.nomMap = nomMap
         self.posMatX = matX
         self.posMatY = matY
-        self.largeur = largeur
-        self.hauteur = hauteur
+        self.padHaut = padHaut
+        self.padBas = padBas
+        self.padGauche = padGauche
+        self.padDroit = padDroit
         self.aTerre = True
         
     def obtenirLimite(self):
-        return [self.posMatX-self.largeur, self.posMatY-self.hauteur, self.posMatX+self.largeur, self.posMatY+self.hauteur]
+        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padHaut, self.posMatY+self.padGauche]
 
 class Sac(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
+        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)# -1, -1, -2, -2 (subDivision à 4)
         self.items = []
 
     '''
@@ -32,7 +34,7 @@ class Sac(Objet):
 
 class Coffre(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, 80, 80, nomMap)
+        Objet.__init__(self, parent, matX, matY, -2, -2, 2, 2, nomMap)
         self.items = []
         self.ouvert = False
 
@@ -43,10 +45,10 @@ class Coffre(Objet):
                 limiteCoffre = self.obtenirLimite()
                 j=0
                 while j < 4:
-                    if limiteCoffre[j] > limitePerso[0] and limiteCoffre[j] < limitePerso[2]:
+                    if limiteCoffre[j] >= limitePerso[0] and limiteCoffre[j] <= limitePerso[2]:
                         valide = True
                     elif j == 0:
-                        if limiteCoffre[j] < limitePerso[0] and limiteCoffre[j+2] > limitePerso[2]:
+                        if limiteCoffre[j] <= limitePerso[0] and limiteCoffre[j+2] >= limitePerso[2]:
                             valide = True
                         else:
                             valide = False
@@ -55,22 +57,23 @@ class Coffre(Objet):
                     if valide:
                         k=1
                         while k < 4:
-                            if limiteCoffre[k] > limitePerso[1] and limiteCoffre[k] < limitePerso[3]:
+                            if limiteCoffre[k] >= limitePerso[1] and limiteCoffre[k] <= limitePerso[3]:
                                 valide = True
                             elif k == 1:
-                                if limiteCoffre[k] < limitePerso[1] and limiteCoffre[k+2] > limitePerso[3]:
+                                if limiteCoffre[k] <= limitePerso[1] and limiteCoffre[k+2] >= limitePerso[3]:
                                     valide = True
                                 else:
                                     valide = False
                             else:
                                 valide = False
                             if valide:
-                                
+                                print("ouvre coffre")
                                 self.ouvert = True
                                 return True
                             k+=2
                     j+=2
         
+        print("ferme coffre")
         self.ouvert = False
         return False
 
@@ -91,7 +94,7 @@ class Coffre(Objet):
        
 class Roche(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
+        Objet.__init__(self, parent, matX, matY, -1, -1, 2, 2, nomMap)# -1, -1, -2, -2 (subDivision à 4)
         self.depose()
         
     def prendre(self, perso):
@@ -100,10 +103,10 @@ class Roche(Objet):
             limiteObjet = self.obtenirLimite()
             j=0
             while j < 4:
-                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
                     valide = True
                 elif j == 0:
-                    if limiteObjet[j] > limitePerso[0] and limiteObjet[j+2] < limitePerso[2]:
+                    if limiteObjet[j] >= limitePerso[0] and limiteObjet[j+2] <= limitePerso[2]:
                         valide = True
                     else:
                         valide = False
@@ -112,10 +115,10 @@ class Roche(Objet):
                 if valide:
                     k=1
                     while k < 4:
-                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                        if limiteObjet[k] >= limitePerso[1] and limiteObjet[k] <= limitePerso[3]:
                             valide = True
                         elif k == 1:
-                            if limiteObjet[k] > limitePerso[1] and limiteObjet[k+2] < limitePerso[3]:
+                            if limiteObjet[k] >= limitePerso[1] and limiteObjet[k+2] <= limitePerso[3]:
                                 valide = True
                             else:
                                 valide = False
@@ -130,9 +133,7 @@ class Roche(Objet):
         self.aTerre = True
         return True
 
-    def bouge(self, perso):
-        pass
-        
+    def bouge(self, perso):        
         if not self.aTerre:
             for i in self.parent.listeInterrupteur:
                 self.aTerre = True
@@ -154,7 +155,7 @@ class Roche(Objet):
 
 class Interrupteur(Objet):
     def __init__(self, parent, matX, matY, unique, nomMap):
-        Objet.__init__(self, parent, matX, matY,60, 60, nomMap)
+        Objet.__init__(self, parent, matX, matY, -2, -2, 2, 2, nomMap)
         self.active = False
         self.aTerre = False
         self.usageUnique = unique
@@ -166,10 +167,10 @@ class Interrupteur(Objet):
             limiteObjet = self.obtenirLimite()
             j=0
             while j < 4:
-                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
                     valide = True
                 elif j == 0:
-                    if limiteObjet[j] < limitePerso[0] and limiteObjet[j+2] > limitePerso[2]:
+                    if limiteObjet[j] <= limitePerso[0] and limiteObjet[j+2] >= limitePerso[2]:
                         valide = True
                     else:
                         valide = False
@@ -178,29 +179,29 @@ class Interrupteur(Objet):
                 if valide:
                     k=1
                     while k < 4:
-                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                        if limiteObjet[k] >= limitePerso[1] and limiteObjet[k] <= limitePerso[3]:
                             valide = True
                         elif k == 1:
-                            if limiteObjet[k] < limitePerso[1] and limiteObjet[k+2] > limitePerso[3]:
+                            if limiteObjet[k] <= limitePerso[1] and limiteObjet[k+2] >= limitePerso[3]:
                                 valide = True
                             else:
                                 valide = False
                         else:
                             valide = False
                         if valide:
+                            
                             self.active = True
                             return True
                         k+=2
                 j+=2
-            
+                
             self.active = False
             return False
     
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
-            #25 par 14-15
             map = self.parent.carte.s.salle
-            if self.posMatX == 22 and self.posMatY == 16:
+            if self.posMatX == 26 and self.posMatY == 21:
                 if self.active:
                     self.ouvrePorte(26, 14, map, "0", False)
                     if self.out:
@@ -239,7 +240,7 @@ class Interrupteur(Objet):
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, 20, 20, nomMap)
+        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)
         self.active = False
         
     def collision(self, perso):
@@ -248,10 +249,10 @@ class Declencheur(Objet):
             limiteObjet = self.obtenirLimite()
             j=0
             while j < 4:
-                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
                     valide = True
                 elif j == 0:
-                    if limiteObjet[j] < limitePerso[0] and limiteObjet[j+2] > limitePerso[2]:
+                    if limiteObjet[j] <= limitePerso[0] and limiteObjet[j+2] >= limitePerso[2]:
                         valide = True
                     else:
                         valide = False
@@ -260,10 +261,10 @@ class Declencheur(Objet):
                 if valide:
                     k=1
                     while k < 4:
-                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                        if limiteObjet[k] >= limitePerso[1] and limiteObjet[k] <= limitePerso[3]:
                             valide = True
                         elif k == 1:
-                            if limiteObjet[k] < limitePerso[1] and limiteObjet[k+2] > limitePerso[3]:
+                            if limiteObjet[k] <= limitePerso[1] and limiteObjet[k+2] >= limitePerso[3]:
                                 valide = True
                             else:
                                 valide = False
@@ -274,7 +275,7 @@ class Declencheur(Objet):
                             return True
                         k+=2
                 j+=2
-                
+            
             self.active = False
             return False
         
@@ -284,7 +285,7 @@ class Declencheur(Objet):
         
 class Levier(Objet):
     def __init__(self, parent, matX, matY, force, energie, contreForce, nomMap):
-        Objet.__init__(self, parent, matX, matY,80,60, nomMap)
+        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)
         self.force = force
         self.max_energie = energie
         self.energie = energie
@@ -298,10 +299,10 @@ class Levier(Objet):
             limiteObjet = self.obtenirLimite()
             j=0
             while j < 4:
-                if limiteObjet[j] > limitePerso[0] and limiteObjet[j] < limitePerso[2]:
+                if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
                     valide = True
                 elif j == 0:
-                    if limiteObjet[j] < limitePerso[0] and limiteObjet[j+2] > limitePerso[2]:
+                    if limiteObjet[j] <= limitePerso[0] and limiteObjet[j+2] >= limitePerso[2]:
                         valide = True
                     else:
                         valide = False
@@ -310,10 +311,10 @@ class Levier(Objet):
                 if valide:
                     k=1
                     while k < 4:
-                        if limiteObjet[k] > limitePerso[1] and limiteObjet[k] < limitePerso[3]:
+                        if limiteObjet[k] >= limitePerso[1] and limiteObjet[k] <= limitePerso[3]:
                             valide = True
                         elif k == 1:
-                            if limiteObjet[k] < limitePerso[1] and limiteObjet[k+2] > limitePerso[3]:
+                            if limiteObjet[k] <= limitePerso[1] and limiteObjet[k+2] >= limitePerso[3]:
                                 valide = True
                             else:
                                 valide = False
@@ -329,18 +330,16 @@ class Levier(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 12 and self.posMatY == 11:
+            if self.posMatX == 17 and self.posMatY == 16:
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.salle = map
                     return True
                 return False
-        
             
         if self.parent.joueur.nomMap == "F_E1S3":
-            print(self.posMatX, self.posMatY)
             map = self.parent.carte.s.dictMap["F_E1S1"]
-            if self.posMatX == 11 and self.posMatY == -4:
+            if self.posMatX == 16 and self.posMatY == 2:
                 if self.active:
                     self.ouvrePorte(1, 14, map, "m", False)
                     self.parent.carte.s.dictMap["F_E1S1"] = map
@@ -348,7 +347,27 @@ class Levier(Objet):
                 return False
                
             self.parent.carte.s.dictMap["F_E1S1"] = map
-
+        
+        if self.parent.joueur.nomMap == "F_E1S5":
+            map = self.parent.carte.s.salle
+            if self.posMatX == 1 and self.posMatY == 24:
+                if self.active:
+                    self.ouvrePorte(13, 28, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    print("win1")
+                    return True
+                return False
+            
+        if self.parent.joueur.nomMap == "F_E2S3":
+            map = self.parent.carte.s.salle
+            if self.posMatX == 42 and self.posMatY == 35:
+                if self.active:
+                    self.ouvrePorte(17, 21, map, "0", False)
+                    self.parent.carte.s.salle = map
+                    print("win2")
+                    return True
+                return False
+        
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
         tempLigne = map.pop(ligne)
