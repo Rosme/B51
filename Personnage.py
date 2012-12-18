@@ -3,6 +3,7 @@ import pickle
 import Item
 import Objet
 from Balle import *
+import IA
         
 class Personnage():
     def __init__(self):
@@ -27,7 +28,10 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
-    
+        ##fonctionnement logomate
+        if self.race.race == "Logomate":
+            self.ia= IA.IA(self)
+            
     def mort(self):
         #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"

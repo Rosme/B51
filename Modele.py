@@ -127,12 +127,15 @@ class Jeu():
                     self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
                     break
                     
-                    
-                    
         if self.listeRoche:
             for i in self.listeRoche:
                 if not i.aTerre:
                     i.bouge(self.joueur)
+        
+        ### logomate deplacement ###
+        if self.listeLogomate:
+            for i in self.listeLogomate:
+                i.ia.choisitDeplacement(self.carte.s.salle)
     
     def gestionMort(self):
         if self.joueur.race.vie<=0:
