@@ -30,14 +30,14 @@ V:F_E2S4 v:MainRoom
 1111100000000000000000000000000000011111
 1111110000000000000000000000000000111111
 1111111111111111110011111111111111111111
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1VV1                   
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1VV1fffffffffffffffffff
