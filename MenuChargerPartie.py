@@ -9,10 +9,9 @@ class MenuChargerPartie():
         
     def menuPerso(self):
         self.frameMenuChargerPartie=tkinter.Frame(self.parent.root)
-        self.backgroundImage = tkinter.PhotoImage(file='assets/Image/Prometheus_1.gif',width=1024,height=768)
         self.fondEcran= tkinter.Canvas(self.frameMenuChargerPartie,width=1024,height=768)
         self.fondEcran.pack()
-        self.fondEcran.create_image(512,384, image= self.backgroundImage,tags="fondEcran")
+        self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         self.boutonConnexion= tkinter.Button(self.fondEcran, text='Continuer',command=self.getPlayer)
         self.boutonRetour= tkinter.Button(self.fondEcran, text='Retour',command=self.effacerEcran)
         self.boutonConnexion.place(x=550,y=650)

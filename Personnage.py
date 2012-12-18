@@ -9,16 +9,19 @@ class Personnage():
         pass
         
     def nouveauPersonnage(self, nom, race):
+        #nom du joueur
         self.nom = nom
+        #nom de la map dans lqeul il se trouve
         self.nomMap = "MainRoom"
+        #objet race contenant toutes les informations spécifiques au races
         self.race = race
-        self.posMatX = 0
-        self.posMatY = 0
-        self.posMapX = 0
-        self.posMapY = 0
+        #position dans la matrice
+        self.posMatX = 11
+        self.posMatY = 11
+        #initialisation des éléments de l'inventaire
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
-        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 5, 20, 1))
+        self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 0.8, 100, 1))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
@@ -26,22 +29,27 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
     
     def mort(self):
+        #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
     
-    def bouge(self, mouvement):
+    def bouge(self,mouvement):
+        #si un mouvement a t demandé on calcul le futur position dans la matrice du perso
         tempx = 0
         tempy = 0
         
         if mouvement[0]:
-            tempy-=4
+            tempy-=1
         if mouvement[1]:
-            tempx+=4
+            tempx+=1
         if mouvement[2]:
-            tempy+=4
+            tempy+=1
         if mouvement[3]:
-            tempx-=4
-            
+            tempx-=1
+        
+        tempx+=self.posMatX
+        tempy+=self.posMatY
+        
         return tempx, tempy
     
     '''
@@ -52,20 +60,28 @@ class Personnage():
         for i in self.inventaire.items:
             #Si c'est une armure (ID = 8)
             if i.id == 8:
-                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure. 
-                if i.energie - degat + i.defense + self.race.defense >= 0:
+                #Si l'énergie restante - les dégâts est supérieur ou égale à zéro, descend l'armure.
+                #les dégats sont réduits d'un pourcentage égal à la defense de l'armure
+                if i.energie - (degat * i.defense) >= 0:
+                    degat=degat * i.defense
                     i.subit(degat)
                     break
-                #Sinon, prend le reste et descend la vie.
                 else:
-                    reste = degat + i.defense + self.race.defense
-                    reste -= i.energie
-                    degat -= reste
-                    i.subit(degat)
+                    #on calcul combien d'énergie est nécéssaire pour rendre l'énergie de 
+                    #l'armure à 0 en tenant compte de la defense de l'armure
+                    reste = i.energie / i.defense
+                    #on enleve l'énergie nécéssaire au dégat total
+                    reste = degat - reste
+                    #on réduit les dégats selon la defense du personnage
+                    reste *= self.race.defense
+                    
+                    i.subit(i.energie)
                     self.subit(reste)
                     break
     
+    
     def tire(self, listeBalle, x, y):
+        #si on possède un arme l'arme perd de l'énergie et une balle est crée
         for i in self.inventaire.items:
             #ID de l'arme = 7
             if i.id == 7:
@@ -96,20 +112,8 @@ class Personnage():
                 break
          
     def subit(self, degat):
+        #soustraction des dégats au joueur
         self.race.vie -= degat
-                
-    def chargerPersonnage(self, nom):
-        nomFichier = nom + '.plr'
-        with open(nomFichier,'rb') as fichier:
-            joueur = pickle.Unpickler(fichier)
-            self = joueur.load()
-        return self
-        
-    def sauvegardePersonnage(self):
-        nomFichier = self.nom + '.plr'
-        with open(nomFichier,'wb') as fichier:
-            save = pickle.Pickler(fichier)
-            save.dump(self)
     
     def autoSoin(self):
         for i in self.inventaire.items:
@@ -125,5 +129,6 @@ class Personnage():
                 break
     
     def obtenirLimite(self):
-        return [self.posMapX-26, self.posMapY-35, self.posMapX+26, self.posMapY+10]
+        #limite pour les collisions
+        return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
     
