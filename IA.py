@@ -15,26 +15,22 @@ class IA():
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
         self.oldDestX =111111       ## notre ancienne destination permet de savoir si la destination a changer 
-        self.odlDestY =111111 #/j'ai mis des gros chiffres car j'ai pas trouver de facon de faire si il n'y a rien 
+        self.oldDestY =111111 #/j'ai mis des gros chiffres car j'ai pas trouver de facon de faire si il n'y a rien 
+        self.i = 0
+        self.first = True
     def choisitAction(self):
         pass
         
     def choisitDeplacement(self,map):
+        if self.posMatX == self.destMatX and self.posMatY == self.destMatY:
+            print ("bravo")
         ## le logomate choisit ce qu'il va faire 
         ## // je vais tricher et donner un parent a personnage il ne faut pas faire sa trouve une solution
-       # if self.listeFerme :
-           # if self.oldDestX == self.destMatX and self.odlDestY == self.destMatY: 
+        if self.oldDestX != self.destMatX or self.oldDestY != self.destMatY: 
                 ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
-        self.chercheChemin(map)
-        #depX  ## le nombre de pixel déplacer en x
-        #depY ## le nombre de pixel déplacer en x
-        #print(self.destMatX,self.destMatY)
-        self.calculDeplacement(self.listeMouvement[-1])
-
-           
-        #else:
-            ##// tu va avoir un temps de retard si tu fais pas faire le move après mais pour tester sa va
-           # self.chercheChemin(map)
+            self.chercheChemin(map)
+      
+        self.calculDeplacement(self.listeMouvement[-1]) 
 		
     def chercheChemin(self,map):
         ## venir voir GAB pour le fonctionnement de la sélection de chemin 
@@ -44,27 +40,25 @@ class IA():
         self.listeFerme.append(self.noeudCourant)
         self.oldDestX = self.destMatX
         self.oldDestY = self.destMatY
+        print(self.oldDestY)
         premierefois = True
         while self.noeudCourant.posX != self.destMatX and self.noeudCourant.posY != self.destMatY:         
             i = 1
             while i <10:
                 tempPosX,tempPosY = self.calculDirection(i)
-                ##on regarde si ya un mur la ou on va                                                
-                if self.deplacementPossible(tempPosX,tempPosY,i,map): 
-                    self.g = self.noeudCourant.g+1
-                    self.h = math.sqrt((self.destMatX-self.posMatX)**2 + (self.destMatY-self.posMatY)**2) 
+                ##on regarde si ya un mur la ou on va 
+                depX,depY = self.deplacementPossible(tempPosX,tempPosY,i,map)
+                if depX != 2: 
+                    g = self.noeudCourant.g+1
+                    h = math.sqrt((self.destMatX-(self.posMatX+depX))**2 + (self.destMatY-(self.posMatY+depY))**2) 
                      ## //je pourrais p-t créer mon noeud plus tard
-                    self.noeudTemp = Noeud(self.g,self.h,tempPosX,tempPosY,self.noeudCourant.posX,self.noeudCourant.posY)
+                    self.noeudTemp = Noeud(g,h,tempPosX,tempPosY,self.noeudCourant.posX,self.noeudCourant.posY)
                     
                     if not self.dansListeFerme(self.noeudTemp):  ## si le noeud n'a pas déjà été vérifié
-                        if self.dansListeOuverte(self.noeudTemp):  ## si le noeud est dans la liste ouverte il y a du code 
-                            pass
-                        else:
-                            self.listeOuverte.append(self.noeudTemp)
+                        self.dansListeOuverte(self.noeudTemp)  
+                            
                 i +=1
-            print("liste")
-            for i in self.listeOuverte:
-                print(i.posX,i.posY)
+
             self.noeudCourant = self.choisirNoeudCourant()
         self.listeDeplacement(self.noeudCourant)  
  
@@ -76,7 +70,9 @@ class IA():
                 if noeudCourant.parentX == i.posX and noeudCourant.parentY == i.posY:
                     self.listeMouvement.append(noeudCourant)
                     noeudCourant = i
-          
+         
+        for i in self.listeMouvement:
+            print(i.posX,i.posY)
         if self.listeMouvement[-1] != None:   # si on est pas au point de départ on move
             ## FAIT LE DÉPLACEMENT
             self.listeMouvement.pop()
@@ -107,36 +103,52 @@ class IA():
         #je vérifie s'il est possible de se déplacer dans cette direction
         #//p-t essayer de rendre sa beau 
         if map[posX][posY] == 1:
-            return False
+            return 2,2
             
         elif direction%2 ==1:
             if direction == 1:
                 if map[posX+1][posY] == 1 and map[posX][posY-1] == 1:
-                    return False
+                    return 2,2
                 else:
-                    return True
+                    return 1, -1
                     
             elif direction == 7:
                 if map[posX+1][posY] == 1 and map[posX][posY+1] == 1:
-                    return False
+                    return 2,2
                 else:
-                    return True
+                    return 1, 1
                     
             elif direction == 9:
                 if map[posX-1][posY] == 1 and map[posX][posY+1] == 1:
-                    return False
+                    return 2,2
                 else:
-                    return True
+                    return -1, 1
                     
             elif direction == 3:
                 if map[posX-1][posY] == 1 and map[posX][posY-1] == 1:
-                    return False
+                    return 2,2
                 else:
-                    return True
-
+                    return -1, -1
+                
+            else:
+                return  2,2
+        
         else:
-            return True
-    
+            if direction ==2:
+                return 0,1
+                
+            elif direction == 6:
+                return 1,0
+                
+            elif direction == 8:
+                return 0,-1
+                
+            elif direction == 4:
+                return -1,0
+            
+            else:
+                return  2,2
+        
     def dansListeFerme(self,noeud):
         ## je regarde si le noeud est dans la liste ferme
         for i in self.listeFerme:
@@ -155,8 +167,14 @@ class IA():
                     i.parentY = noeud.parentY
                     i.g =noeud.g
                     i.calculF()
+                break
+        self.listeOuverte.append(noeud)
     
     def choisirNoeudCourant(self):
+        print("liste")
+        for i in self.listeOuverte:
+            print(i.posX,i.posY,i.f)
+        
         ## je me choisi un nouveau noeud courant en prenant celui avec la plus petite distance total (F)
         ##         parmi la liste ouverte( celle qui contient les chemins pas vérifié)
         noeudTemp = None 
