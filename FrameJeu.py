@@ -13,8 +13,8 @@ class FrameJeu():
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=31
-        self.hauteurTuile=31
+        self.largeurTuile=32
+        self.hauteurTuile=32
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
@@ -110,7 +110,7 @@ class FrameJeu():
         tag="image"
         texte=None
         
-        if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
+         if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
             nomImage="zoning"
             #x,y=self.coordEcranAMatrice(posX,posY)
             #texte=str(y)+","+str(x)

@@ -25,7 +25,7 @@ class Jeu():
         self.listeSac = list()
         self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_S1", "R_E1S1", "HELL"]
         self.nbObjMap = len(self.listeMap)
-        self.subDivision = 1
+        self.subDivision = 32
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -49,7 +49,7 @@ class Jeu():
         
         tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
         
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX] == 'B' or laMap[tempMatY][tempMatX] == 'N' or laMap[tempMatY][tempMatX] == 'M' or laMap[tempMatY][tempMatX] == 'V':
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
@@ -184,7 +184,7 @@ class Jeu():
         
     
     def nouveauLogo(self, posMat,nomMap):
-        pers = Personnage()
+        pers = Personnage(self)
         pers.nouveauPersonnage("Logo", Race.Logomate())
         pers.posMatX = int(posMat[0])
         pers.posMatY = int(posMat[1])
@@ -215,7 +215,7 @@ class Jeu():
         self.listeLevier.append(levier)
     
     def nouveauJoueur(self, race, nom):
-        self.joueur = Personnage()
+        self.joueur = Personnage(self)
         if race == "Humain":
             self.joueur.nouveauPersonnage(nom, Race.Humain())
         
