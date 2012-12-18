@@ -22,15 +22,14 @@ class IA():
         pass
         
     def choisitDeplacement(self,map):
-        if self.posMatX == self.destMatX and self.posMatY == self.destMatY:
-            print ("bravo")
-        ## le logomate choisit ce qu'il va faire 
-        ## // je vais tricher et donner un parent a personnage il ne faut pas faire sa trouve une solution
-        if self.oldDestX != self.destMatX or self.oldDestY != self.destMatY: 
-                ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
-            self.chercheChemin(map)
-      
-        self.calculDeplacement(self.listeMouvement[-1]) 
+        ## le logomate choisit la destination
+        if self.posMatX != self.destMatX and self.posMatY != self.destMatY:
+            if self.oldDestX != self.destMatX or self.oldDestY != self.destMatY: 
+                    ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
+                self.chercheChemin(map)
+                
+            self.calculDeplacement(self.listeMouvement[-1])
+            self.listeMouvement.pop()
 		
     def chercheChemin(self,map):
         ## venir voir GAB pour le fonctionnement de la sélection de chemin 
@@ -40,8 +39,6 @@ class IA():
         self.listeFerme.append(self.noeudCourant)
         self.oldDestX = self.destMatX
         self.oldDestY = self.destMatY
-        print(self.oldDestY)
-        premierefois = True
         while self.noeudCourant.posX != self.destMatX and self.noeudCourant.posY != self.destMatY:         
             i = 1
             while i <10:
@@ -70,9 +67,7 @@ class IA():
                 if noeudCourant.parentX == i.posX and noeudCourant.parentY == i.posY:
                     self.listeMouvement.append(noeudCourant)
                     noeudCourant = i
-         
-        for i in self.listeMouvement:
-            print(i.posX,i.posY)
+
         if self.listeMouvement[-1] != None:   # si on est pas au point de départ on move
             ## FAIT LE DÉPLACEMENT
             self.listeMouvement.pop()
@@ -170,11 +165,7 @@ class IA():
                 break
         self.listeOuverte.append(noeud)
     
-    def choisirNoeudCourant(self):
-        print("liste")
-        for i in self.listeOuverte:
-            print(i.posX,i.posY,i.f)
-        
+    def choisirNoeudCourant(self):        
         ## je me choisi un nouveau noeud courant en prenant celui avec la plus petite distance total (F)
         ##         parmi la liste ouverte( celle qui contient les chemins pas vérifié)
         noeudTemp = None 
