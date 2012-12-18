@@ -7,7 +7,6 @@ Coffre
 19:1
 break
 Roche
-3:19
 break
 Interrupteur
 break
@@ -26,10 +25,8 @@ break
 Coffre
 break
 Roche
-3:21
 break
 Interrupteur
-26:21
 break
 Declencheur
 break
