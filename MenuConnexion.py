@@ -55,6 +55,7 @@ class MenuConnexion():
         network = self.parent.parent.network
         network.connecter(adresse, port, self.parent.parent.jeu.joueur.nom)
         if network.recevoirDonnees() == True:
+            self.parent.menuL.updateClientList()
             self.rejoindreUnePartie()
 
 

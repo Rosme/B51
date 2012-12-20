@@ -5,12 +5,14 @@ import Netdata as nd
 
 
 class ConnecteurReseau():
-	def __init__(self):
+	def __init__(self, parent):
+		self.parent = parent
 		self.port = None
 		self.adresse = None
 		self.id = -1
 		self.socket = None
 		self.nom = None
+		self.playerList = None
 
 	def connecter(self, adresse, port, nom):
 		#Mise à jour des informations du client
@@ -21,33 +23,6 @@ class ConnecteurReseau():
 		self.socket.settimeout(0.01)
 
 		self.nom = nom
-
-		'''
-		#On envoie les informations de connection pour générer un ID et avoir une connection
-		infoJoueur = nd.PersoInfo(nom)
-		infoBinaire = pickle.dumps(infoJoueur)
-		self.socket.send(infoBinaire)
-
-		#On reçoit les données du serveur, et on s'ajuste ainsi
-		infoBinaire = self.socket.recv(4096)
-		infoJoueur = pickle.loads(infoBinaire)
-		self.id = infoJoueur.id
-
-		return infoJoueur
-		'''
-
-	'''
-	def deconnecter(self):
-		cmd = nd.Message("/quit")
-		cmdBinaire = pickle.dumps(cmd)
-		self.socket.send(cmdBinaire)
-		self.socket.close()
-
-	def envoyerDonnees(self, donnees):
-		bin = pickle.dumps(donnees)
-		self.socket.send(bin)
-
-	'''
 
 	def recevoirDonnees(self):
 		try:
@@ -60,10 +35,16 @@ class ConnecteurReseau():
 					self.sendData(clientInfo)
 					return True
 				elif isinstance(data, nd.ListClientInfo):
+					self.playerList = data.list
+					self.parent.app.menuL.update(self.playerList)
 					for client in data.list:
 						print(client.nom)
 				elif isinstance(data, nd.ClientDisconnect):
 					self.socket.close()
+				elif isinstance(data, nd.MsgQueue):
+					for msg in data.msg:
+						if isinstance(msg, nd.StartGameMsg):
+							self.parent.app.menuL.debuterPartie()
 		except socket.timeout:
 			return None
 		except socket.error:

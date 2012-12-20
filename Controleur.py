@@ -11,7 +11,7 @@ class Controleur():
         self.app.root.mainloop()
     
     def demarrer(self):
-        self.network = Network.ConnecteurReseau()
+        self.network = Network.ConnecteurReseau(self)
         self.jeu = Modele.Jeu(self)
         self.app = Vue.Application(self)
         self.press = False
@@ -189,6 +189,8 @@ class Controleur():
                 
                 self.app.initialisationInterfaces()
                 self.app.menuPrincipal()
+                if self.network.socket != None:
+                    self.network.disconnect()
             
         
         

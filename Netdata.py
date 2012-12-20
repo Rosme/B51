@@ -9,6 +9,10 @@ class ListClientInfo():
 	def __init__(self):
 		self.list = list()
 
+class MsgQueue():
+	def __init__(self):
+		self.msg = []
+
 class ClientInfo():
 	def __init__(self, id, nom):
 		self.nom = nom

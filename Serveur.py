@@ -34,6 +34,7 @@ class Serveur():
 		self.qteConnect = len(self.clients)
 		self.newClient = False
 		self.listIdClient = nd.ListClientInfo()
+		self.msgQueue = nd.MsgQueue()
 
 		#Liste de booléen pour les id des joueurs
 		#Mis à False par défaut pour pouvoir les attribuer
@@ -49,7 +50,7 @@ class Serveur():
 
 	def recevoirConnexion(self):
 		#On va accepter les connexions uniquement si on est en-dessous du nombre de joueur maximal ou la partie n'est pas commencé
-		if self.qteConnect < self.maxConnect and self.statut != "jeu":
+		if self.qteConnect < self.maxConnect and self.statut == "demarrer":
 			incoming, wlist, xlist = select.select([self.socket], [], [], 0.05) #Obtention de connexion
 			for connection in incoming:
 				conn, address = self.socket.accept()
@@ -84,6 +85,13 @@ class Serveur():
 				for client in self.clients:
 					client.conn.send(bListClient)
 			self.newClient = False
+		elif self.statut == "starting":
+			bListMsg = pickle.dumps(self.msgQueue)
+			for client in self.clients:
+				client.conn.send(bListMsg)
+			self.msgQueue.msg = []
+			self.statut = "jeu"
+
 
 	def getListConn(self):
 		listConn = []
@@ -127,6 +135,9 @@ class Serveur():
 								bDisco = pickle.dumps(nd.ClientDisconnect(data.id))
 								conn.send(bDisco)
 								self.removeClient(conn)
+							elif isinstance(data, nd.StartGameMsg):
+								self.statut = "starting"
+								self.msgQueue.msg.append(data)
 					except Exception as ex:
 						print("Erreur sur lecture de client. Deconnection: ")
 						self.removeClient(conn)
