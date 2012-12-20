@@ -28,19 +28,7 @@ class Joueur():
 class Serveur():
 	def __init__(self, port = 43225):
 		self.port = port
-		self.statut = "demarrer" #Le statut représente l'état du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
-		self.maxConnect = 8
-		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
-		self.qteConnect = len(self.clients)
-		self.newClient = False
-		self.listIdClient = nd.ListClientInfo()
-		self.msgQueue = nd.MsgQueue()
-
-		#Liste de booléen pour les id des joueurs
-		#Mis à False par défaut pour pouvoir les attribuer
-		self.boolIdConnect = []
-		for i in range(self.maxConnect):
-			self.boolIdConnect.append(False)
+		self.restart()
 
 		#Création du socket pour les connexions, ainsi que son paramétrage
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,6 +49,24 @@ class Serveur():
 				clientId = nd.ClientId(client.id)
 				bClientId = pickle.dumps(clientId)
 				client.conn.send(bClientId)
+		if self.statut == "jeu":
+			if self.qteConnect == 0:
+				self.restart()
+
+	def restart(self):
+		self.statut = "demarrer" #Le statut représente l'état du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
+		self.maxConnect = 8
+		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
+		self.qteConnect = len(self.clients)
+		self.newClient = False
+		self.listIdClient = nd.ListClientInfo()
+		self.msgQueue = nd.MsgQueue()
+
+		#Liste de booléen pour les id des joueurs
+		#Mis à False par défaut pour pouvoir les attribuer
+		self.boolIdConnect = []
+		for i in range(self.maxConnect):
+			self.boolIdConnect.append(False)
 
 	def generateId(self):
 		for i in range(self.maxConnect):
@@ -112,7 +118,7 @@ class Serveur():
 		self.updateQteClients()
 
 	def recvData(self):
-		if self.statut == "demarrer" and self.clients:
+		if self.clients:
 			toRead = []
 			try:
 				listConn = self.getListConn()
