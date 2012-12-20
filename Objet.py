@@ -6,10 +6,10 @@ class Objet():
         self.nomMap = nomMap
         self.posMatX = matX
         self.posMatY = matY
-        self.padHaut = padHaut
-        self.padBas = padBas
-        self.padGauche = padGauche
-        self.padDroit = padDroit
+        self.padHaut = padHaut*self.parent.subDivision
+        self.padBas = padBas*self.parent.subDivision
+        self.padGauche = padGauche*self.parent.subDivision
+        self.padDroit = padDroit*self.parent.subDivision
         self.aTerre = True
         
     def obtenirLimite(self):

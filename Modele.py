@@ -49,14 +49,14 @@ class Jeu():
         
         tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
         
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
             self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
         else:
             try:    
-                if laMap[tempMatY+1][tempMatX]!='1':
+                if laMap[tempMatY+self.subDivision][tempMatX]!='1':
                     if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                         self.joueur.posMatX=tempMatX
                         self.joueur.posMatY=tempMatY
@@ -72,43 +72,43 @@ class Jeu():
         
         trouver=False
         
-        for i in range(len(laMap)):
-            for j in range(len(laMap[i])):
+        for i in range(0,len(laMap),self.subDivision):
+            for j in range(0,len(laMap[i]),self.subDivision):
                 if laMap[i][j]==char:
                     try:
                         #si l'autre char à droite
-                        if laMap[i][j+1]==char:
+                        if laMap[i][j+self.subDivision]==char:
                             try:
-                                print(laMap[i+1][j])
-                                if laMap[i+1][j]=='0':#porte en haut
+                                if laMap[i+self.subDivision][j]=='0':#porte en haut
                                     matx = j
-                                    maty = i+1
+                                    maty = i+self.subDivision
                                     trouver=True
                                     break
-                                elif laMap[i+1][j] == ' ':
+                                elif laMap[i+self.subDivision][j] == ' ':
                                     raise IndexError
                             except IndexError:
-                                if laMap[i-1][j]=='0':#porte en bas
+                                if laMap[i-self.subDivision][j]=='0':#porte en bas
                                     matx = j
-                                    maty = i-1
+                                    maty = i-self.subDivision
                                     trouver=True
                                     break
                         else:
                             raise IndexError
                     except IndexError: 
                         #sil'autre char est en dessous
-                        if laMap[i+1][j]==char:
+                        if laMap[i+self.subDivision][j]==char:
+                            print("3")
                             try:
-                                if laMap[i][j+1]=='0':#porte à droite
-                                    matx = j+1
+                                if laMap[i][j+self.subDivision]=='0':#porte à droite
+                                    matx = j+self.subDivision
                                     maty = i
                                     trouver=True
                                     break
-                                elif laMap[i+1][j] == ' ':
+                                elif laMap[i+self.subDivision][j] == ' ':
                                     raise IndexError
                             except IndexError:
-                                if laMap[i][j-1]=='0':#porte à gauche
-                                    matx = j-1
+                                if laMap[i][j-self.subDivision]=='0':#porte à gauche
+                                    matx = j-self.subDivision
                                     maty = i
                                     trouver=True                          
                                     break

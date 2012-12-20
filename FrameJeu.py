@@ -5,8 +5,9 @@ import MenuInventaire
 
 class FrameJeu():
     #############################Initialisation de variables#############################
-    def __init__(self,parent):
+    def __init__(self,parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions du jeu
         self.largeurJeu=4000
@@ -83,11 +84,10 @@ class FrameJeu():
         
         #affichage de toutes les tuiles de la map ainsi que le personnage et les objets
         #passe toutes les lignes de la map
-        for i in range(len(map)):
+        for i in range(0,len(map),self.subDivision):
             posTempX=posInitX
             posTempY=posInitY
-            for k in range(len(map[i])):
-                
+            for k in range(0,len(map[i]),self.subDivision):
                 self.affichageImage(map[i][k],posTempX,posTempY)
                 
                 #affichage du personnage s'il na pas déjà été affiché
@@ -110,7 +110,7 @@ class FrameJeu():
         tag="image"
         texte=None
         
-         if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
+        if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
             nomImage="zoning"
             #x,y=self.coordEcranAMatrice(posX,posY)
             #texte=str(y)+","+str(x)
@@ -161,24 +161,6 @@ class FrameJeu():
                 tempPosX, tempPosY = self.coordMatriceAEcran(i)
                 self.map.create_rectangle(tempPosX, tempPosY, tempPosX+31, tempPosY+31, fill='blue', tags="perso")
                 
-    def test(self,i):
-        for k in self.parent.parent.jeu.listeInterrupteur:
-            if k.nomMap == "F_E1S1":
-                x,y,x1,y1=k.obtenirLimite()
- 
-        depx=self.posDepartX
-        depy=self.posDepartY
-        
-        depx+=self.largeurTuile*x
-        depy+=self.hauteurTuile*y
-        depx1=self.posDepartX
-        depy1=self.posDepartY
-        
-        depx1+=self.largeurTuile*x1
-        depy1+=self.hauteurTuile*y1        
-        print(depx1,depy1,depx,depy)
-        self.map.create_rectangle(depx1, depy1, depx, depy, fill='red', tags="perso")
-                
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
@@ -197,6 +179,7 @@ class FrameJeu():
         self.posDepartX=(self.largeurJeu/2)-(laSalle.dictMap[perso.nomMap + " dimensions"][1]*self.largeurTuile/2)
         #calcul du centre de l'écran sur les y moins le nombre de colonne de la matrice 
         self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*self.hauteurTuile/2))
+        print(self.posDepartX,self.posDepartY)
         
     def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
@@ -206,11 +189,11 @@ class FrameJeu():
         return resteY,resteX
     
     def coordMatriceAEcran(self,divers):
-        depx=self.posDepartX
-        depy=self.posDepartY
+        depx=self.posDepartX+(divers.posMatX/(self.hauteurTuile/self.subDivision))
+        depy=self.posDepartY+(divers.posMatY/(self.largeurTuile/self.subDivision))
         
-        depx+=self.largeurTuile*divers.posMatX
-        depy+=self.hauteurTuile*divers.posMatY
+        #depx+=self.largeurTuile*divers.posMatX
+        #depy+=self.hauteurTuile*divers.posMatY
         
         return depx,depy
     

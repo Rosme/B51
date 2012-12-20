@@ -11,7 +11,7 @@ class Controleur():
     
     def demarrer(self):
         self.jeu = Modele.Jeu(self)
-        self.app = Vue.Application(self)
+        self.app = Vue.Application(self,self.jeu.subDivision)
         self.press = False
         self.contexte="menu"
         self.compteur=0

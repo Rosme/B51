@@ -11,8 +11,9 @@ import GestionImage
 import GestionSon
 
 class Application():
-    def __init__(self, parent):
+    def __init__(self, parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions de la fenêtre
         self.largeurFrame=1024
@@ -38,7 +39,7 @@ class Application():
         #création du hud du haut placé dans frameDuJeu
         self.hudH=HudHaut.HudHaut(self,self.root)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
-        self.frameJeu=FrameJeu.FrameJeu(self)
+        self.frameJeu=FrameJeu.FrameJeu(self,self.subDivision)
     
     #############################Appel pour afficher les interfaces#############################
     def menuPrincipal(self):

@@ -39,13 +39,13 @@ class Personnage():
         tempy = 0
         
         if mouvement[0]:
-            tempy-=1
+            tempy-=16
         if mouvement[1]:
-            tempx+=1
+            tempx+=16
         if mouvement[2]:
-            tempy+=1
+            tempy+=16
         if mouvement[3]:
-            tempx-=1
+            tempx-=16
         
         tempx+=self.posMatX
         tempy+=self.posMatY
@@ -130,5 +130,5 @@ class Personnage():
     
     def obtenirLimite(self):
         #limite pour les collisions
-        return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
+        return [self.posMatX-self.parent.subDivision, self.posMatY-self.parent.subDivision,self.posMatX+self.parent.subDivision,self.posMatY+self.parent.subDivision]
     
