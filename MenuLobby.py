@@ -8,6 +8,7 @@ class MenuLobby():
         self.parent = parent
         self.network = self.parent.parent.network
         self.frameMenuLobby = tkinter.Frame(self.parent.root)
+        self.inLobby = True
         
         #Image de fond
         self.fondEcran= tkinter.Canvas(self.frameMenuLobby,width=1024,height=768)
@@ -49,10 +50,12 @@ class MenuLobby():
         self.network.sendData(nd.StartGameMsg())
 
     def debuterPartie(self):
+        self.inLobby = False
         self.frameMenuLobby.pack_forget()
         self.parent.parent.enJeu() 
         
     def retour(self):
+        self.inLobby = False
         self.network.disconnect()
         self.frameMenuLobby.pack_forget()
         self.parent.menuP.menuPrincipal()
@@ -66,4 +69,5 @@ class MenuLobby():
     def updateClientList(self):
         self.network.recevoirDonnees()
 
-        self.parent.root.after(100, self.updateClientList)
+        if self.inLobby:
+            self.parent.root.after(100, self.updateClientList)

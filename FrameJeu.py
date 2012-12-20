@@ -91,9 +91,9 @@ class FrameJeu():
                 self.affichageImage(map[i][k],posTempX,posTempY)
                 
                 #affichage du personnage s'il na pas déjà été affiché
-                if self.persoAff==True:
+                #if self.persoAff==True:
                     #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
-                    if perso.posMatX<k and perso.posMatY<i: 
+                    if perso.posMatX == k+1 and perso.posMatY == i+1: 
                         self.affichagePerso(perso)
                 '''
                 #affichage des logomates
@@ -154,6 +154,11 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
+
+        for personnage in self.parent.parent.jeu.listePersonnage:
+            if personnage.nomMap == perso.nomMap:
+                x,y=self.coordMatriceAEcran(perso)
+                self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
     
     def affichageRoche(self,perso,listeRoche):
         for i in listeRoche:

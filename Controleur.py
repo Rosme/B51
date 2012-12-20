@@ -53,6 +53,9 @@ class Controleur():
 
             self.network.recevoirDonnees()
 
+    def mettreAJourAutreClient(self, id, events):
+        pass
+
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.contexte="enJeu"
