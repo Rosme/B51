@@ -133,7 +133,13 @@ class Jeu():
             for i in self.listeRoche:
                 if not i.aTerre:
                     i.bouge(self.joueur)
-    
+                    
+        if self.listeDeclencheur:
+            for i in self.listeDeclencheur:
+                i.collision(self.joueur)
+                i.activer()
+                break
+                
     def gestionMort(self):
         if self.joueur.race.vie<=0:
             self.joueur.mort()

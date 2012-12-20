@@ -201,7 +201,7 @@ class Interrupteur(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 26 and self.posMatY == 21:
+            if self.posMatX == 26*self.parent.subDivision and self.posMatY == 21*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(26, 14, map, "0", False)
                     if self.out:
@@ -240,8 +240,9 @@ class Interrupteur(Objet):
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)
+        Objet.__init__(self, parent, matX, matY, 0, 0, 0, -32, nomMap)
         self.active = False
+        self.aTerre = False
         
     def collision(self, perso):
         if not self.aTerre:
@@ -279,9 +280,11 @@ class Declencheur(Objet):
             self.active = False
             return False
         
-    def active(self, nomMap):
-        if nomMap == "F_E1S1":
-            pass
+    def activer(self):
+        if self.parent.joueur.nomMap == "R_E1S1":
+            if self.posMatX == 22*self.parent.subDivision and self.posMatY == 10*self.parent.subDivision:
+                if self.active:
+                    self.parent.joueur.posMatX = 18*self.parent.subDivision
         
 class Levier(Objet):
     def __init__(self, parent, matX, matY, force, energie, contreForce, nomMap):
