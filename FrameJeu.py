@@ -95,16 +95,32 @@ class FrameJeu():
                     #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
                     if perso.posMatX<k and perso.posMatY<i: 
                         self.affichagePerso(perso)
-						
-                '''
+                        
                 #affichage des logomates
+                '''
                 for p in self.parent.parent.jeu.listeLogomate:
                     if p.posMatX<k and p.posMatY<i:
                         x,y=self.coordMatriceAEcran(perso)
                         self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
-                '''   
+                '''
+                        
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
+
+
+        #on apelle la méthode affichageLogomate pour afficher le logomate
+        self.affichageLogomate(perso,map)
+
+    ### Affichage Logomate ### 
+    def affichageLogomate(self, perso,map):
+        self.map.delete("logo")
+        for i in range(len(map)):
+            for k in range(len(map[i])):
+                for p in self.parent.parent.jeu.listeLogomate:
+                    if p.posMatX<k and p.posMatY<i:
+                        x,y=self.coordMatriceAEcran(p)
+                        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="logo")
+
 
     def affichageImage(self,car,posX,posY):
         nomImage=None

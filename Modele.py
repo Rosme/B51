@@ -65,7 +65,7 @@ class Jeu():
                 if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                     self.joueur.posMatX=tempMatX
                     self.joueur.posMatY=tempMatY
-                    self.parent.actusliserPersonnage(self.joueur)
+                    self.parent.actusliserPersonnage(self.joueur, laMap)
     
     def coordProchaineZone(self,char):
         laMap=self.carte.s.salle
@@ -131,11 +131,15 @@ class Jeu():
             for i in self.listeRoche:
                 if not i.aTerre:
                     i.bouge(self.joueur)
-        
-        ### logomate deplacement ###
+                
+    def actuLogo(self):
         if self.listeLogomate:
             for i in self.listeLogomate:
+                print(i.ia.posMatX)
+                print(i.posMatX)
+                print("ligne")
                 i.ia.choisitDeplacement(self.carte.s.salle)
+                
     
     def gestionMort(self):
         if self.joueur.race.vie<=0:

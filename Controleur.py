@@ -40,11 +40,14 @@ class Controleur():
                 self.jeu.balle() 
             if self.compteur%6==0:
                 self.jeu.tire()
+
+            if self.compteur%7 == 0:
+                self.jeu.actuLogo()
                 
             self.compteur+=1
             if self.partieCommencer:
                 self.app.frameJeu.map.after(50,self.miseAJour)
-    
+                    
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.contexte="enJeu"
@@ -60,9 +63,10 @@ class Controleur():
         self.app.frameJeu.actualiserAffichage(perso,map)
         self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
-    def actusliserPersonnage(self,perso):
+    def actusliserPersonnage(self,perso, map):
         self.app.frameJeu.affichagePerso(perso)
         self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
+        self.app.frameJeu.affichageLogomate(perso, map)
 
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")

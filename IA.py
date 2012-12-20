@@ -7,10 +7,10 @@ import math
 class IA():
     def __init__(self,parent):
         self.parent = parent
-        self.posMatX = 11
-        self.posMatY = 11
-        self.destMatX = 16 ##destination dans la matrice
-        self.destMatY = 16 ##destination dans la matrice 
+        self.posMatX = self.parent.posMatX
+        self.posMatY = self.parent.posMatY
+        self.destMatX = 11 ##destination dans la matrice
+        self.destMatY = 3 ##destination dans la matrice 
         self.listeOuverte =[]  ## liste qui contient tout les noeud qui n'ont pas été analysé 
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
@@ -18,19 +18,25 @@ class IA():
         self.oldDestY =111111 #/j'ai mis des gros chiffres car j'ai pas trouver de facon de faire si il n'y a rien 
         self.i = 0
         self.first = True
+    
     def choisitAction(self):
         pass
         
     def choisitDeplacement(self,map):
-        ## le logomate choisit la destination
-        if self.posMatX != self.destMatX and self.posMatY != self.destMatY:
+        '''
+        ###################### À revoir les conditions ne sont pas adapter ######################
+        # le logomate choisit la destination
+        # le logomate ne se déplace pas horizontalement et verticalement , seulement en diagonale
+        #########################################################################################
+        '''
+        if self.arriverFin():
             if self.oldDestX != self.destMatX or self.oldDestY != self.destMatY: 
                     ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
                 self.chercheChemin(map)
                 
             self.calculDeplacement(self.listeMouvement[-1])
             self.listeMouvement.pop()
-		
+
     def chercheChemin(self,map):
         ## venir voir GAB pour le fonctionnement de la sélection de chemin 
         
@@ -39,7 +45,7 @@ class IA():
         self.listeFerme.append(self.noeudCourant)
         self.oldDestX = self.destMatX
         self.oldDestY = self.destMatY
-        while self.noeudCourant.posX != self.destMatX and self.noeudCourant.posY != self.destMatY:         
+        while self.arriverFin():         
             i = 1
             while i <10:
                 tempPosX,tempPosY = self.calculDirection(i)
@@ -179,22 +185,33 @@ class IA():
         self.listeFerme.append(noeudTemp)
         self.listeOuverte.remove(noeudTemp)
         return noeudTemp
-	        
+       
     def calculDeplacement(self,destination):
         ## on calcul la direction dans laquelle on doit se déplacer
         #0-haut,1-droite,2-bas,3-gauche
 
         if destination.posX > self.posMatX:
             self.posMatX +=1
+            self.parent.posMatX +=1
             
         elif destination.posX < self.posMatX:
             self.posMatX -=1
+            self.parent.posMatX -=1
             
         if destination.posY < self.posMatY:
             self.posMatY -=1
+            self.parent.posMatY -=1
             
         elif destination.posY > self.posMatY:
-            self.posMatY +=1   
+            self.posMatY +=1  
+            self.parent.posMatY +=1 
+     
+     ### Vérification si le logomate est arrivée a destination       
+    def arriverFin(self):
+        if self.posMatX == self.destMatX and self.posMatY == self.destMatY:
+            return True
+        else:
+            return False
         
         
 class Noeud():
