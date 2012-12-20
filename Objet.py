@@ -4,8 +4,8 @@ class Objet():
     def __init__(self, parent, matX, matY, padGauche, padHaut, padDroit, padBas, nomMap):
         self.parent = parent
         self.nomMap = nomMap
-        self.posMatX = matX
-        self.posMatY = matY
+        self.posMatX = matX*self.parent.subDivision
+        self.posMatY = matY*self.parent.subDivision
         self.padHaut = padHaut*self.parent.subDivision
         self.padBas = padBas*self.parent.subDivision
         self.padGauche = padGauche*self.parent.subDivision
@@ -330,7 +330,7 @@ class Levier(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 17 and self.posMatY == 16:
+            if self.posMatX == 17*self.parent.subDivision and self.posMatY == 16*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.salle = map
@@ -369,24 +369,28 @@ class Levier(Objet):
                 return False
         
     def ouvrePorte(self, ligne, colonne, map, car, simple):
-        temp=[]
-        tempLigne = map.pop(ligne)
-        i = 0
-        while i < colonne:
-            temp.append(tempLigne[i])
-            i+=1
+        ligne *=self.parent.subDivision
+        colonne *=self.parent.subDivision
+        for j in range(self.parent.subDivision):
+            temp=[]
+            tempLigne = map.pop(ligne+j)
+            i = 0
+            while i < colonne:
+                temp.append(tempLigne[i])
+                i+=1
+            for k in range(self.parent.subDivision):
+                temp.append(car)
+                i+=1
+            
+            if not simple:
+                temp.append(car)
+                i+=1
         
-        temp.append(car)
-        i+=1
-        if not simple:
-            temp.append(car)
-            i+=1
-    
-        while i < len(tempLigne):
-            temp.append(tempLigne[i])
-            i+=1    
-        
-        map.insert(ligne, temp)
+            while i < len(tempLigne):
+                temp.append(tempLigne[i])
+                i+=1    
+            
+            map.insert(ligne, temp)
 
     def tire(self):
         if self.energie - self.force <= 0:

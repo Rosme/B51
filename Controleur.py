@@ -35,10 +35,10 @@ class Controleur():
             if self.compteur%20==0:
                 #recharge de l'énergie de l'arme
                 self.jeu.rechargement()
-            if self.compteur%6==0:
+            if self.compteur%1==0:
                 #vérifie les collions du personnage et des balles
                 self.jeu.balle() 
-            if self.compteur%6==0:
+            if self.compteur%1==0:
                 self.jeu.tire()
                 
             self.compteur+=1
@@ -212,8 +212,10 @@ class Controleur():
     #prend a chaque deplacement de souris la nouvelle position en x,y de la souris
     def tireCoord(self,event):
         if self.jeu.mouvement[4]:
-            self.jeu.sourisX = event.x
-            self.jeu.sourisY = event.y
+            x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.joueur)
+            x-=self.app.largeurFrame/2
+            y-=self.app.hauteurFrame/2
+            self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
 
 if __name__ == '__main__':
     c = Controleur()

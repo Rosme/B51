@@ -151,10 +151,7 @@ class Jeu():
     def tire(self):
         if self.mouvement[4]:
             if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
-                balle = self.listeBalle[len(self.listeBalle)-1]
-            else:
-                balle = self.listeBalle[len(self.listeBalle)-1]
-                self.listeBalle.remove(balle);
+                balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
         self.collision(self.listePersonnage)

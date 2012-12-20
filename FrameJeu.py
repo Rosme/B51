@@ -166,7 +166,7 @@ class FrameJeu():
         #affichage de toutes les balles existantes 
         for i in listeBalle:
             x,y=self.coordMatriceAEcran(i)   
-            self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
+            self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
     
     def actualiserAffichage(self,perso,laSalle):
         self.map.delete(tkinter.ALL)
@@ -179,14 +179,13 @@ class FrameJeu():
         self.posDepartX=(self.largeurJeu/2)-(laSalle.dictMap[perso.nomMap + " dimensions"][1]*self.largeurTuile/2)
         #calcul du centre de l'écran sur les y moins le nombre de colonne de la matrice 
         self.posDepartY=(self.hauteurJeu/2)-((laSalle.dictMap[perso.nomMap + " dimensions"][0]*self.hauteurTuile/2))
-        print(self.posDepartX,self.posDepartY)
         
     def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
-        resteX = math.floor((x-self.posDepartX)/self.largeurTuile)
-        resteY = math.floor((y-self.posDepartY)/self.hauteurTuile)
+        resteX = math.floor((x-self.posDepartX)/(self.largeurTuile/self.subDivision))
+        resteY = math.floor((y-self.posDepartY)/(self.hauteurTuile/self.subDivision))
         
-        return resteY,resteX
+        return int(resteY),int(resteX)
     
     def coordMatriceAEcran(self,divers):
         depx=self.posDepartX+(divers.posMatX/(self.hauteurTuile/self.subDivision))
@@ -195,7 +194,7 @@ class FrameJeu():
         #depx+=self.largeurTuile*divers.posMatX
         #depy+=self.hauteurTuile*divers.posMatY
         
-        return depx,depy
+        return int(depx),int(depy)
     
     #############################Modification des scrollbars#############################
     def calculOffSet(self,x,y):
