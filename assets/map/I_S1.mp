@@ -9,7 +9,7 @@ b:MainRoom B:I_E1S1 n:I_E2S1 N:I_E3S1 v:I_E4S1 V:I_E5S1
        100001       
        100001       
        100001       
-       100001       
+       N0000n       
        N0000n       
        N0000n       
        100001       
