@@ -1,7 +1,7 @@
 40:40
-v:F_E2S4 m:F_E3S1
+V:F_E2S4 v:MainRoom
 
-111111111111111111mm11111111111111111111
+111111111111111111vv11111111111111111111
 1111111111111111112211111111111111111111
 1111110000000000000000000000000000011111
 1111100000000000000000000000000000001111
@@ -30,14 +30,14 @@ v:F_E2S4 m:F_E3S1
 1111100000000000000000000000000000011111
 1111110000000000000000000000000000111111
 1111111111111111110011111111111111111111
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1001                   
-                 1vv1                   
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1001fffffffffffffffffff
+fffffffffffffffff1VV1fffffffffffffffffff

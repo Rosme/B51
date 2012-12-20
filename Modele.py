@@ -23,7 +23,7 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_E1S1", "HELL"]
+        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_S1", "R_E1S1", "S_S1" , "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.subDivision = 1
         self.joueur = ""
@@ -49,7 +49,7 @@ class Jeu():
         
         tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
         
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n':
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX] == 'B' or laMap[tempMatY][tempMatX] == 'N' or laMap[tempMatY][tempMatX] == 'M' or laMap[tempMatY][tempMatX] == 'V':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
