@@ -13,7 +13,7 @@ class Objet():
         self.aTerre = True
         
     def obtenirLimite(self):
-        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padHaut, self.posMatY+self.padGauche]
+        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padGauche, self.posMatY+self.padHaut]
 
 class Sac(Objet):
     def __init__(self, parent, matX, matY, nomMap):
@@ -240,7 +240,7 @@ class Interrupteur(Objet):
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, 0, 0, 0, -32, nomMap)
+        Objet.__init__(self, parent, matX, matY, 0, 0, 0, 4, nomMap)
         self.active = False
         self.aTerre = False
         
@@ -248,6 +248,7 @@ class Declencheur(Objet):
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
+            print(limiteObjet[0], limiteObjet[1],limiteObjet[2],limiteObjet[3])
             j=0
             while j < 4:
                 if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
