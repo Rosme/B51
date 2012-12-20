@@ -45,6 +45,25 @@ class ConnecteurReseau():
 					for msg in data.msg:
 						if isinstance(msg, nd.StartGameMsg):
 							self.parent.app.menuL.debuterPartie()
+				elif isinstance(data, nd.ClientTickData):
+					for event in data.events:
+						if event == "MOVE_UP":
+							self.parent.jeu.mouvement[0] = True
+						if event == "MOVE_RIGHT":
+							self.parent.jeu.mouvement[1] = True
+						if event == "MOVE_DOWN":
+							self.parent.jeu.mouvement[2] = True
+						if event == "MOVE_LEFT":
+							self.parent.jeu.mouvement[3] = True
+						if event == "NO_UP":
+							self.parent.jeu.mouvement[0] = False
+						if event == "NO_RIGHT":
+							self.parent.jeu.mouvement[1] = False
+						if event == "NO_DOWN":
+							self.parent.jeu.mouvement[2] = False
+						if event == "NO_LEFT":
+							self.parent.jeu.mouvement[3] = False
+
 		except socket.timeout:
 			return None
 		except socket.error:

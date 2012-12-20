@@ -61,6 +61,7 @@ class Serveur():
 		self.newClient = False
 		self.listIdClient = nd.ListClientInfo()
 		self.msgQueue = nd.MsgQueue()
+		self.eventQueue = []
 
 		#Liste de booléen pour les id des joueurs
 		#Mis à False par défaut pour pouvoir les attribuer
@@ -97,6 +98,12 @@ class Serveur():
 				client.conn.send(bListMsg)
 			self.msgQueue.msg = []
 			self.statut = "jeu"
+		elif self.statut == "jeu":
+			for client in self.clients:
+				for event in self.eventQueue:
+					bEvent = pickle.dumps(event)
+					client.conn.send(bEvent)
+			self.eventQueue = []
 
 
 	def getListConn(self):
@@ -144,6 +151,8 @@ class Serveur():
 							elif isinstance(data, nd.StartGameMsg):
 								self.statut = "starting"
 								self.msgQueue.msg.append(data)
+							elif isinstance(data, nd.ClientTickData):
+								self.eventQueue.append(data)
 					except Exception as ex:
 						print("Erreur sur lecture de client. Deconnection: ")
 						self.removeClient(conn)

@@ -46,11 +46,15 @@ class ClientTickData():
 		self.id = id
 		self.events = events;
 
+class ClientListTick():
+	def __init__(self, list):
+		self.list = list
+
 class TotalTickInfo():
 	#Frame, ClientTickData
 	def __init__(self, tick, listEvents):
 		self.tick = tick
-		self.listEvents = tickData
+		self.listEvents = listEvents
 
 class NoConnect():
 	def __init__(self):

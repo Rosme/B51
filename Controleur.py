@@ -3,6 +3,7 @@ import Vue
 import Modele
 import os
 import ConnecteurReseau as Network
+import Netdata as nd
 
 class Controleur():
     ############################# Methode d'initialisation de l'aplication #############################
@@ -19,6 +20,8 @@ class Controleur():
         self.compteur=0
         self.partieCommencer=False
         self.app.menuPrincipal()
+
+        self.ownEventQueue = []
         
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
@@ -46,10 +49,10 @@ class Controleur():
             self.compteur+=1
             self.app.frameJeu.map.after(50,self.miseAJour)
 
+            self.network.sendData(nd.ClientTickData(self.network.id, self.ownEventQueue))
+
             self.network.recevoirDonnees()
 
-
-    
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
         self.contexte="enJeu"
@@ -121,13 +124,17 @@ class Controleur():
         key = event.char.upper()
         if self.contexte=="enJeu":
             if key == 'W':
-                self.jeu.mouvement[0]=True
+                #self.jeu.mouvement[0]=True
+                self.ownEventQueue.append("MOVE_UP")
             if key == 'D':
-                self.jeu.mouvement[1]=True
+                #self.jeu.mouvement[1]=True
+                self.ownEventQueue.append("MOVE_RIGHT")
             if key == 'S':
-                self.jeu.mouvement[2]=True
+                #self.jeu.mouvement[2]=True
+                self.ownEventQueue.append("MOVE_DOWN")
             if key == 'A':
-                self.jeu.mouvement[3]=True
+                #self.jeu.mouvement[3]=True
+                self.ownEventQueue.append("MOVE_LEFT")
                 
             if key == 'Q':
                 self.autoSoin()
@@ -164,13 +171,17 @@ class Controleur():
         
         if self.contexte=="enJeu":
             if key == 'W':
-                self.jeu.mouvement[0]=False
+                #self.jeu.mouvement[0]=False
+                self.ownEventQueue.append("NO_UP")
             if key == 'D':
-                self.jeu.mouvement[1]=False
+                #self.jeu.mouvement[1]=False
+                self.ownEventQueue.append("NO_RIGHT")
             if key == 'S':
-                self.jeu.mouvement[2]=False
+                #self.jeu.mouvement[2]=False
+                self.ownEventQueue.append("NO_DOWN")
             if key == 'A':
-                self.jeu.mouvement[3]=False
+                #self.jeu.mouvement[3]=False
+                self.ownEventQueue.append("NO_LEFT")
             if key == 'E':
                 self.press = False
             
