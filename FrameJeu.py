@@ -92,9 +92,9 @@ class FrameJeu():
                 
                 #affichage du personnage s'il na pas déjà été affiché
                 #if self.persoAff==True:
-                    #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
-                    if perso.posMatX == k+1 and perso.posMatY == i+1: 
-                        self.affichagePerso(perso)
+                #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
+                if perso.posMatX == k+1 and perso.posMatY == i+1: 
+                    self.affichagePerso(perso)
                 '''
                 #affichage des logomates
                 for p in self.parent.parent.jeu.listeLogomate:
