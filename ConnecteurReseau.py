@@ -64,9 +64,6 @@ class ConnecteurReseau():
 								self.parent.jeu.mouvement[2] = False
 							if event == "NO_LEFT":
 								self.parent.jeu.mouvement[3] = False
-					else:
-						
-
 		except socket.timeout:
 			return None
 		except socket.error:
