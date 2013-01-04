@@ -70,8 +70,8 @@ class Controleur():
     
     #############################Gestion de la mort#############################    
     def joueurMort(self,perso,laSalle):
-        self.app.frameJeu.debutDePartie(self.joueur,self.carte.s)
-        self.actualiserAffichageComplet(self.joueur,self.carte.s)
+        self.app.frameJeu.debutDePartie(perso,laSalle)
+        self.actualiserAffichageComplet(perso,laSalle)
     
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
