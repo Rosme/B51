@@ -22,6 +22,7 @@ class Controleur():
         self.app.menuPrincipal()
 
         self.ownEventQueue = []
+        self.totalEventQueue = []
         
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
@@ -49,9 +50,34 @@ class Controleur():
             self.compteur+=1
             self.app.frameJeu.map.after(50,self.miseAJour)
 
-            self.network.sendData(nd.ClientTickData(self.network.id, self.ownEventQueue))
+            self.network.sendData(nd.ClientTickInfo(self.network.id, self.compteur, self.ownEventQueue))
 
             self.network.recevoirDonnees()
+
+            for listEvents in self.totalEventQueue:
+                if self.compteur in listEvents:
+                    listEventData = self.totalEventQueue[self.compteur]
+                    for tickData in listEventData:
+                        if tickData.id == self.network.id:
+                            for event in data.events:
+                                if event == "MOVE_UP":
+                                    self.parent.jeu.mouvement[0] = True
+                                if event == "MOVE_RIGHT":
+                                    self.parent.jeu.mouvement[1] = True
+                                if event == "MOVE_DOWN":
+                                    self.parent.jeu.mouvement[2] = True
+                                if event == "MOVE_LEFT":
+                                    self.parent.jeu.mouvement[3] = True
+                                if event == "NO_UP":
+                                    self.parent.jeu.mouvement[0] = False
+                                if event == "NO_RIGHT":
+                                    self.parent.jeu.mouvement[1] = False
+                                if event == "NO_DOWN":
+                                    self.parent.jeu.mouvement[2] = False
+                                if event == "NO_LEFT":
+                                    self.parent.jeu.mouvement[3] = False
+            self.ownEventQueue = []
+
 
     def mettreAJourAutreClient(self, id, events):
         pass

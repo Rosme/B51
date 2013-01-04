@@ -62,6 +62,7 @@ class Serveur():
 		self.listIdClient = nd.ListClientInfo()
 		self.msgQueue = nd.MsgQueue()
 		self.eventQueue = []
+		self.treatedQueue = {}
 
 		#Liste de booléen pour les id des joueurs
 		#Mis à False par défaut pour pouvoir les attribuer
@@ -99,11 +100,15 @@ class Serveur():
 			self.msgQueue.msg = []
 			self.statut = "jeu"
 		elif self.statut == "jeu":
+			bEvents = pickle.dumps(self.treatedQueue)
 			for client in self.clients:
-				for event in self.eventQueue:
+				'''
+				for event in self.treatedQueue:
 					bEvent = pickle.dumps(event)
 					client.conn.send(bEvent)
-			self.eventQueue = []
+				'''
+				client.conn.send(bEvents)
+			self.treatedQueue = {}
 
 
 	def getListConn(self):
@@ -151,11 +156,18 @@ class Serveur():
 							elif isinstance(data, nd.StartGameMsg):
 								self.statut = "starting"
 								self.msgQueue.msg.append(data)
-							elif isinstance(data, nd.ClientTickData):
+							elif isinstance(data, nd.ClientTickInfo):
 								self.eventQueue.append(data)
 					except Exception as ex:
 						print("Erreur sur lecture de client. Deconnection: ")
 						self.removeClient(conn)
+
+	def updateFrames(self):
+		for event in self.eventQueue:
+			self.treatedQueue[event.tick+3] = []
+			self.treatedQueue[event.tick+3].append(nd.ClientTickData(event.id, event.events))
+
+		self.eventQueue = []
 
 
 serveur = Serveur()
@@ -163,6 +175,7 @@ while True:
 	serveur.recevoirConnexion()
 	serveur.sendData()
 	serveur.recvData()
+	serveur.updateFrames()
 
 '''
 import select 

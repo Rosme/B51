@@ -248,7 +248,7 @@ class Declencheur(Objet):
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
-            print(limiteObjet[0], limiteObjet[1],limiteObjet[2],limiteObjet[3])
+            #print(limiteObjet[0], limiteObjet[1],limiteObjet[2],limiteObjet[3])
             j=0
             while j < 4:
                 if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
