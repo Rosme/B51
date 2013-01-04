@@ -56,26 +56,27 @@ class Controleur():
 
             for listEvents in self.totalEventQueue:
                 if self.compteur in listEvents:
-                    listEventData = self.totalEventQueue[self.compteur]
+                    listEventData = listEvents[self.compteur]
                     for tickData in listEventData:
                         if tickData.id == self.network.id:
-                            for event in data.events:
+                            for event in tickData.events:
                                 if event == "MOVE_UP":
-                                    self.parent.jeu.mouvement[0] = True
+                                    self.jeu.mouvement[0] = True
                                 if event == "MOVE_RIGHT":
-                                    self.parent.jeu.mouvement[1] = True
+                                    self.jeu.mouvement[1] = True
                                 if event == "MOVE_DOWN":
-                                    self.parent.jeu.mouvement[2] = True
+                                    self.jeu.mouvement[2] = True
                                 if event == "MOVE_LEFT":
-                                    self.parent.jeu.mouvement[3] = True
+                                    self.jeu.mouvement[3] = True
                                 if event == "NO_UP":
-                                    self.parent.jeu.mouvement[0] = False
+                                    self.jeu.mouvement[0] = False
                                 if event == "NO_RIGHT":
-                                    self.parent.jeu.mouvement[1] = False
+                                    self.jeu.mouvement[1] = False
                                 if event == "NO_DOWN":
-                                    self.parent.jeu.mouvement[2] = False
+                                    self.jeu.mouvement[2] = False
                                 if event == "NO_LEFT":
-                                    self.parent.jeu.mouvement[3] = False
+                                    self.jeu.mouvement[3] = False
+                    listEvents.pop(self.compteur, None)
             self.ownEventQueue = []
 
 
