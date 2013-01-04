@@ -15,7 +15,7 @@ Charles
 
 Samuel
 
-Eduard --> eduardpirtea@gmail.com
+Eduard 
 
 David
 
