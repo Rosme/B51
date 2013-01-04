@@ -5,16 +5,17 @@ import MenuInventaire
 
 class FrameJeu():
     #############################Initialisation de variables#############################
-    def __init__(self,parent):
+    def __init__(self,parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions du jeu
         self.largeurJeu=4000
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=31
-        self.hauteurTuile=31
+        self.largeurTuile=32
+        self.hauteurTuile=32
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
@@ -83,18 +84,17 @@ class FrameJeu():
         
         #affichage de toutes les tuiles de la map ainsi que le personnage et les objets
         #passe toutes les lignes de la map
-        for i in range(len(map)):
+        for i in range(0,len(map),self.subDivision):
             posTempX=posInitX
             posTempY=posInitY
-            for k in range(len(map[i])):
-                
+            for k in range(0,len(map[i]),self.subDivision):
                 self.affichageImage(map[i][k],posTempX,posTempY)
                 
                 #affichage du personnage s'il na pas déjà été affiché
-                #if self.persoAff==True:
-                #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
-                if perso.posMatX == k+1 and perso.posMatY == i+1: 
-                    self.affichagePerso(perso)
+                if self.persoAff==True:
+                    #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
+                    if perso.posMatX<k and perso.posMatY<i: 
+                        self.affichagePerso(perso)
                 '''
                 #affichage des logomates
                 for p in self.parent.parent.jeu.listeLogomate:
@@ -154,11 +154,6 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
-
-        for personnage in self.parent.parent.jeu.listePersonnage:
-            if personnage.nomMap == perso.nomMap:
-                x,y=self.coordMatriceAEcran(perso)
-                self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
     
     def affichageRoche(self,perso,listeRoche):
         for i in listeRoche:
@@ -166,30 +161,12 @@ class FrameJeu():
                 tempPosX, tempPosY = self.coordMatriceAEcran(i)
                 self.map.create_rectangle(tempPosX, tempPosY, tempPosX+31, tempPosY+31, fill='blue', tags="perso")
                 
-    def test(self,i):
-        for k in self.parent.parent.jeu.listeInterrupteur:
-            if k.nomMap == "F_E1S1":
-                x,y,x1,y1=k.obtenirLimite()
- 
-        depx=self.posDepartX
-        depy=self.posDepartY
-        
-        depx+=self.largeurTuile*x
-        depy+=self.hauteurTuile*y
-        depx1=self.posDepartX
-        depy1=self.posDepartY
-        
-        depx1+=self.largeurTuile*x1
-        depy1+=self.hauteurTuile*y1        
-        print(depx1,depy1,depx,depy)
-        self.map.create_rectangle(depx1, depy1, depx, depy, fill='red', tags="perso")
-                
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
         for i in listeBalle:
             x,y=self.coordMatriceAEcran(i)   
-            self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
+            self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
     
     def actualiserAffichage(self,perso,laSalle):
         self.map.delete(tkinter.ALL)
@@ -205,19 +182,19 @@ class FrameJeu():
         
     def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
-        resteX = math.floor((x-self.posDepartX)/self.largeurTuile)
-        resteY = math.floor((y-self.posDepartY)/self.hauteurTuile)
+        resteX = math.floor((x-self.posDepartX)/(self.largeurTuile/self.subDivision))
+        resteY = math.floor((y-self.posDepartY)/(self.hauteurTuile/self.subDivision))
         
-        return resteY,resteX
+        return int(resteY),int(resteX)
     
     def coordMatriceAEcran(self,divers):
-        depx=self.posDepartX
-        depy=self.posDepartY
+        depx=self.posDepartX+(divers.posMatX/(self.hauteurTuile/self.subDivision))
+        depy=self.posDepartY+(divers.posMatY/(self.largeurTuile/self.subDivision))
         
-        depx+=self.largeurTuile*divers.posMatX
-        depy+=self.hauteurTuile*divers.posMatY
+        #depx+=self.largeurTuile*divers.posMatX
+        #depy+=self.hauteurTuile*divers.posMatY
         
-        return depx,depy
+        return int(depx),int(depy)
     
     #############################Modification des scrollbars#############################
     def calculOffSet(self,x,y):

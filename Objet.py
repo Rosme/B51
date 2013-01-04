@@ -4,16 +4,16 @@ class Objet():
     def __init__(self, parent, matX, matY, padGauche, padHaut, padDroit, padBas, nomMap):
         self.parent = parent
         self.nomMap = nomMap
-        self.posMatX = matX
-        self.posMatY = matY
-        self.padHaut = padHaut
-        self.padBas = padBas
-        self.padGauche = padGauche
-        self.padDroit = padDroit
+        self.posMatX = matX*self.parent.subDivision
+        self.posMatY = matY*self.parent.subDivision
+        self.padHaut = padHaut*self.parent.subDivision
+        self.padBas = padBas*self.parent.subDivision
+        self.padGauche = padGauche*self.parent.subDivision
+        self.padDroit = padDroit*self.parent.subDivision
         self.aTerre = True
         
     def obtenirLimite(self):
-        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padHaut, self.posMatY+self.padGauche]
+        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padGauche, self.posMatY+self.padHaut]
 
 class Sac(Objet):
     def __init__(self, parent, matX, matY, nomMap):
@@ -201,7 +201,7 @@ class Interrupteur(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 26 and self.posMatY == 21:
+            if self.posMatX == 26*self.parent.subDivision and self.posMatY == 21*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(26, 14, map, "0", False)
                     if self.out:
@@ -240,13 +240,15 @@ class Interrupteur(Objet):
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
-        Objet.__init__(self, parent, matX, matY, -1, -1, 1, 1, nomMap)
+        Objet.__init__(self, parent, matX, matY, 0, 0, 0, 4, nomMap)
         self.active = False
+        self.aTerre = False
         
     def collision(self, perso):
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
+            print(limiteObjet[0], limiteObjet[1],limiteObjet[2],limiteObjet[3])
             j=0
             while j < 4:
                 if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
@@ -279,9 +281,11 @@ class Declencheur(Objet):
             self.active = False
             return False
         
-    def active(self, nomMap):
-        if nomMap == "F_E1S1":
-            pass
+    def activer(self):
+        if self.parent.joueur.nomMap == "R_E1S1":
+            if self.posMatX == 22*self.parent.subDivision and self.posMatY == 10*self.parent.subDivision:
+                if self.active:
+                    self.parent.joueur.posMatX = 18*self.parent.subDivision
         
 class Levier(Objet):
     def __init__(self, parent, matX, matY, force, energie, contreForce, nomMap):
@@ -330,7 +334,7 @@ class Levier(Objet):
     def activer(self):
         if self.parent.joueur.nomMap == "F_E1S1":
             map = self.parent.carte.s.salle
-            if self.posMatX == 17 and self.posMatY == 16:
+            if self.posMatX == 17*self.parent.subDivision and self.posMatY == 16*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.salle = map
@@ -369,24 +373,28 @@ class Levier(Objet):
                 return False
         
     def ouvrePorte(self, ligne, colonne, map, car, simple):
-        temp=[]
-        tempLigne = map.pop(ligne)
-        i = 0
-        while i < colonne:
-            temp.append(tempLigne[i])
-            i+=1
+        ligne *=self.parent.subDivision
+        colonne *=self.parent.subDivision
+        for j in range(self.parent.subDivision):
+            temp=[]
+            tempLigne = map.pop(ligne+j)
+            i = 0
+            while i < colonne:
+                temp.append(tempLigne[i])
+                i+=1
+            for k in range(self.parent.subDivision):
+                temp.append(car)
+                i+=1
+            
+            if not simple:
+                temp.append(car)
+                i+=1
         
-        temp.append(car)
-        i+=1
-        if not simple:
-            temp.append(car)
-            i+=1
-    
-        while i < len(tempLigne):
-            temp.append(tempLigne[i])
-            i+=1    
-        
-        map.insert(ligne, temp)
+            while i < len(tempLigne):
+                temp.append(tempLigne[i])
+                i+=1    
+            
+            map.insert(ligne, temp)
 
     def tire(self):
         if self.energie - self.force <= 0:

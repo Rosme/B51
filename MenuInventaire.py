@@ -1,4 +1,5 @@
 import tkinter
+import Item
 
 class MenuInventaire():
     def __init__(self, parent):

@@ -23,9 +23,9 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4", "R_S1", "R_E1S1", "S_S1" , "HELL"]
+        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4" , "R_S1", "R_E1S1", "S_S1" , "HELL"]
         self.nbObjMap = len(self.listeMap)
-        self.subDivision = 1
+        self.subDivision = 32
         self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
@@ -49,14 +49,14 @@ class Jeu():
         
         tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
         
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX] == 'B' or laMap[tempMatY][tempMatX] == 'N' or laMap[tempMatY][tempMatX] == 'M' or laMap[tempMatY][tempMatX] == 'V':
+        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
             car=laMap[tempMatY][tempMatX]
             self.joueur.nomMap=self.carte.s.changementCarte(car)
             self.coordProchaineZone(car)
             self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
         else:
             try:    
-                if laMap[tempMatY+1][tempMatX]!='1':
+                if laMap[tempMatY+self.subDivision][tempMatX]!='1':
                     if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                         self.joueur.posMatX=tempMatX
                         self.joueur.posMatY=tempMatY
@@ -72,43 +72,43 @@ class Jeu():
         
         trouver=False
         
-        for i in range(len(laMap)):
-            for j in range(len(laMap[i])):
+        for i in range(0,len(laMap),self.subDivision):
+            for j in range(0,len(laMap[i]),self.subDivision):
                 if laMap[i][j]==char:
                     try:
                         #si l'autre char à droite
-                        if laMap[i][j+1]==char:
+                        if laMap[i][j+self.subDivision]==char:
                             try:
-                                print(laMap[i+1][j])
-                                if laMap[i+1][j]=='0':#porte en haut
+                                if laMap[i+self.subDivision][j]=='0':#porte en haut
                                     matx = j
-                                    maty = i+1
+                                    maty = i+self.subDivision
                                     trouver=True
                                     break
-                                elif laMap[i+1][j] == ' ':
+                                elif laMap[i+self.subDivision][j] == ' ':
                                     raise IndexError
                             except IndexError:
-                                if laMap[i-1][j]=='0':#porte en bas
+                                if laMap[i-self.subDivision][j]=='0':#porte en bas
                                     matx = j
-                                    maty = i-1
+                                    maty = i-self.subDivision
                                     trouver=True
                                     break
                         else:
                             raise IndexError
                     except IndexError: 
                         #sil'autre char est en dessous
-                        if laMap[i+1][j]==char:
+                        if laMap[i+self.subDivision][j]==char:
+                            print("3")
                             try:
-                                if laMap[i][j+1]=='0':#porte à droite
-                                    matx = j+1
+                                if laMap[i][j+self.subDivision]=='0':#porte à droite
+                                    matx = j+self.subDivision
                                     maty = i
                                     trouver=True
                                     break
-                                elif laMap[i+1][j] == ' ':
+                                elif laMap[i+self.subDivision][j] == ' ':
                                     raise IndexError
                             except IndexError:
-                                if laMap[i][j-1]=='0':#porte à gauche
-                                    matx = j-1
+                                if laMap[i][j-self.subDivision]=='0':#porte à gauche
+                                    matx = j-self.subDivision
                                     maty = i
                                     trouver=True                          
                                     break
@@ -133,7 +133,13 @@ class Jeu():
             for i in self.listeRoche:
                 if not i.aTerre:
                     i.bouge(self.joueur)
-    
+                    
+        if self.listeDeclencheur:
+            for i in self.listeDeclencheur:
+                i.collision(self.joueur)
+                i.activer()
+                break
+                
     def gestionMort(self):
         if self.joueur.race.vie<=0:
             self.joueur.mort()
@@ -151,10 +157,7 @@ class Jeu():
     def tire(self):
         if self.mouvement[4]:
             if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
-                balle = self.listeBalle[len(self.listeBalle)-1]
-            else:
-                balle = self.listeBalle[len(self.listeBalle)-1]
-                self.listeBalle.remove(balle);
+                balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
         self.collision(self.listePersonnage)
@@ -184,7 +187,7 @@ class Jeu():
         
     
     def nouveauLogo(self, posMat,nomMap):
-        pers = Personnage()
+        pers = Personnage(self)
         pers.nouveauPersonnage("Logo", Race.Logomate())
         pers.posMatX = int(posMat[0])
         pers.posMatY = int(posMat[1])
@@ -215,7 +218,7 @@ class Jeu():
         self.listeLevier.append(levier)
     
     def nouveauJoueur(self, race, nom):
-        self.joueur = Personnage()
+        self.joueur = Personnage(self)
         if race == "Humain":
             self.joueur.nouveauPersonnage(nom, Race.Humain())
         
