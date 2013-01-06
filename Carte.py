@@ -87,13 +87,26 @@ class Salle():
             for i in ligne.splitlines():
                 i.split('\n')
                 self.salle.append(i)
+            self.subdivisionMap()
             self.dictMap[j] = self.salle
             #print(j)
             #print(self.salle)
             self.salle = list()
         
         self.fichier.close()
-    
+        
+    def subdivisionMap(self):
+        salleDivise=list()
+        tempLigne=list()        
+        for i in range(len(self.salle)):
+            for k in range(len(self.salle[i])):
+                for u in range(self.parent.parent.subDivision):
+                    tempLigne.append(self.salle[i][k])
+            for r in range(self.parent.parent.subDivision):
+                salleDivise.append(tempLigne)
+            tempLigne=list()
+        self.salle=salleDivise
+                    
     def liensCarte(self):
         self.dictionnaireLiens = dict()
         self.assoCarte = self.fichier.readline()

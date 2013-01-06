@@ -1,21 +1,21 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
 import math
-import HudHaut
 import MenuInventaire
 
 class FrameJeu():
     #############################Initialisation de variables#############################
-    def __init__(self,parent):
+    def __init__(self,parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions du jeu
         self.largeurJeu=4000
         self.hauteurJeu=4000
         
         #dimensions des tuiles affichées
-        self.largeurTuile=40
-        self.hauteurTuile=40
+        self.largeurTuile=32
+        self.hauteurTuile=32
         
         #assignation de valeur plus tard pour la position des scrollbars
         self.offX=0
@@ -36,9 +36,6 @@ class FrameJeu():
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
         
-        #création du hud du haut placé dans frameDuJeu
-        self.hudHaut=HudHaut.HudHaut(self,perso,self.parent.root)
-        
         self.menuI= MenuInventaire.MenuInventaire(self)
         
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
@@ -46,9 +43,6 @@ class FrameJeu():
         
         #affichage de la map, des objets et du personnage à l'écran
         self.affichageMap(perso,laSalle)
-        
-        #ajout des écouteur (souris, clavier)
-        self.ajoutEcouteur()
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -72,16 +66,6 @@ class FrameJeu():
         self.frameHudBas= tkinter.Frame(self.parent.root)
         self.conversation=tkinter.Canvas(self.frameHudBas, width=self.largeurJeu, height=self.parent.hauteurFrame-self.hauteurJeu,bg="blue")
         self.conversation.pack()'''
-    
-    #############################Ajout d'ecouteur#############################
-    def ajoutEcouteur(self):
-        #ecouteur lié au clavier       
-        self.parent.root.bind("<KeyPress>",self.parent.parent.peseKeyGestion)
-        self.parent.root.bind("<KeyRelease>",self.parent.parent.relacheKeyGestion)
-        #ecouteur lié à la souris
-        self.parent.root.bind("<Button-1>", self.parent.parent.peseTire)
-        self.parent.root.bind("<ButtonRelease-1>", self.parent.parent.relacheTire)
-        self.parent.root.bind("<B1-Motion>", self.parent.parent.tireCoord)
         
     #############################Affichage à l'écran#############################
     def affichageMap(self,perso,laSalle):
@@ -100,11 +84,10 @@ class FrameJeu():
         
         #affichage de toutes les tuiles de la map ainsi que le personnage et les objets
         #passe toutes les lignes de la map
-        for i in range(len(map)):
+        for i in range(0,len(map),self.subDivision):
             posTempX=posInitX
             posTempY=posInitY
-            for k in range(len(map[i])):
-                
+            for k in range(0,len(map[i]),self.subDivision):
                 self.affichageImage(map[i][k],posTempX,posTempY)
                 
                 #affichage du personnage s'il na pas déjà été affiché
@@ -121,27 +104,54 @@ class FrameJeu():
                 '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-    
+
+        #on apelle la méthode affichageLogomate pour afficher le logomate
+        self.affichageLogomate(perso,map)
+        
+    ### Affichage Logomate ###
+    def affichageLogomate(self,perso,map):
+        self.map.delete("logo")
+        for i in range(0,len(map),self.subDivision):
+            for k in range(0,len(map[i]),self.subDivision):
+                for p in self.parent.parent.jeu.listeLogomate:
+                    if p.posMatX<k and p.posMatY<i:
+                        x,y=self.coordMatriceAEcran(p)
+                        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tag="logo")
+                        
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
         texte=None
         
-        if car=='0' or car=='v' or car=='b' or car=='n' or car=='m':
-            nomImage="gazon"
+        if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
+            nomImage="zoning"
             #x,y=self.coordEcranAMatrice(posX,posY)
             #texte=str(y)+","+str(x)
+        elif car=='0':
+            nomImage="gazon"
         elif car=='1' or car=='2':
             nomImage="roche"
-        elif car=='3':
+            posY-=14
+            '''elif car=='3':
             tag="coffre"
-            nomImage="coffre"
+            nomImage=d"coffre"'''
         elif car=='e':
             texte="Levier"
         elif car=='w':
             texte="Switch"
         elif car=='f':
             nomImage="feu"
+        elif car=="u":
+            nomImage="simonBleu"
+        elif car=="i":
+            nomImage="simonJaune"
+        elif car=="o":
+            nomImage="simonRouge"
+        elif car=="p":
+            nomImage="simonVert"
+        elif car=="y":
+            nomImage="eau"
+        
         
         if nomImage:
             self.map.create_image(posX,posY,image=self.parent.getImage(nomImage),tags=tag)
@@ -157,12 +167,19 @@ class FrameJeu():
         self.calculOffSet(x,y)
         #puisque le perso a été affiché on ne l'affiche plus
         self.persoAff=False
+    
+    def affichageRoche(self,perso,listeRoche):
+        for i in listeRoche:
+            if i.nomMap == perso.nomMap:
+                tempPosX, tempPosY = self.coordMatriceAEcran(i)
+                self.map.create_rectangle(tempPosX, tempPosY, tempPosX+31, tempPosY+31, fill='blue', tags="perso")
+                
         
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
         for i in listeBalle:
             x,y=self.coordMatriceAEcran(i)   
-            self.map.create_oval(x-5, y-5, x+5,y+5, fill='red', tags="balle")
+            self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
     
     def actualiserAffichage(self,perso,laSalle):
         self.map.delete(tkinter.ALL)
@@ -178,19 +195,19 @@ class FrameJeu():
         
     def coordEcranAMatrice(self,x,y):
         #permet de trouver à partie des coordonnées d'un personnage dans l'écran sa position sur la matrice
-        resteX = math.floor((x-self.posDepartX)/self.largeurTuile)
-        resteY = math.floor((y-self.posDepartY)/self.hauteurTuile)
+        resteX = math.floor((x-self.posDepartX)/(self.largeurTuile/self.subDivision))
+        resteY = math.floor((y-self.posDepartY)/(self.hauteurTuile/self.subDivision))
         
-        return resteY,resteX
+        return int(resteY),int(resteX)
     
     def coordMatriceAEcran(self,divers):
-        depx=self.posDepartX
-        depy=self.posDepartY
+        depx=self.posDepartX+(divers.posMatX/(self.hauteurTuile/self.subDivision))
+        depy=self.posDepartY+(divers.posMatY/(self.largeurTuile/self.subDivision))
         
-        depx+=self.largeurTuile*divers.posMatX
-        depy+=self.hauteurTuile*divers.posMatY
+        #depx+=self.largeurTuile*divers.posMatX
+        #depy+=self.hauteurTuile*divers.posMatY
         
-        return depx,depy
+        return int(depx),int(depy)
     
     #############################Modification des scrollbars#############################
     def calculOffSet(self,x,y):
@@ -233,6 +250,13 @@ class FrameJeu():
             self.map.xview(tkinter.MOVETO,self.offY)
     
     #############################Supression de masse#############################    
-    def effaceTout(self):
+    def effacer(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False
+
+'''       
+class Test():
+    def __init__(self,p,o):
+        self.posMatX=p
+        self.posMatY=o
+''' 

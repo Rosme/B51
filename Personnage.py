@@ -2,19 +2,24 @@
 import pickle
 import Item
 import Objet
-from Balle import *
 import IA
+from Balle import *
         
 class Personnage():
-    def __init__(self):
-        pass
+    def __init__(self,parent):
+        self.parent=parent
         
     def nouveauPersonnage(self, nom, race):
+        #nom du joueur
         self.nom = nom
+        #nom de la map dans lqeul il se trouve
         self.nomMap = "MainRoom"
+        #objet race contenant toutes les informations spécifiques au races
         self.race = race
-        self.posMatX = 11
-        self.posMatY = 11
+        #position dans la matrice
+        self.posMatX = 11*self.parent.subDivision
+        self.posMatY = 11*self.parent.subDivision
+        #initialisation des éléments de l'inventaire
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
         self.inventaire.ajouterItem(Item.Armure(8, 4, "Armure", "Q.Q", 0.8, 100, 1))
@@ -23,26 +28,30 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(3, 1, "Seringue", "Soigne de 100 de vies", 100))
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
-		##Code Gab
+        
+        ### Fonctionnement Logomate ###
         if self.race.race == "Logomate":
-            self.ia = IA.IA(self)
-    
+            self.ia=IA.IA(self)
     def mort(self):
+        #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
+        self.posMatX = 11*self.parent.subDivision
+        self.posMatY = 11*self.parent.subDivision
     
     def bouge(self,mouvement):
+        #si un mouvement a t demandé on calcul le futur position dans la matrice du perso
         tempx = 0
         tempy = 0
         
         if mouvement[0]:
-            tempy-=1
+            tempy-=16
         if mouvement[1]:
-            tempx+=1
+            tempx+=16
         if mouvement[2]:
-            tempy+=1
+            tempy+=16
         if mouvement[3]:
-            tempx-=1
+            tempx-=16
         
         tempx+=self.posMatX
         tempy+=self.posMatY
@@ -76,7 +85,9 @@ class Personnage():
                     self.subit(reste)
                     break
     
+    
     def tire(self, listeBalle, x, y):
+        #si on possède un arme l'arme perd de l'énergie et une balle est crée
         for i in self.inventaire.items:
             #ID de l'arme = 7
             if i.id == 7:
@@ -107,6 +118,7 @@ class Personnage():
                 break
          
     def subit(self, degat):
+        #soustraction des dégats au joueur
         self.race.vie -= degat
     
     def autoSoin(self):
@@ -123,5 +135,6 @@ class Personnage():
                 break
     
     def obtenirLimite(self):
-        return [self.posMatX-1, self.posMatY-1,self.posMatX+1,self.posMatY+1]
+        #limite pour les collisions
+        return [self.posMatX-self.parent.subDivision, self.posMatY-self.parent.subDivision,self.posMatX+self.parent.subDivision,self.posMatY+self.parent.subDivision]
     

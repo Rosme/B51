@@ -1,3 +1,4 @@
+# -*- coding: ISO-8859-1 -*-
 import tkinter
 
 class MenuConnexion():
@@ -21,21 +22,26 @@ class MenuConnexion():
         self.boutonRetour.place(x=400,y=650)
         
     def menuConnexion(self):
+        #affichage à l'écran du menu connexion
         self.frameMenuConnexion.pack()
         
     def retour(self):
+        #retour au menu principal après avoir appuyé sur le bouton retour
         self.frameMenuConnexion.pack_forget()
         self.parent.menuPrincipal()
      
     def rejoindreUnePartie(self):
+        #demande du joueur de rejoindre une partie
         self.frameMenuConnexion.pack_forget()
         self.parent.menuLobby()
         
     def nouveauServeur(self):
+        #demande du joueur de créer un nouveau serveur/une nouvelle partie
         self.frameMenuConnexion.pack_forget()
         self.parent.menuLobby()
         
     def validerIPort(self):
+        #validation non implanté, mais prete à l'être voir le commentaire ci-bas
         self.rejoindreUnePartie()
        
     '''

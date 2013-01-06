@@ -5,12 +5,15 @@ import MenuNouvellePartie
 import MenuChargerPartie
 import MenuConnexion
 import MenuLobby
+import HudHaut
 import FrameJeu
 import GestionImage
+import GestionSon
 
 class Application():
-    def __init__(self, parent):
+    def __init__(self, parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions de la fenêtre
         self.largeurFrame=1024
@@ -22,6 +25,7 @@ class Application():
         self.root.resizable(0,0)
         self.root.title("AreaB51")
         
+        self.gestionnaireSon = GestionSon.GestionSon()
         self.gestionnaireImage = GestionImage.GestionImage()
         
         self.initialisationInterfaces()
@@ -32,11 +36,14 @@ class Application():
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
         self.menuL = MenuLobby.MenuLobby(self)
+        #création du hud du haut placé dans frameDuJeu
+        self.hudH=HudHaut.HudHaut(self,self.root)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
-        self.frameJeu=FrameJeu.FrameJeu(self)
+        self.frameJeu=FrameJeu.FrameJeu(self,self.subDivision)
     
     #############################Appel pour afficher les interfaces#############################
     def menuPrincipal(self):
+        self.gestionnaireSon.startTest("hello")
         self.menuP.menuPrincipal()
         
     def menuNouvellePartie(self,event):
@@ -53,12 +60,22 @@ class Application():
         self.menuL.menuLobby()
         
     def jeu(self,perso,laSalle):
+        self.gestionnaireSon.startTest("inGame")
+        self.hudHaut(perso)
         self.frameJeu.initMap(perso,laSalle)
+        
+    def hudHaut(self,perso):
+        self.hudH.hudHaut(perso)
+    
+    def effaceTout(self):
+        self.hudH.effacer()
+        self.frameJeu.effacer()
     
     #############################Retourne l'objet de l'image#############################
     def getImage(self,nomImage):
-        return self.gestionnaireImage.getImage(nomImage)
+        return self.gestionnaireImage.getImage(nomImage)    
     
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
+        self.gestionnaireSon.stopAll()
         self.root.quit()
