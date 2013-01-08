@@ -21,17 +21,15 @@ class FrameJeu():
         self.offX=0
         self.offY=0
     
-    def debutDePartie(self,perso,listePerso, laSalle):
-        #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
-        self.persoAff=True
-		
+    def debutDePartie(self,perso,laSalle):		
         #position des premiers blocs
-        for player in listePerso:
-            self.calculPositionDepart(self.parent.parent.getMap(player.nomMap),player)
+        self.calculPositionDepart(laSalle,perso)
     
-    def initMap(self,perso,listePerso,laSalle):
+    def initMap(self,perso,listePerso):
+        laSalle = self.parent.parent.getMap()
+        
         #appelé une seule fois à la création d'une partie
-        self.debutDePartie(perso,listePerso,laSalle)
+        self.debutDePartie(perso,laSalle)
         
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
@@ -43,7 +41,7 @@ class FrameJeu():
         self.dispositionPrincipale()
         
         #affichage de la map, des objets et du personnage à l'écran
-        self.affichageMap(perso,listePerso,laSalle)
+        self.affichageMap(perso,listePerso)
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -69,14 +67,12 @@ class FrameJeu():
         self.conversation.pack()'''
         
     #############################Affichage à l'écran#############################
-    def affichageMap(self,perso,listePerso,laSalle):
-        map=laSalle.salle
+    def affichageMap(self,perso,listePerso): 
+        map = self.parent.parent.getMapByName(perso.nomMap)
         
-        #calcul de la position de la scrollbar pour voir le personnage
-        x,y=self.coordMatriceAEcran(perso)
+        x,y=self.coordMatriceAEcran(perso) 
         self.calculOffSet(x,y)
-        
-        #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
+        self.effaceLesPersos()
         
         #position de la tuile la plus haute affiché dans l'écran
         posInitX=self.posDepartX
@@ -93,7 +89,7 @@ class FrameJeu():
                 for pers in listePerso:
                     if pers.nomMap == perso.nomMap:
                         #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
-                        if pers.posMatX==k and pers.posMatY==i+1:
+                        if pers.posMatX==k and pers.posMatY==i:
                             self.affichagePerso(pers)
                 '''
                 #affichage des logomates
@@ -104,7 +100,7 @@ class FrameJeu():
                 '''   
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
-
+        
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
@@ -112,8 +108,6 @@ class FrameJeu():
         
         if car=='v' or car=='b' or car=='n' or car=='m' or car=='B' or car=='V' or car=='N' or car=='M':
             nomImage="zoning"
-            #x,y=self.coordEcranAMatrice(posX,posY)
-            #texte=str(y)+","+str(x)
         elif car=='0':
             nomImage="gazon"
         elif car=='1' or car=='2':
@@ -147,13 +141,13 @@ class FrameJeu():
     
     def affichagePerso(self,perso):
         #affichage du personnage
-        #on supprime le perso précedement affiché
-        self.map.delete("perso")
         x,y=self.coordMatriceAEcran(perso)
+        
+        if perso.id == self.parent.parent.getIdPlayer():
+            self.calculOffSet(x,y)
+            
         self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
-        self.calculOffSet(x,y)
-        #puisque le perso a été affiché on ne l'affiche plus
-        self.persoAff=False
+
     
     def affichageRoche(self,perso,listeRoche):
         for i in listeRoche:
@@ -168,9 +162,9 @@ class FrameJeu():
             x,y=self.coordMatriceAEcran(i)   
             self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
     
-    def actualiserAffichage(self,perso,laSalle):
+    def actualiserAffichage(self,perso,listePerso):
         self.map.delete(tkinter.ALL)
-        self.affichageMap(perso,laSalle)
+        self.affichageMap(perso,listePerso)
     
     #############################Calcul de postion#############################
     def calculPositionDepart(self,laSalle,perso):
@@ -190,9 +184,6 @@ class FrameJeu():
     def coordMatriceAEcran(self,divers):
         depx=self.posDepartX+(divers.posMatX/(self.hauteurTuile/self.subDivision))
         depy=self.posDepartY+(divers.posMatY/(self.largeurTuile/self.subDivision))
-        
-        #depx+=self.largeurTuile*divers.posMatX
-        #depy+=self.hauteurTuile*divers.posMatY
         
         return int(depx),int(depy)
     
@@ -240,10 +231,6 @@ class FrameJeu():
     def effacer(self):
         self.frameDuJeu.pack_forget()
         self.parent.parent.partieCommencer=False
-
-'''       
-class Test():
-    def __init__(self,p,o):
-        self.posMatX=p
-        self.posMatY=o
-''' 
+    def effaceLesPersos(self):
+        #on supprime le perso précedement affiché
+        self.map.delete("perso")

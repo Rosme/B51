@@ -31,14 +31,14 @@ class Serveur():
 		self.port = port
 		self.restart()
 
-		#Création du socket pour les connexions, ainsi que son paramétrage
+		#Cr?ation du socket pour les connexions, ainsi que son param?trage
 		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		s.bind(('', self.port))
 		s.listen(5)
 		self.socket = s
 
 	def recevoirConnexion(self):
-		#On va accepter les connexions uniquement si on est en-dessous du nombre de joueur maximal ou la partie n'est pas commencé
+		#On va accepter les connexions uniquement si on est en-dessous du nombre de joueur maximal ou la partie n'est pas commenc?
 		if self.qteConnect < self.maxConnect and self.statut == "demarrer":
 			incoming, wlist, xlist = select.select([self.socket], [], [], 0.05) #Obtention de connexion
 			for connection in incoming:
@@ -55,9 +55,9 @@ class Serveur():
 				self.restart()
 
 	def restart(self):
-		self.statut = "demarrer" #Le statut représente l'état du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
+		self.statut = "demarrer" #Le statut repr?sente l'?tat du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
 		self.maxConnect = 8
-		self.clients = [] #Maximum de 8, contient chaque client connecté au serveur
+		self.clients = [] #Maximum de 8, contient chaque client connect? au serveur
 		self.qteConnect = len(self.clients)
 		self.newClient = False
 		self.listIdClient = nd.ListClientInfo()
@@ -65,8 +65,8 @@ class Serveur():
 		self.eventQueue = []
 		self.treatedQueue = {}
 
-		#Liste de booléen pour les id des joueurs
-		#Mis à False par défaut pour pouvoir les attribuer
+		#Liste de bool?en pour les id des joueurs
+		#Mis ? False par d?faut pour pouvoir les attribuer
 		self.boolIdConnect = []
 		for i in range(self.maxConnect):
 			self.boolIdConnect.append(False)
@@ -78,7 +78,7 @@ class Serveur():
 				return i
 		return -1 #Aucun ID Disponible
 
-	#Met à jour le nombre de clients et les id dans la liste
+	#Met ? jour le nombre de clients et les id dans la liste
 	def updateQteClients(self):
 		self.qteConnect = self.boolIdConnect.count(True)
 		self.newClient = True
@@ -154,7 +154,7 @@ class Serveur():
 						bData = conn.recv(4096)
 						if bData:
 							data = pickle.loads(bData)
-							if isinstance(data, nd.ClientInfo): #Récupération des infos du joueur
+							if isinstance(data, nd.ClientInfo): #R?cup?ration des infos du joueur
 								print("New client: " + str(data.nom) + " / " + str(data.race))
 								client = self.findClientByConnection(conn)
 								client.nom = data.nom
@@ -218,7 +218,7 @@ class Serveur():
 
 	def demarrer(self, client = None, donnees = None):
 		self.statut = "demarrer"
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#création du socket
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#cr?ation du socket
 		s.bind(('', self.port))
 		s.listen(5)
 		self.socket = s
@@ -233,13 +233,13 @@ class Serveur():
 	
 	def deconnecterClients(self):
 		for client in self.clients:
-			client.conn.close()			#déconnecte le client à partir de la liste
+			client.conn.close()			#d?connecte le client ? partir de la liste
 
 	def clientDeconnection(self, client, donnees = None):
 		print("Client Deconnecte")
 		msg = nd.Message("ok-deconnection")
 		bMsg = pickle.dumps(msg)			
-		client.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
+		client.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien d?connect?
 		infoClient = self.obtenirInfoClient(client)
 		self.idConnect[infoClient.id] = False
 		self.clients.remove(infoClient)
@@ -279,7 +279,7 @@ class Serveur():
 
 				for client in toRead:
 					try:
-						data = pickle.loads(client.recv(4096))				#desérialise les données reçu
+						data = pickle.loads(client.recv(4096))				#des?rialise les donn?es re?u
 						if isinstance(data, nd.PersoInfo):
 							info = self.genererId(data)
 							cl = self.obtenirInfoClient(client)
