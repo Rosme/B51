@@ -102,13 +102,23 @@ class Serveur():
 			self.statut = "jeu"
 		elif self.statut == "jeu":
 			bEvents = pickle.dumps(self.treatedQueue)
+			iii = 0
 			for client in self.clients:
+
 				'''
 				for event in self.treatedQueue:
 					bEvent = pickle.dumps(event)
 					client.conn.send(bEvent)
 				'''
 				client.conn.send(bEvents)
+				print("Envoie " + str(iii))
+				for event in self.treatedQueue:
+					for cl in self.treatedQueue[event]:
+						print(cl.events)
+				iii += 1
+				if iii%2 == 0:
+					iii = 0
+
 			self.treatedQueue = {}
 
 

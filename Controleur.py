@@ -56,10 +56,9 @@ class Controleur():
             for listEvents in self.totalEventQueue:
                 if self.compteur in listEvents: #Si on est dans le frame avec des events
                     listEventData = listEvents[self.compteur] #List des evenements pour le frame
-                    '''
                     for tickData in listEventData: #Liste des events par id au frame
                         self.jeu.treatEventsById(tickData)
-                    '''
+                    
                     for tick in listEventData:
                         print(tick.events)
                     listEvents.pop(self.compteur, None) #On enleve le frame de la liste
