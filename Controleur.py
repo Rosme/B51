@@ -48,7 +48,6 @@ class Controleur():
                 self.jeu.tire()
                 
             self.compteur+=1
-            self.app.frameJeu.map.after(50,self.miseAJour)
 
             self.network.sendData(nd.ClientTickInfo(self.network.id, self.compteur, self.ownEventQueue))
 
@@ -78,6 +77,8 @@ class Controleur():
                                     self.jeu.mouvement[3] = False
                     listEvents.pop(self.compteur, None)
             self.ownEventQueue = []
+
+            self.app.frameJeu.map.after(50,self.miseAJour)
 
 
     def mettreAJourAutreClient(self, id, events):
