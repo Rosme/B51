@@ -10,10 +10,7 @@ import Objet
 class Jeu():
     def __init__(self, parent):
         self.parent = parent
-        self.mouvement = list() 
-        #0-haut,1-droite,2-bas,3-gauche,4-tire
-        for i in range(5):
-            self.mouvement.append(False)
+
         self.listeInterrupteur = list()
         self.listeDeclencheur = list()
         self.listePersonnage = list()
@@ -26,7 +23,7 @@ class Jeu():
         self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4" , "R_S1", "R_E1S1", "S_S1" , "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.subDivision = 32
-        self.joueur = ""
+        #self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
         self.sourisX = 0
@@ -47,27 +44,28 @@ class Jeu():
     def bougePersonnage(self):
         laMap=self.carte.s.salle
         
-        tempMatX, tempMatY = self.joueur.bouge(self.mouvement)
-        
-        if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
-            car=laMap[tempMatY][tempMatX]
-            self.joueur.nomMap=self.carte.s.changementCarte(car)
-            self.coordProchaineZone(car)
-            self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
-        else:
-            try:    
-                if laMap[tempMatY+self.subDivision][tempMatX]!='1':
+        for joueur in self.listePersonnage:
+            tempMatX, tempMatY = joueur.bouge()
+            
+            if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
+                car=laMap[tempMatY][tempMatX]
+                joueur.nomMap=self.carte.s.changementCarte(car)
+                self.coordProchaineZone(car, joueur)
+                self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+            else:
+                try:    
+                    if laMap[tempMatY+self.subDivision][tempMatX]!='1':
+                        if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                            joueur.posMatX=tempMatX
+                            joueur.posMatY=tempMatY
+                            self.parent.actusliserPersonnage(joueur)
+                except:
                     if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                        self.joueur.posMatX=tempMatX
-                        self.joueur.posMatY=tempMatY
-                        self.parent.actusliserPersonnage(self.joueur)
-            except:
-                if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                    self.joueur.posMatX=tempMatX
-                    self.joueur.posMatY=tempMatY
-                    self.parent.actusliserPersonnage(self.joueur)
+                        joueur.posMatX=tempMatX
+                        joueur.posMatY=tempMatY
+                        sellf.parent.actusliserPersonnage(joueur)
     
-    def coordProchaineZone(self,char):
+    def coordProchaineZone(self,char, joueur):
         laMap=self.carte.s.salle
         
         trouver=False
@@ -115,11 +113,12 @@ class Jeu():
             if trouver:
                 break
 
-        self.joueur.posMatY=maty
-        self.joueur.posMatX=matx        
+        joueur.posMatY=maty
+        joueur.posMatX=matx        
         
     
     def activationObjet(self):
+        '''
         if self.listeInterrupteur:
             for i in self.listeInterrupteur:
                 i.collision(self.joueur)
@@ -139,25 +138,41 @@ class Jeu():
                 i.collision(self.joueur)
                 i.activer()
                 break
+        '''
+        pass
                 
     def gestionMort(self):
+        '''
         if self.joueur.race.vie<=0:
             self.joueur.mort()
             self.carte.s.salle=self.carte.s.dictMap[self.joueur.nomMap]
             self.parent.joueurMort(self.joueur,self.carte.s)
+        '''
+        ownPlayer = self.getPlayerById(self.parent.network.id)
+        if ownPlayer.race.vie <= 0:
+            ownPlayer.mort()
+            self.carte.s.salle = self.carte.s.dictMap[ownPlayer.nomMap]
+            self.parent.joueurMort(ownPlayer, self.carte.s)
 
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
+        '''
         self.joueur.recharge()
         if self.listeLevier:
             for i in self.listeLevier:
                 if i.energie != i.max_energie:
                     i.recharge()
+        '''
+        ownPlayer = self.getPlayerById(self.parent.network.id)
+        ownPlayer.recharge()
                     
     def tire(self):
+        '''
         if self.mouvement[4]:
             if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
                 balle = self.listeBalle[len(self.listeBalle)-1]    
+        '''
+        pass
 
     def balle(self):
         self.collision(self.listePersonnage)
@@ -169,7 +184,7 @@ class Jeu():
         temp = self.listeBalle
         
         for i in self.listeBalle:
-            i.bouge(self.joueur)
+            #i.bouge(self.joueur)
             '''
             if i.veloY<0 and i.veloX<0:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
@@ -217,25 +232,49 @@ class Jeu():
         levier = Objet.Levier(self, int(posMat[0]), int(posMat[1]), 10, 100, 2, nomMap)
         self.listeLevier.append(levier)
     
-    def nouveauJoueur(self, race, nom):
-        self.joueur = Personnage(self)
+    def nouveauJoueur(self, id, race, nom):
+        joueur = Personnage(self, id)
         if race == "Humain":
-            self.joueur.nouveauPersonnage(nom, Race.Humain())
-        
+            joueur.nouveauPersonnage(nom, Race.Humain())
         elif race == "Irki":
-            self.joueur.nouveauPersonnage(nom, Race.Irki())
-            
+            joueur.nouveauPersonnage(nom, Race.Irki())
         elif race == "Popamu":
-            self.joueur.nouveauPersonnage(nom, Race.Popamu())
-            
+            joueur.nouveauPersonnage(nom, Race.Popamu()) 
         elif race == "Atarix":
-            self.joueur.nouveauPersonnage(nom, Race.Atarix())
+            joueur.nouveauPersonnage(nom, Race.Atarix())
+        self.listePersonnage.append(joueur)
         
-    def rajoutMetal(self):
-        self.joueur.inventaire.ajouterItem(Item.Upgradable(0, "Metal", "Metal Scrap used to craft Guns and Armors"))
+    def rajoutMetal(self, id):
+        self.getPlayerById(self.parent.network.id).inventaire.ajouterItem(Item.Upgradable(0, "Metal", "Metal Scrap used to craft Guns and Armors"))
         
     def rajoutElectro(self):
-        self.joueur.inventaire.ajouterItem(Item.Upgradable(1, "Electronique", "Electronic parts used to craft Armors and Dematerializator"))
+        self.getPlayerById(self.parent.network.id).inventaire.ajouterItem(Item.Upgradable(1, "Electronique", "Electronic parts used to craft Armors and Dematerializator"))
         
     def rajoutBatterie(self):
-        self.joueur.inventaire.ajouterItem(Item.Upgradable(2, "Batterie", "Battery used to craft Guns and Dematerializator"))
+        self.getPlayerById(self.parent.network.id).inventaire.ajouterItem(Item.Upgradable(2, "Batterie", "Battery used to craft Guns and Dematerializator"))
+
+    def getPlayerById(self, id):
+        for player in self.listePersonnage:
+            if player.id == id:
+                return player
+        return None
+
+    def treatEventsById(self, tickData):
+        player = self.getPlayerById(tickData.id)
+        for event in tickData.events:
+            if event == "MOVE_UP":
+                player.mouvement[0] = True
+            if event == "MOVE_RIGHT":
+                player.mouvement[1] = True
+            if event == "MOVE_DOWN":
+                player.mouvement[2] = True
+            if event == "MOVE_LEFT":
+                player.mouvement[3] = True
+            if event == "NO_UP":
+                player.mouvement[0] = False
+            if event == "NO_RIGHT":
+                player.mouvement[1] = False
+            if event == "NO_DOWN":
+                player.mouvement[2] = False
+            if event == "NO_LEFT":
+                player.mouvement[3] = False

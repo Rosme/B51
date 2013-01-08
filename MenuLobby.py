@@ -49,7 +49,9 @@ class MenuLobby():
     def lancerSignal(self):
         self.network.sendData(nd.StartGameMsg())
 
-    def debuterPartie(self):
+    def debuterPartie(self, playerList):
+        for player in playerList:
+            self.parent.parent.nouveauJoueur(player.id, player.race, player.nom)
         self.inLobby = False
         self.frameMenuLobby.pack_forget()
         self.parent.parent.enJeu() 

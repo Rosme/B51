@@ -34,7 +34,7 @@ class Controleur():
             #on active les switchs,leviers,etc
             self.jeu.activationObjet()
             #on actualise le hud du haut
-            self.app.hudH.actualiser(self.jeu.joueur)
+            self.app.hudH.actualiser(self.jeu.getPlayerById(self.network.id))
             #on vérifie que le joueur n'est pas mort
             self.jeu.gestionMort()
             
@@ -54,10 +54,12 @@ class Controleur():
             self.network.recevoirDonnees()
 
             for listEvents in self.totalEventQueue:
-                if self.compteur in listEvents:
-                    listEventData = listEvents[self.compteur]
-                    for tickData in listEventData:
-                        if tickData.id == self.network.id:
+                if self.compteur in listEvents: #Si on est dans le frame avec des events
+                    listEventData = listEvents[self.compteur] #List des evenements pour le frame
+                    for tickData in listEventData: #Liste des events par id au frame
+                        self.jeu.treatEventsById(tickData)
+                        '''
+                        if tickData.id == self.network.id: 
                             for event in tickData.events:
                                 if event == "MOVE_UP":
                                     self.jeu.mouvement[0] = True
@@ -75,7 +77,8 @@ class Controleur():
                                     self.jeu.mouvement[2] = False
                                 if event == "NO_LEFT":
                                     self.jeu.mouvement[3] = False
-                    listEvents.pop(self.compteur, None)
+                        '''
+                    listEvents.pop(self.compteur, None) #On enleve le frame de la liste
             self.ownEventQueue = []
 
             self.app.frameJeu.map.after(50,self.miseAJour)
@@ -88,9 +91,9 @@ class Controleur():
     def enJeu(self):
         self.contexte="enJeu"
         self.partieCommencer=True
-        self.app.frameJeu.debutDePartie(self.jeu.joueur,self.jeu.carte.s)
+        self.app.frameJeu.debutDePartie(self.jeu.getPlayerById(self.network.id),self.jeu.carte.s)
         self.jeu.carte.chargeObjets()
-        self.app.jeu(self.jeu.joueur,self.jeu.carte.s)
+        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.carte.s)
         #ajout des écouteur (souris, clavier)
         self.ajoutEcouteur()
         self.miseAJour()
@@ -116,8 +119,8 @@ class Controleur():
     def raceInfo(self, race):
         return self.jeu.info(race)
         
-    def nouveauJoueur(self, race, nom):
-        self.jeu.nouveauJoueur(race, nom)
+    def nouveauJoueur(self, id, race, nom):
+        self.jeu.nouveauJoueur(id, race, nom)
         
     def autoSoin(self):
         self.jeu.joueur.autoSoin()
@@ -225,10 +228,10 @@ class Controleur():
                 self.press = False
                 self.contexte="menu"
                 self.compteur=0
-                self.partieCommencer=False 
-                for i in self.jeu.mouvement:
-                    i=False
-                
+                self.partieCommencer=False
+                self.jeu.listePersonnage = list()
+
+
                 self.app.initialisationInterfaces()
                 self.app.menuPrincipal()
                 if self.network.socket != None:

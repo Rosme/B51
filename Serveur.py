@@ -17,6 +17,7 @@ class Client():
 		self.address = address
 		self.id = id
 		self.nom = ""
+		self.race = ""
 
 #Classe Wrapper pour les Joueurs
 class Joueur():
@@ -83,7 +84,7 @@ class Serveur():
 		self.newClient = True
 		self.listIdClient = nd.ListClientInfo()
 		for client in self.clients:
-			self.listIdClient.list.append(nd.ClientInfo(client.id, client.nom))
+			self.listIdClient.list.append(nd.ClientInfo(client.id, client.nom, client.race))
 
 	def sendData(self):
 		#On est pas encore dans le jeu, la seule chose qu'on envoie c'est la liste des clients
@@ -144,9 +145,10 @@ class Serveur():
 						if bData:
 							data = pickle.loads(bData)
 							if isinstance(data, nd.ClientInfo): #Récupération des infos du joueur
-								print("New client: " + str(data.nom))
+								print("New client: " + str(data.nom) + " / " + str(data.race))
 								client = self.findClientByConnection(conn)
 								client.nom = data.nom
+								client.race = data.race
 								self.updateQteClients()
 							elif isinstance(data, nd.ClientDisconnect):
 								print("Client disconnected")

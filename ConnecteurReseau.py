@@ -12,17 +12,16 @@ class ConnecteurReseau():
 		self.id = -1
 		self.socket = None
 		self.nom = None
+		self.race = None
 		self.playerList = None
 
-	def connecter(self, adresse, port, nom):
+	def connecter(self, adresse, port):
 		#Mise à jour des informations du client
 		self.adresse = adresse
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((adresse, port))
 		self.socket.settimeout(0.01)
-
-		self.nom = nom
 
 	def recevoirDonnees(self):
 		try:
@@ -31,7 +30,7 @@ class ConnecteurReseau():
 				data = pickle.loads(bData)
 				if isinstance(data, nd.ClientId):
 					self.id = data.id
-					clientInfo = nd.ClientInfo(self.id, self.nom)
+					clientInfo = nd.ClientInfo(self.id, self.nom, self.race)
 					self.sendData(clientInfo)
 					return True
 				elif isinstance(data, nd.ListClientInfo):
@@ -44,32 +43,13 @@ class ConnecteurReseau():
 				elif isinstance(data, nd.MsgQueue):
 					for msg in data.msg:
 						if isinstance(msg, nd.StartGameMsg):
-							self.parent.app.menuL.debuterPartie()
-				elif isinstance(data, nd.ClientTickData):
-					if data.id == self.id:
-						for event in data.events:
-							if event == "MOVE_UP":
-								self.parent.jeu.mouvement[0] = True
-							if event == "MOVE_RIGHT":
-								self.parent.jeu.mouvement[1] = True
-							if event == "MOVE_DOWN":
-								self.parent.jeu.mouvement[2] = True
-							if event == "MOVE_LEFT":
-								self.parent.jeu.mouvement[3] = True
-							if event == "NO_UP":
-								self.parent.jeu.mouvement[0] = False
-							if event == "NO_RIGHT":
-								self.parent.jeu.mouvement[1] = False
-							if event == "NO_DOWN":
-								self.parent.jeu.mouvement[2] = False
-							if event == "NO_LEFT":
-								self.parent.jeu.mouvement[3] = False
+							self.parent.app.menuL.debuterPartie(self.playerList)
 				else:
 					self.parent.totalEventQueue.append(data)
 		except socket.timeout:
 			return None
-		except socket.error:
-			print("Erreur sur la connexion au serveur")
+		except socket.error as ex:
+			print("Erreur sur la connexion au serveur: ")
 
 	def sendData(self, data = None):
 		if data != None:

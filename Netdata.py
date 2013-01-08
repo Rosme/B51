@@ -14,9 +14,10 @@ class MsgQueue():
 		self.msg = []
 
 class ClientInfo():
-	def __init__(self, id, nom):
+	def __init__(self, id, nom, race):
 		self.nom = nom
 		self.id = id
+		self.race = race
 
 class StartGameMsg():
 	def __init__(self):

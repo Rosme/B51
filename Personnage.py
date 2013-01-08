@@ -5,8 +5,13 @@ import Objet
 from Balle import *
         
 class Personnage():
-    def __init__(self,parent):
+    def __init__(self,parent, id):
         self.parent=parent
+        self.id = id
+        self.mouvement = list() 
+        #0-haut,1-droite,2-bas,3-gauche,4-tire
+        for i in range(5):
+            self.mouvement.append(False)
         
     def nouveauPersonnage(self, nom, race):
         #nom du joueur
@@ -35,18 +40,18 @@ class Personnage():
         self.posMatX = 11*self.parent.subDivision
         self.posMatY = 11*self.parent.subDivision
     
-    def bouge(self,mouvement):
+    def bouge(self):
         #si un mouvement a t demandé on calcul le futur position dans la matrice du perso
         tempx = 0
         tempy = 0
         
-        if mouvement[0]:
+        if self.mouvement[0]:
             tempy-=16
-        if mouvement[1]:
+        if self.mouvement[1]:
             tempx+=16
-        if mouvement[2]:
+        if self.mouvement[2]:
             tempy+=16
-        if mouvement[3]:
+        if self.mouvement[3]:
             tempx-=16
         
         tempx+=self.posMatX
