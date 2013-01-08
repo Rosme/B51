@@ -136,9 +136,6 @@ class Jeu():
     def actuLogo(self):
         if self.listeLogomate:
             for i in self.listeLogomate:
-                print(i.ia.posMatX)
-                print(i.posMatX)
-                print("ligne")
                 i.ia.choisitDeplacement(self.carte.s.salle)
                     
         if self.listeDeclencheur:

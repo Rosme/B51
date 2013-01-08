@@ -65,6 +65,9 @@ class Carte():
 
     def convertion(self, variable): #convertir les positions (5:5) en liste [(5,5) ...]
         tempo = variable.split(":")
+        #print("asfa",tempo[0]," * ", self.parent.subDivision, " = " ,tempo[0]*self.parent.subDivision)
+        tempo[0] = int(tempo[0]) * self.parent.subDivision
+        tempo[1] = int(tempo[1]) * self.parent.subDivision
         return tempo
 
 class Salle():

@@ -9,8 +9,8 @@ class IA():
         self.parent = parent
         self.posMatX = self.parent.posMatX
         self.posMatY = self.parent.posMatY
-        self.destMatX = 11 ##destination dans la matrice
-        self.destMatY = 3 ##destination dans la matrice 
+        self.destMatX = 11*self.parent.parent.subDivision ##destination dans la matrice
+        self.destMatY = 11*self.parent.parent.subDivision ##destination dans la matrice 
         self.listeOuverte =[]  ## liste qui contient tout les noeud qui n'ont pas été analysé 
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
@@ -25,13 +25,14 @@ class IA():
     def choisitDeplacement(self,map):
         '''
         ###################### À revoir les conditions ne sont pas adapter ######################
-        # le logomate choisit la destination
+        # le logomate choisit la destinationsd
         # le logomate ne se déplace pas horizontalement et verticalement , seulement en diagonale
         #########################################################################################
         '''
         if self.arriverFin():
             if self.oldDestX != self.destMatX or self.oldDestY != self.destMatY: 
                     ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
+                print("yo")
                 self.chercheChemin(map)
                 
             self.calculDeplacement(self.listeMouvement[-1])
@@ -105,7 +106,7 @@ class IA():
         #//p-t essayer de rendre sa beau 
         if map[posX][posY] == 1:
             return 2,2
-            
+        #if map[posX*self.parent.parent.subDivision][posY*self.parent.parent.subDivision] == 1:    
         elif direction%2 ==1:
             if direction == 1:
                 if map[posX+1][posY] == 1 and map[posX][posY-1] == 1:
