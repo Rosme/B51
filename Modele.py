@@ -51,7 +51,7 @@ class Jeu():
                 car=laMap[tempMatY][tempMatX]
                 joueur.nomMap=self.carte.s.changementCarte(car)
                 self.coordProchaineZone(car, joueur)
-                self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                self.parent.actualiserAffichageComplet(joueur,self.carte.s)
             else:
                 try:    
                     if laMap[tempMatY+self.subDivision][tempMatX]!='1':
@@ -262,6 +262,7 @@ class Jeu():
     def treatEventsById(self, tickData):
         player = self.getPlayerById(tickData.id)
         for event in tickData.events:
+            print(str(tickData.id) + " : " + event)
             if event == "MOVE_UP":
                 player.mouvement[0] = True
             if event == "MOVE_RIGHT":
@@ -278,3 +279,6 @@ class Jeu():
                 player.mouvement[2] = False
             if event == "NO_LEFT":
                 player.mouvement[3] = False
+
+    def getSalleByName(self, name):
+        return self.carte.s

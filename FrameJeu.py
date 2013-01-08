@@ -21,16 +21,17 @@ class FrameJeu():
         self.offX=0
         self.offY=0
     
-    def debutDePartie(self,perso,laSalle):
+    def debutDePartie(self,perso,listePerso, laSalle):
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
         self.persoAff=True
 		
         #position des premiers blocs
-        self.calculPositionDepart(laSalle,perso)
+        for player in listePerso:
+            self.calculPositionDepart(self.parent.parent.getMap(player.nomMap),player)
     
-    def initMap(self,perso,laSalle):
+    def initMap(self,perso,listePerso,laSalle):
         #appelé une seule fois à la création d'une partie
-        self.debutDePartie(perso,laSalle)
+        self.debutDePartie(perso,listePerso,laSalle)
         
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
@@ -42,7 +43,7 @@ class FrameJeu():
         self.dispositionPrincipale()
         
         #affichage de la map, des objets et du personnage à l'écran
-        self.affichageMap(perso,laSalle)
+        self.affichageMap(perso,listePerso,laSalle)
     
     def dispositionPrincipale(self):
         #appelé une seule fois lors d'une nouvelle partie
@@ -68,7 +69,7 @@ class FrameJeu():
         self.conversation.pack()'''
         
     #############################Affichage à l'écran#############################
-    def affichageMap(self,perso,laSalle):
+    def affichageMap(self,perso,listePerso,laSalle):
         map=laSalle.salle
         
         #calcul de la position de la scrollbar pour voir le personnage
@@ -76,7 +77,6 @@ class FrameJeu():
         self.calculOffSet(x,y)
         
         #variable déterminant si le joueur a déjà été affiché (utilisé dans affichagePerso)
-        self.persoAff=True
         
         #position de la tuile la plus haute affiché dans l'écran
         posInitX=self.posDepartX
@@ -90,11 +90,11 @@ class FrameJeu():
             for k in range(0,len(map[i]),self.subDivision):
                 self.affichageImage(map[i][k],posTempX,posTempY)
                 
-                #affichage du personnage s'il na pas déjà été affiché
-                if self.persoAff==True:
-                    #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
-                    if perso.posMatX<k and perso.posMatY<i: 
-                        self.affichagePerso(perso)
+                for pers in listePerso:
+                    if pers.nomMap == perso.nomMap:
+                        #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
+                        if pers.posMatX==k and pers.posMatY==i+1:
+                            self.affichagePerso(pers)
                 '''
                 #affichage des logomates
                 for p in self.parent.parent.jeu.listeLogomate:

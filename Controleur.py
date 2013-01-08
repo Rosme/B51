@@ -56,32 +56,16 @@ class Controleur():
             for listEvents in self.totalEventQueue:
                 if self.compteur in listEvents: #Si on est dans le frame avec des events
                     listEventData = listEvents[self.compteur] #List des evenements pour le frame
+                    '''
                     for tickData in listEventData: #Liste des events par id au frame
                         self.jeu.treatEventsById(tickData)
-                        '''
-                        if tickData.id == self.network.id: 
-                            for event in tickData.events:
-                                if event == "MOVE_UP":
-                                    self.jeu.mouvement[0] = True
-                                if event == "MOVE_RIGHT":
-                                    self.jeu.mouvement[1] = True
-                                if event == "MOVE_DOWN":
-                                    self.jeu.mouvement[2] = True
-                                if event == "MOVE_LEFT":
-                                    self.jeu.mouvement[3] = True
-                                if event == "NO_UP":
-                                    self.jeu.mouvement[0] = False
-                                if event == "NO_RIGHT":
-                                    self.jeu.mouvement[1] = False
-                                if event == "NO_DOWN":
-                                    self.jeu.mouvement[2] = False
-                                if event == "NO_LEFT":
-                                    self.jeu.mouvement[3] = False
-                        '''
+                    '''
+                    for tick in listEventData:
+                        print(tick.events)
                     listEvents.pop(self.compteur, None) #On enleve le frame de la liste
             self.ownEventQueue = []
 
-            self.app.frameJeu.map.after(50,self.miseAJour)
+            self.app.frameJeu.map.after(25,self.miseAJour)
 
 
     def mettreAJourAutreClient(self, id, events):
@@ -91,9 +75,9 @@ class Controleur():
     def enJeu(self):
         self.contexte="enJeu"
         self.partieCommencer=True
-        self.app.frameJeu.debutDePartie(self.jeu.getPlayerById(self.network.id),self.jeu.carte.s)
+        
         self.jeu.carte.chargeObjets()
-        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.carte.s)
+        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.listePersonnage,self.jeu.carte.s)
         #ajout des écouteur (souris, clavier)
         self.ajoutEcouteur()
         self.miseAJour()
@@ -268,6 +252,9 @@ class Controleur():
             x-=self.app.largeurFrame/2
             y-=self.app.hauteurFrame/2
             self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
+
+    def getMap(self, name):
+        return self.jeu.getSalleByName(name)
 
 if __name__ == '__main__':
     c = Controleur()

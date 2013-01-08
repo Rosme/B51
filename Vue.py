@@ -61,10 +61,10 @@ class Application():
     def menuLobby(self):
         self.menuL.menuLobby()
         
-    def jeu(self,perso,laSalle):
+    def jeu(self,perso,listePerso,laSalle):
         self.gestionnaireSon.startTest("inGame")
         self.hudHaut(perso)
-        self.frameJeu.initMap(perso,laSalle)
+        self.frameJeu.initMap(perso,listePerso,laSalle)
         
     def hudHaut(self,perso):
         self.hudH.hudHaut(perso)

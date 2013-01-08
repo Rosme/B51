@@ -167,6 +167,8 @@ class Serveur():
 	def updateFrames(self):
 		for event in self.eventQueue:
 			self.treatedQueue[event.tick+2] = []
+
+		for event in self.eventQueue:
 			self.treatedQueue[event.tick+2].append(nd.ClientTickData(event.id, event.events))
 
 		self.eventQueue = []

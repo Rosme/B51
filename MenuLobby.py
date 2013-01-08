@@ -67,7 +67,6 @@ class MenuLobby():
         self.fondEcran.delete("nbPlayer")
         self.fondEcran.create_text(140,70,text=nb,font=("verdana","12","bold"),fill="red",tags="nbPlayer")
 
-
     def updateClientList(self):
         self.network.recevoirDonnees()
 
