@@ -258,6 +258,9 @@ class Controleur():
     
     def getIdPlayer(self):
         return self.jeu.getPlayerById(self.network.id).id
+        
+    def getIdUsagerLocal(self):
+        return self.network.id
 
 if __name__ == '__main__':
     c = Controleur()

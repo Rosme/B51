@@ -16,6 +16,11 @@ class Personnage():
     def nouveauPersonnage(self, nom, race):
         #nom du joueur
         self.nom = nom
+        
+        #numéro de l'animation du personnage
+        self.animationId = 19
+        self.animationIncrem = 0
+        
         #nom de la map dans lqeul il se trouve
         self.nomMap = "MainRoom"
         #objet race contenant toutes les informations spécifiques au races
@@ -56,6 +61,41 @@ class Personnage():
         
         tempx+=self.posMatX
         tempy+=self.posMatY
+        
+        #animation
+        if self.mouvement[1]:
+            if not(self.animationId >= 9 and self.animationId < 17):
+                self.animationId = 9
+            else:
+                self.animationId+=1
+            
+        elif self.mouvement[3]:
+            if not(self.animationId >= 27 and self.animationId < 35):
+                self.animationId = 27
+            else:
+                self.animationId+=1
+        
+        elif self.mouvement[0]:
+            if not(self.animationId >= 0 and self.animationId < 8):
+                self.animationId = 0
+            else:
+                self.animationId+=1
+        
+        elif self.mouvement[2]:
+            if not(self.animationId >= 18 and self.animationId < 26):
+                self.animationId = 18
+            else:
+                self.animationId+=1
+        
+        else:
+            if self.animationId >= 0 and self.animationId <= 8:
+                self.animationId = 0
+            if self.animationId >= 9 and self.animationId <= 17:
+                self.animationId = 9
+            if self.animationId >= 18 and self.animationId <= 26:
+                self.animationId = 18
+            if self.animationId >= 27 and self.animationId <= 35:
+                self.animationId = 27
         
         return tempx, tempy
     

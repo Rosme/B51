@@ -55,14 +55,16 @@ class Jeu():
                 try:    
                     if laMap[tempMatY+self.subDivision][tempMatX]!='1':
                         if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                            if laMap[tempMatY][tempMatX+16] != '1' and laMap[tempMatY+48][tempMatX] != '1':
+                                joueur.posMatX=tempMatX
+                                joueur.posMatY=tempMatY
+                                self.parent.actusliserPersonnage()
+                except:
+                    if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                        if laMap[tempMatY][tempMatX+16] != '1' and laMap[tempMatY+16][tempMatX] != '1':
                             joueur.posMatX=tempMatX
                             joueur.posMatY=tempMatY
                             self.parent.actusliserPersonnage()
-                except:
-                    if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                        joueur.posMatX=tempMatX
-                        joueur.posMatY=tempMatY
-                        self.parent.actusliserPersonnage()
     
     def coordProchaineZone(self,char, joueur):
         laMap=self.carte.s.salle
@@ -79,6 +81,7 @@ class Jeu():
                                 if laMap[i+self.subDivision][j]=='0':#porte en haut
                                     matx = j
                                     maty = i+self.subDivision
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 18
                                     trouver=True
                                     break
                                 elif laMap[i+self.subDivision][j] == ' ':
@@ -87,6 +90,7 @@ class Jeu():
                                 if laMap[i-self.subDivision][j]=='0':#porte en bas
                                     matx = j
                                     maty = i-self.subDivision
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 0
                                     trouver=True
                                     break
                         else:
@@ -99,6 +103,7 @@ class Jeu():
                                 if laMap[i][j+self.subDivision]=='0':#porte à droite
                                     matx = j+self.subDivision
                                     maty = i
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 9
                                     trouver=True
                                     break
                                 elif laMap[i+self.subDivision][j] == ' ':
@@ -107,6 +112,7 @@ class Jeu():
                                 if laMap[i][j-self.subDivision]=='0':#porte à gauche
                                     matx = j-self.subDivision
                                     maty = i
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 27
                                     trouver=True                          
                                     break
             if trouver:
