@@ -32,6 +32,8 @@ class Personnage():
         #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
+        self.posMatX = 11*self.parent.subDivision
+        self.posMatY = 11*self.parent.subDivision
     
     def bouge(self,mouvement):
         #si un mouvement a t demandé on calcul le futur position dans la matrice du perso
