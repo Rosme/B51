@@ -48,8 +48,9 @@ class Personnage():
             self.posMatY = random.randrange(0,len(salle),self.parent.subDivision)
             
             try:
-                if salle[self.posMatY][self.posMatX] == '0' and salle[self.posMatY][self.posMatX+16] != '1' and salle[self.posMatY+48][self.posMatX] != '1':
-                    valide=True
+                if salle[self.posMatY][self.posMatX] == '0' or laMap[tempMatY][tempMatX-4] == '1':
+                    if salle[self.posMatY][self.posMatX+26] != '1':
+                        valide=True
             except:
                 pass
     
