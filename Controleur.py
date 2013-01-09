@@ -222,9 +222,7 @@ class Controleur():
                 pass
         
         if key == 'Z':
-            pass
-            
-       
+            pass      
         
     def peseTire(self,event):
         pass

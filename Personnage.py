@@ -2,6 +2,7 @@
 import pickle
 import Item
 import Objet
+import random
 from Balle import *
         
 class Personnage():
@@ -25,9 +26,9 @@ class Personnage():
         self.nomMap = "MainRoom"
         #objet race contenant toutes les informations spécifiques au races
         self.race = race
-        #position dans la matrice
-        self.posMatX = 11*self.parent.subDivision
-        self.posMatY = 11*self.parent.subDivision
+        #position dans la matrice  
+        self.posAleatoire()
+        
         #initialisation des éléments de l'inventaire
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
@@ -38,12 +39,25 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
     
+    def posAleatoire(self):    
+        valide=False
+        salle = self.parent.getSalleByName(self.nomMap)
+        
+        while valide==False:
+            self.posMatX = random.randrange(0,len(salle),self.parent.subDivision)
+            self.posMatY = random.randrange(0,len(salle),self.parent.subDivision)
+            
+            try:
+                if salle[self.posMatY][self.posMatX] == '0' and salle[self.posMatY][self.posMatX+16] != '1' and salle[self.posMatY+48][self.posMatX] != '1':
+                    valide=True
+            except:
+                pass
+    
     def mort(self):
         #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
-        self.posMatX = 11*self.parent.subDivision
-        self.posMatY = 11*self.parent.subDivision
+        self.posAleatoire()
     
     def bouge(self):
         #si un mouvement a t demandé on calcul le futur position dans la matrice du perso

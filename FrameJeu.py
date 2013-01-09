@@ -145,8 +145,8 @@ class FrameJeu():
         
         if perso.id == self.parent.parent.getIdPlayer():
             self.calculOffSet(x,y)
-            
-        self.map.create_image(x,y-16,image=self.parent.getImage("pers")[perso.animationId],tags="perso")
+        
+        self.map.create_image(x,y-28,image=self.parent.getImage("pers")[perso.animationId],tags="perso")
 
     
     def affichageRoche(self,perso,listeRoche):
