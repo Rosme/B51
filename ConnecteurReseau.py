@@ -2,7 +2,7 @@
 import socket
 import pickle
 import Netdata as nd
-
+from time import sleep
 
 class ConnecteurReseau():
 	def __init__(self, parent):
@@ -45,11 +45,16 @@ class ConnecteurReseau():
 						if isinstance(msg, nd.StartGameMsg):
 							self.parent.app.menuL.debuterPartie(self.playerList)
 				else:
+					for event in data:
+						li = data[event]
+						for cl in li:
+							print(event, cl.events)
+							#sleep(1)
 					self.parent.totalEventQueue.append(data)
 		except socket.timeout:
 			return None
 		except socket.error as ex:
-			print("Erreur sur la connexion au serveur: ")
+			print("Erreur sur la connexion au serveur: ", ex)
 
 	def sendData(self, data = None):
 		if data != None:

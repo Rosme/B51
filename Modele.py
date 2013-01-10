@@ -262,6 +262,7 @@ class Jeu():
     def treatEventsById(self, tickData):
         player = self.getPlayerById(tickData.id)
         for event in tickData.events:
+            #print(str(tickData.id) + " : " + event)
             if event == "MOVE_UP":
                 player.mouvement[0] = True
             if event == "MOVE_RIGHT":

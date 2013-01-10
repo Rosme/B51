@@ -9,6 +9,7 @@ import socket
 import select
 import pickle
 import Netdata as nd
+from time import sleep
 
 #Classe Wrapper pour les connexions clientes
 class Client():
@@ -102,22 +103,24 @@ class Serveur():
 			self.statut = "jeu"
 		elif self.statut == "jeu":
 			bEvents = pickle.dumps(self.treatedQueue)
-			iii = 0
+			'''
+			for frame in self.treatedQueue:
+				item = self.treatedQueue[frame]
+				print(item)
+				sleep(1)
+			'''
 			for client in self.clients:
-
 				'''
 				for event in self.treatedQueue:
 					bEvent = pickle.dumps(event)
 					client.conn.send(bEvent)
 				'''
 				client.conn.send(bEvents)
-				print("Envoie " + str(iii))
+				'''
 				for event in self.treatedQueue:
 					for cl in self.treatedQueue[event]:
 						print(cl.events)
-				iii += 1
-				if iii%2 == 0:
-					iii = 0
+				'''
 
 			self.treatedQueue = {}
 
@@ -175,13 +178,20 @@ class Serveur():
 						self.removeClient(conn)
 
 	def updateFrames(self):
-		for event in self.eventQueue:
-			self.treatedQueue[event.tick+2] = []
+		if self.statut == "jeu":
+			for event in self.eventQueue:
+				self.treatedQueue[event.tick+2] = []
 
-		for event in self.eventQueue:
-			self.treatedQueue[event.tick+2].append(nd.ClientTickData(event.id, event.events))
+			for event in self.eventQueue:
+				self.treatedQueue[event.tick+2].append(nd.ClientTickData(event.id, event.events))
+			
+			for frame in self.treatedQueue:
+				events = self.treatedQueue[frame]
+				for data in events:
+					print(data.id, data.events)
+			#sleep(1)
 
-		self.eventQueue = []
+			self.eventQueue = []
 
 
 serveur = Serveur()
