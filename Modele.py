@@ -41,16 +41,18 @@ class Jeu():
         return raceInfo.info()
     
     def bougePersonnage(self):
-        laMap=self.carte.s.salle
-        
+        ownPlayer = self.getPlayerById(self.parent.network.id)       
         for joueur in self.listePersonnage:
             tempMatX, tempMatY = joueur.bouge()
-            
+        
+            laMap = self.getSalleByName(joueur.nomMap)
+
             if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
                 car=laMap[tempMatY][tempMatX]
-                joueur.nomMap=self.carte.s.changementCarte(car)
+                #if joueur == ownPlayer:
+                joueur.nomMap=self.carte.s.changementCarte(car,joueur.nomMap)
                 self.coordProchaineZone(car, joueur)
-                self.parent.actualiserAffichageComplet(joueur,self.listePersonnage)
+                self.parent.actualiserAffichageComplet(ownPlayer,self.listePersonnage)
             else:
                 try:    
                     if laMap[tempMatY+self.subDivision][tempMatX]!='1':
@@ -66,7 +68,7 @@ class Jeu():
                             self.parent.actusliserPersonnage()
     
     def coordProchaineZone(self,char, joueur):
-        laMap=self.carte.s.salle
+        laMap = self.getSalleByName(joueur.nomMap)
         
         trouver=False
         

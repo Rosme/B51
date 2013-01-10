@@ -44,8 +44,8 @@ class Personnage():
         salle = self.parent.getSalleByName(self.nomMap)
         
         while valide==False:
-            self.posMatX = random.randrange(0,len(salle),self.parent.subDivision)
-            self.posMatY = random.randrange(0,len(salle),self.parent.subDivision)
+            self.posMatX = 11*self.parent.subDivision#random.randrange(0,len(salle),self.parent.subDivision)
+            self.posMatY = 11*self.parent.subDivision#random.randrange(0,len(salle),self.parent.subDivision)
             
             try:
                 if salle[self.posMatY][self.posMatX] == '0' or laMap[tempMatY][tempMatX-4] == '1':

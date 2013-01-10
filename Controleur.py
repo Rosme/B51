@@ -84,8 +84,10 @@ class Controleur():
     
     def actusliserPersonnage(self):
         self.app.frameJeu.effaceLesPersos()
+        ownPlayer = self.jeu.getPlayerById(self.network.id)   
         for joueur in self.jeu.listePersonnage:
-            self.app.frameJeu.affichagePerso(joueur)
+            if joueur.nomMap == ownPlayer.nomMap:
+                self.app.frameJeu.affichagePerso(joueur)
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualisationBalle(self,listeBalle):
@@ -147,7 +149,8 @@ class Controleur():
                 self.ownEventQueue.append("MOVE_DOWN")
             if key == 'A':
                 self.ownEventQueue.append("MOVE_LEFT")
-                
+            
+            '''    
             if key == 'Q':
                 self.autoSoin()
                 
@@ -177,6 +180,7 @@ class Controleur():
                             i.ouvrir(self.jeu.joueur)
                         
                 self.press = True
+            '''
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()
@@ -212,7 +216,7 @@ class Controleur():
                     self.network.disconnect()
             
         
-        
+        '''
         if key=='I':
             if self.contexte == "enJeu":
                 self.contexte="inventaire"
@@ -222,7 +226,8 @@ class Controleur():
                 pass
         
         if key == 'Z':
-            pass      
+            pass 
+        '''     
         
     def peseTire(self,event):
         pass

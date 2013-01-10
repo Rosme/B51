@@ -118,16 +118,15 @@ class Salle():
             self.dictionnaireLiens[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
     
-    def changementCarte(self, caractere):
-        self.liensCarte = self.dictMap[self.nomMap + " liens"]
-        self.nomMap = self.liensCarte[caractere]
+    def changementCarte(self, caractere,nomMap):
+        self.liensCarte = self.dictMap[nomMap + " liens"]
+        nomMap = self.liensCarte[caractere]
         #On va ignorer le \n qui peut se retrouver dans les noms de map
-        self.listeTempo = self.nomMap.split('\n')
-        self.nomMap = self.listeTempo[0]
+        self.listeTempo = nomMap.split('\n')
+        nomMap = self.listeTempo[0]
+        salle = self.dictMap[nomMap]
         
-        self.salle = self.dictMap[self.nomMap]
-        
-        return self.nomMap
+        return nomMap
         
     def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
         self.dictSauvegarde[nomMap] = contenuMap

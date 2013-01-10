@@ -124,7 +124,11 @@ class Serveur():
                     bEvent = pickle.dumps(event)
                     client.conn.send(bEvent)
                 '''
-                client.conn.send(bEvents)
+                try:
+                    client.conn.send(bEvents)
+                except:
+                    print("Erreur sur Envoie de client. Deconnection: ")
+                    self.removeClient(client.conn)
                 '''
                 for event in self.treatedQueue:
                     for cl in self.treatedQueue[event]:
