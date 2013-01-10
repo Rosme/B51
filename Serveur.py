@@ -54,6 +54,7 @@ class Serveur():
                 client.conn.send(bClientId)
         if self.statut == "jeu":
             if self.qteConnect == 0:
+                print("REDEMARRAGE DU SERVEUR")
                 self.restart()
 
     def restart(self):
@@ -72,6 +73,10 @@ class Serveur():
         self.boolIdConnect = []
         for i in range(self.maxConnect):
             self.boolIdConnect.append(False)
+
+        print("****** DEMARRAGE DU SERVEUR ******")
+        print("******     PORT: " + str(self.port) + "      ******")
+        print("******   MAX JOUEUR : " + str(self.maxConnect) + "     ******")
 
     def generateId(self):
         for i in range(self.maxConnect):
@@ -102,6 +107,7 @@ class Serveur():
                 client.conn.send(bListMsg)
             self.msgQueue.msg = []
             self.statut = "jeu"
+            print("****** DEMARRAGE D'UNE PARTIE ******")
         elif self.statut == "jeu":
             '''
             if len(self.listClientGone) == 0:
