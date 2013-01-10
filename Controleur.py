@@ -65,6 +65,7 @@ class Controleur():
     
     def actusliserPersonnage(self,perso):
         self.app.frameJeu.affichagePerso(perso)
+        self.app.frameJeu.affichageLogomate(self.jeu.joueur, self.jeu.carte.s)
         self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualisationBalle(self,listeBalle):

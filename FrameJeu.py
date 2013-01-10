@@ -114,7 +114,7 @@ class FrameJeu():
     def affichageLogomate(self,perso,laSalle):
         map = laSalle.salle
         if "logo" in map:
-            map.remove("logo")
+            map.delete("logo")
         for i in range(0,len(map),self.subDivision):
             for k in range(0,len(map[i]),self.subDivision):
                 for p in self.parent.parent.jeu.listeLogomate:
