@@ -180,15 +180,18 @@ class Serveur():
 	def updateFrames(self):
 		if self.statut == "jeu":
 			for event in self.eventQueue:
-				self.treatedQueue[event.tick+2] = []
+				self.treatedQueue[event.tick+5] = []
 
 			for event in self.eventQueue:
-				self.treatedQueue[event.tick+2].append(nd.ClientTickData(event.id, event.events))
+				self.treatedQueue[event.tick+5].append(nd.ClientTickData(event.id, event.events))
 			
+			'''
 			for frame in self.treatedQueue:
 				events = self.treatedQueue[frame]
 				for data in events:
 					print(data.id, data.events)
+			'''
+			sleep(0.05)
 			#sleep(1)
 
 			self.eventQueue = []
