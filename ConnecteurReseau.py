@@ -1,6 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import socket
 import pickle
+import random
 import Netdata as nd
 from time import sleep
 
@@ -21,7 +22,7 @@ class ConnecteurReseau():
 		self.port = port
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.socket.connect((adresse, port))
-		self.socket.settimeout(0.01)
+		self.socket.settimeout(1)
 
 	def recevoirDonnees(self):
 		try:

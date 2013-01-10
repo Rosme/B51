@@ -2,6 +2,7 @@
 import pickle
 import Item
 import Objet
+import random
 from Balle import *
         
 class Personnage():
@@ -16,13 +17,18 @@ class Personnage():
     def nouveauPersonnage(self, nom, race):
         #nom du joueur
         self.nom = nom
+        
+        #numéro de l'animation du personnage
+        self.animationId = 19
+        self.animationIncrem = 0
+        
         #nom de la map dans lqeul il se trouve
         self.nomMap = "MainRoom"
         #objet race contenant toutes les informations spécifiques au races
         self.race = race
-        #position dans la matrice
-        self.posMatX = 11*self.parent.subDivision
-        self.posMatY = 11*self.parent.subDivision
+        #position dans la matrice  
+        self.posAleatoire()
+        
         #initialisation des éléments de l'inventaire
         self.inventaire = Item.Inventaire(self.race.poidsLimite)
         self.inventaire.ajouterItem(Item.Arme(7, 2, "Fusil", "Pewpew", 5, 100, 2, 5, 500))
@@ -33,12 +39,26 @@ class Personnage():
         self.inventaire.ajouterItem(Item.Divers(4, 1, "Nourriture", "Soigne de 50 de vies", 50))
         self.inventaire.ajouterItem(Item.Divers(5, 1, "Super-Seringue", "Soigne de 200 de vies", 200))
     
+    def posAleatoire(self):    
+        valide=False
+        salle = self.parent.getSalleByName(self.nomMap)
+        
+        while valide==False:
+            self.posMatX = random.randrange(0,len(salle),self.parent.subDivision)
+            self.posMatY = random.randrange(0,len(salle),self.parent.subDivision)
+            
+            try:
+                if salle[self.posMatY][self.posMatX] == '0' or laMap[tempMatY][tempMatX-4] == '1':
+                    if salle[self.posMatY][self.posMatX+26] != '1':
+                        valide=True
+            except:
+                pass
+    
     def mort(self):
         #action engendrées par la mort du joueur
         self.nomMap = "MainRoom"
         self.race.vie=self.race.max_vie/2
-        self.posMatX = 11*self.parent.subDivision
-        self.posMatY = 11*self.parent.subDivision
+        self.posAleatoire()
     
     def bouge(self):
         #si un mouvement a t demandé on calcul le futur position dans la matrice du perso
@@ -56,6 +76,41 @@ class Personnage():
         
         tempx+=self.posMatX
         tempy+=self.posMatY
+        
+        #animation
+        if self.mouvement[1]:
+            if not(self.animationId >= 9 and self.animationId < 17):
+                self.animationId = 9
+            else:
+                self.animationId+=1
+            
+        elif self.mouvement[3]:
+            if not(self.animationId >= 27 and self.animationId < 35):
+                self.animationId = 27
+            else:
+                self.animationId+=1
+        
+        elif self.mouvement[0]:
+            if not(self.animationId >= 0 and self.animationId < 8):
+                self.animationId = 0
+            else:
+                self.animationId+=1
+        
+        elif self.mouvement[2]:
+            if not(self.animationId >= 18 and self.animationId < 26):
+                self.animationId = 18
+            else:
+                self.animationId+=1
+        
+        else:
+            if self.animationId >= 0 and self.animationId <= 8:
+                self.animationId = 0
+            if self.animationId >= 9 and self.animationId <= 17:
+                self.animationId = 9
+            if self.animationId >= 18 and self.animationId <= 26:
+                self.animationId = 18
+            if self.animationId >= 27 and self.animationId <= 35:
+                self.animationId = 27
         
         return tempx, tempy
     

@@ -46,8 +46,6 @@ class Controleur():
                 self.jeu.balle() 
             if self.compteur%1==0:
                 self.jeu.tire()
-                
-            self.compteur+=1
 
             self.network.sendData(nd.ClientTickInfo(self.network.id, self.compteur, self.ownEventQueue))
 
@@ -60,7 +58,9 @@ class Controleur():
                         self.jeu.treatEventsById(tickData)
                     listEvents.pop(self.compteur, None) #On enleve le frame de la liste
             self.ownEventQueue = []
-
+            
+            self.compteur+=1
+            
             self.app.frameJeu.map.after(25,self.miseAJour)
 
 
@@ -73,18 +73,20 @@ class Controleur():
         self.partieCommencer=True
         
         self.jeu.carte.chargeObjets()
-        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.listePersonnage,self.jeu.carte.s)
+        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.listePersonnage)
         #ajout des écouteur (souris, clavier)
         self.ajoutEcouteur()
         self.miseAJour()
     
-    def actualiserAffichageComplet(self,perso,map):
-        self.app.frameJeu.actualiserAffichage(perso,map)
-        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
+    def actualiserAffichageComplet(self,perso,listePerso):
+        self.app.frameJeu.actualiserAffichage(perso,listePerso)
+        #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
-    def actusliserPersonnage(self,perso):
-        self.app.frameJeu.affichagePerso(perso)
-        self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
+    def actusliserPersonnage(self):
+        self.app.frameJeu.effaceLesPersos()
+        for joueur in self.jeu.listePersonnage:
+            self.app.frameJeu.affichagePerso(joueur)
+        #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")
@@ -138,16 +140,12 @@ class Controleur():
         key = event.char.upper()
         if self.contexte=="enJeu":
             if key == 'W':
-                #self.jeu.mouvement[0]=True
                 self.ownEventQueue.append("MOVE_UP")
             if key == 'D':
-                #self.jeu.mouvement[1]=True
                 self.ownEventQueue.append("MOVE_RIGHT")
             if key == 'S':
-                #self.jeu.mouvement[2]=True
                 self.ownEventQueue.append("MOVE_DOWN")
             if key == 'A':
-                #self.jeu.mouvement[3]=True
                 self.ownEventQueue.append("MOVE_LEFT")
                 
             if key == 'Q':
@@ -185,16 +183,12 @@ class Controleur():
         
         if self.contexte=="enJeu":
             if key == 'W':
-                #self.jeu.mouvement[0]=False
                 self.ownEventQueue.append("NO_UP")
             if key == 'D':
-                #self.jeu.mouvement[1]=False
                 self.ownEventQueue.append("NO_RIGHT")
             if key == 'S':
-                #self.jeu.mouvement[2]=False
                 self.ownEventQueue.append("NO_DOWN")
             if key == 'A':
-                #self.jeu.mouvement[3]=False
                 self.ownEventQueue.append("NO_LEFT")
             if key == 'E':
                 self.press = False
@@ -228,29 +222,43 @@ class Controleur():
                 pass
         
         if key == 'Z':
-            pass
-            
-       
+            pass      
         
     def peseTire(self,event):
+        pass
+        '''
         if self.contexte == "enJeu":
             self.jeu.mouvement[4] = True
             self.jeu.sourisX = event.x
             self.jeu.sourisY = event.y  
+        '''
         
     def relacheTire(self,event):
-        self.jeu.mouvement[4] = False
+        pass
+        #self.jeu.mouvement[4] = False
     
     #prend a chaque deplacement de souris la nouvelle position en x,y de la souris
     def tireCoord(self,event):
+        pass
+        '''
         if self.jeu.mouvement[4]:
             x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.joueur)
             x-=self.app.largeurFrame/2
             y-=self.app.hauteurFrame/2
             self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
+        '''
 
-    def getMap(self, name):
+    def getMap(self):
+        return self.jeu.getCurrentSalle()
+        
+    def getMapByName(self,name):
         return self.jeu.getSalleByName(name)
+    
+    def getIdPlayer(self):
+        return self.jeu.getPlayerById(self.network.id).id
+        
+    def getIdUsagerLocal(self):
+        return self.network.id
 
 if __name__ == '__main__':
     c = Controleur()

@@ -23,7 +23,6 @@ class Jeu():
         self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4" , "R_S1", "R_E1S1", "S_S1" , "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.subDivision = 32
-        #self.joueur = ""
         self.carte = Carte.Carte(self)
         self.artisanat = Artisanat.Artisanat(self)
         self.sourisX = 0
@@ -51,19 +50,20 @@ class Jeu():
                 car=laMap[tempMatY][tempMatX]
                 joueur.nomMap=self.carte.s.changementCarte(car)
                 self.coordProchaineZone(car, joueur)
-                self.parent.actualiserAffichageComplet(joueur,self.carte.s)
+                self.parent.actualiserAffichageComplet(joueur,self.listePersonnage)
             else:
                 try:    
                     if laMap[tempMatY+self.subDivision][tempMatX]!='1':
-                        if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                            joueur.posMatX=tempMatX
-                            joueur.posMatY=tempMatY
-                            self.parent.actusliserPersonnage(joueur)
+                        if laMap[tempMatY][tempMatX-4] == '1' or laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                            if laMap[tempMatY][tempMatX+26] != '1':
+                                joueur.posMatX=tempMatX
+                                joueur.posMatY=tempMatY
+                                self.parent.actusliserPersonnage()
                 except:
                     if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                        joueur.posMatX=tempMatX
-                        joueur.posMatY=tempMatY
-                        sellf.parent.actusliserPersonnage(joueur)
+                            joueur.posMatX=tempMatX
+                            joueur.posMatY=tempMatY
+                            self.parent.actusliserPersonnage()
     
     def coordProchaineZone(self,char, joueur):
         laMap=self.carte.s.salle
@@ -80,6 +80,7 @@ class Jeu():
                                 if laMap[i+self.subDivision][j]=='0':#porte en haut
                                     matx = j
                                     maty = i+self.subDivision
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 18
                                     trouver=True
                                     break
                                 elif laMap[i+self.subDivision][j] == ' ':
@@ -88,6 +89,7 @@ class Jeu():
                                 if laMap[i-self.subDivision][j]=='0':#porte en bas
                                     matx = j
                                     maty = i-self.subDivision
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 0
                                     trouver=True
                                     break
                         else:
@@ -100,6 +102,7 @@ class Jeu():
                                 if laMap[i][j+self.subDivision]=='0':#porte à droite
                                     matx = j+self.subDivision
                                     maty = i
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 9
                                     trouver=True
                                     break
                                 elif laMap[i+self.subDivision][j] == ' ':
@@ -108,6 +111,7 @@ class Jeu():
                                 if laMap[i][j-self.subDivision]=='0':#porte à gauche
                                     matx = j-self.subDivision
                                     maty = i
+                                    self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 27
                                     trouver=True                          
                                     break
             if trouver:
@@ -115,8 +119,7 @@ class Jeu():
 
         joueur.posMatY=maty
         joueur.posMatX=matx        
-        
-    
+           
     def activationObjet(self):
         '''
         if self.listeInterrupteur:
@@ -281,4 +284,7 @@ class Jeu():
                 player.mouvement[3] = False
 
     def getSalleByName(self, name):
+        return self.carte.s.dictMap[name]
+    
+    def getCurrentSalle(self):
         return self.carte.s
