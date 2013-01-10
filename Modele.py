@@ -288,3 +288,7 @@ class Jeu():
     
     def getCurrentSalle(self):
         return self.carte.s
+
+    def updateQteClient(self, id):
+        player = getPlayerById(id)
+        self.listePersonnage.pop(player, None)
