@@ -193,6 +193,9 @@ class Serveur():
                                 self.msgQueue.msg.append(data)
                             elif isinstance(data, nd.ClientTickInfo):
                                 self.eventQueue.append(data)
+                            elif isinstance(data, nd.ClientTireInfo):
+                                print("works")
+                                pass
                     except Exception as ex:
                         print("Erreur sur lecture de client. Deconnection: ")
                         self.removeClient(conn)

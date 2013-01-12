@@ -65,3 +65,10 @@ class ClientId():
     #ID du joueur
     def __init__(self, id):
         self.id = id
+
+class ClientTireInfo():
+    def __init__(self,id,finX,finY):
+        self.id = id
+        self.finX = finX
+        self.finY = finY
+            
