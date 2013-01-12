@@ -146,6 +146,7 @@ class FrameJeu():
         if perso.id == self.parent.parent.getIdPlayer():
             self.calculOffSet(x,y)
         
+        self.map.create_text(x, y-67, text=perso.nom, fill='white', tags="perso")
         self.map.create_image(x,y-28,image=self.parent.getImage("pers")[perso.animationId],tags="perso")
 
     
