@@ -10,6 +10,7 @@ class Balle():
         self.velocite = 10
         self.distanceMax = 300
         self.distanceParcouru = 0
+        self.idProprietaire = perso.id
         #calcul la distance entre les deux points. Départ et fin.
         try:
             self.entreDeux = math.sqrt(abs((finX-self.posMatX)**2)+abs((finY-self.posMatY)**2))

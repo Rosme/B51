@@ -108,7 +108,7 @@ class Controleur():
         self.jeu.nouveauJoueur(id, race, nom)
         
     def autoSoin(self):
-        self.jeu.joueur.autoSoin()
+        self.jeu.ownPlayer.autoSoin()
         
     def rajoutMetal(self):
         self.jeu.rajoutMetal()
@@ -136,7 +136,7 @@ class Controleur():
         #ecouteur lié à la souris
         self.app.frameJeu.map.bind("<Button-1>", self.peseTire)
         self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
-        self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
+        #self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
     
     ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):
@@ -151,13 +151,11 @@ class Controleur():
             if key == 'A':
                 self.ownEventQueue.append("MOVE_LEFT")
             
-            '''    
+            
             if key == 'Q':
                 self.autoSoin()
                 
-            if key == 'M':
-                self.jeu.joueur.touche(10)
-            
+            '''
             if key == 'E':
                 if self.jeu.listeRoche:
                     for i in self.jeu.listeRoche:
@@ -208,7 +206,7 @@ class Controleur():
                 self.contexte="menu"
                 self.compteur=0
                 self.partieCommencer=False
-                self.jeu.listePersonnage = list()
+                #self.jeu.listePersonnage = list()
 
 
                 self.app.initialisationInterfaces()
@@ -225,30 +223,33 @@ class Controleur():
             elif self.contexte == "inventaire":
                 #faire disparaitre l'inventaire
                 pass
-        
-        if key == 'Z':
-            pass 
         '''     
         
     def peseTire(self,event):
-        pass
-        '''
         if self.contexte == "enJeu":
-            self.jeu.mouvement[4] = True
+            self.tireCoord(event)
+            #self.ownEventQueue.append("FIRE")
+            ########################################### Envoie signal et de la destination#######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            '''
+            self.jeu.ownPlayer.mouvement[4] = True
             self.jeu.sourisX = event.x
             self.jeu.sourisY = event.y  
-        '''
+            '''
         
     def relacheTire(self,event):
+        #self.ownEventQueue.append("NO_FIRE")
+        #self.jeu.ownPlayer.mouvement[4] = False
         pass
-        #self.jeu.mouvement[4] = False
     
     #prend a chaque deplacement de souris la nouvelle position en x,y de la souris
     def tireCoord(self,event):
-        pass
+        x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.ownPlayer)
+        x-=self.app.largeurFrame/2
+        y-=self.app.hauteurFrame/2
+        self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
         '''
-        if self.jeu.mouvement[4]:
-            x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.joueur)
+        if self.jeu.ownPlayer.mouvement[4]:
+            x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.ownPlayer)
             x-=self.app.largeurFrame/2
             y-=self.app.hauteurFrame/2
             self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
@@ -260,11 +261,13 @@ class Controleur():
     def getMapByName(self,name):
         return self.jeu.getSalleByName(name)
     
-    def getIdPlayer(self):
-        return self.jeu.getPlayerById(self.network.id).id
+    def getPlayerById(self,id):
+        return self.jeu.getPlayerById(id)
         
     def getIdUsagerLocal(self):
         return self.network.id
 
+    def getPlayerLocal(self):
+        return self.jeu.ownPlayer
 if __name__ == '__main__':
     c = Controleur()

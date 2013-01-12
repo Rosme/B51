@@ -143,7 +143,7 @@ class FrameJeu():
         #affichage du personnage
         x,y=self.coordMatriceAEcran(perso)
         
-        if perso.id == self.parent.parent.getIdPlayer():
+        if perso.id == self.parent.parent.getIdUsagerLocal():
             self.calculOffSet(x,y)
         
         self.map.create_text(x, y-67, text=perso.nom, fill='white', tags="perso")
@@ -160,8 +160,9 @@ class FrameJeu():
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
         for i in listeBalle:
-            x,y=self.coordMatriceAEcran(i)   
-            self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
+            if self.parent.parent.getPlayerById(i.id).nomMap == self.parent.parent.getPlayerLocal.nomMap:
+                x,y=self.coordMatriceAEcran(i)   
+                self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
     
     def actualiserAffichage(self,perso,listePerso):
         self.map.delete(tkinter.ALL)

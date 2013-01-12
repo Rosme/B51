@@ -154,7 +154,6 @@ class Jeu():
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
         '''
-        self.joueur.recharge()
         if self.listeLevier:
             for i in self.listeLevier:
                 if i.energie != i.max_energie:
@@ -163,25 +162,24 @@ class Jeu():
         self.ownPlayer.recharge()
                     
     def tire(self):
-        '''
-        if self.mouvement[4]:
-            if self.joueur.tire(self.listeBalle, self.sourisX, self.sourisY):
-                balle = self.listeBalle[len(self.listeBalle)-1]    
-        '''
+        #for player in self.listePersonnage:
+            #if player.mouvement[4] and player.nomMap == self.ownPlayer.nomMap:
+                #if player.tire(self.listeBalle, self.sourisX, self.sourisY):
+                    #balle = self.listeBalle[len(self.listeBalle)-1]    
         pass
 
     def balle(self):
-        self.collision(self.listePersonnage)
-        self.collision(self.listeLogomate)
+        #self.collision(self.listePersonnage)
+        #self.collision(self.listeLogomate)
         
         self.parent.actualisationBalle(self.listeBalle)
    
     def collision(self, liste):  
         temp = self.listeBalle
-        
+        '''
         for i in self.listeBalle:
             #i.bouge(self.joueur)
-            '''
+            
             if i.veloY<0 and i.veloX<0:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
             elif i.veloY>0 and i.veloX>0:
@@ -190,10 +188,10 @@ class Jeu():
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
             else:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
-            '''
-            if i.collision(liste, self.carte.s.salle):
-                temp.remove(i)
-                
+            
+            #if i.collision(liste, self.carte.s.salle):
+                #temp.remove(i)
+        '''  
         self.listeBalle = temp
         
     
@@ -267,6 +265,8 @@ class Jeu():
                 player.mouvement[2] = True
             if event == "MOVE_LEFT":
                 player.mouvement[3] = True
+            if event == "FIRE":
+                player.mouvement[4] = True
             if event == "NO_UP":
                 player.mouvement[0] = False
             if event == "NO_RIGHT":
@@ -275,6 +275,8 @@ class Jeu():
                 player.mouvement[2] = False
             if event == "NO_LEFT":
                 player.mouvement[3] = False
+            if event == "NO_FIRE":
+                player.mouvement[4] = False
 
     def getSalleByName(self, name):
         return self.carte.s.dictMap[name]
