@@ -34,7 +34,7 @@ class Controleur():
             #on active les switchs,leviers,etc
             self.jeu.activationObjet()
             #on actualise le hud du haut
-            self.app.hudH.actualiser(self.jeu.getPlayerById(self.network.id))
+            self.app.hudH.actualiser(self.jeu.ownPlayer)
             #on vérifie que le joueur n'est pas mort
             self.jeu.gestionMort()
             
@@ -69,11 +69,12 @@ class Controleur():
 
     ############################# Méthode d'initialisation du Jeu et de l'actualisation du Jeu #############################
     def enJeu(self):
+        self.jeu.ownPlayer = self.jeu.getPlayerById(self.network.id)
         self.contexte="enJeu"
         self.partieCommencer=True
         
         self.jeu.carte.chargeObjets()
-        self.app.jeu(self.jeu.getPlayerById(self.network.id),self.jeu.listePersonnage)
+        self.app.jeu(self.jeu.ownPlayer,self.jeu.listePersonnage)
         #ajout des écouteur (souris, clavier)
         self.ajoutEcouteur()
         self.miseAJour()
@@ -83,10 +84,9 @@ class Controleur():
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
     def actusliserPersonnage(self):
-        self.app.frameJeu.effaceLesPersos()
-        ownPlayer = self.jeu.getPlayerById(self.network.id)   
+        self.app.frameJeu.effaceLesPersos()  
         for joueur in self.jeu.listePersonnage:
-            if joueur.nomMap == ownPlayer.nomMap:
+            if joueur.nomMap == self.jeu.ownPlayer.nomMap:
                 self.app.frameJeu.affichagePerso(joueur)
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
@@ -96,8 +96,9 @@ class Controleur():
     
     #############################Gestion de la mort#############################    
     def joueurMort(self,perso,laSalle):
-        self.app.frameJeu.debutDePartie(perso,lasalle)
-        self.actualiserAffichageComplet(perso,lasalle)
+        if perso.id == self.network.id:
+            self.app.frameJeu.debutDePartie(perso,lasalle)
+        self.actualiserAffichageComplet(perso,self.jeu.listePersonnage)
     
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):

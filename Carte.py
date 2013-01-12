@@ -14,7 +14,7 @@ class Carte():
             print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
-        self.s.salle = self.s.dictMap["MainRoom"]
+        #self.s.salle = self.s.dictMap["MainRoom"]
         ligne = list()
         ligne = liens.read()
 
@@ -70,13 +70,14 @@ class Carte():
 class Salle():
     def __init__(self, parent):
         self.parent = parent
-        self.salle = list()
+        #self.salle = list()
         self.dimensionCarte = int()
         self.dictSauvegarde = dict()
         self.dictMap = dict()
         self.nomMap = "MainRoom"
 
     def chargeCartes(self):
+        tempSalle = list()
         for j in self.parent.parent.listeMap:
             self.ouvertureMap(j)
             self.dimensionsMap(j)
@@ -86,26 +87,28 @@ class Salle():
             ligne = self.fichier.read()
             for i in ligne.splitlines():
                 i.split('\n')
-                self.salle.append(i)
-            self.subdivisionMap()
-            self.dictMap[j] = self.salle
+                tempSalle.append(i)
+            tempSalle = self.subdivisionMap(tempSalle)
+            self.dictMap[j] = tempSalle
             #print(j)
             #print(self.salle)
-            self.salle = list()
+            tempSalle = list()
         
         self.fichier.close()
         
-    def subdivisionMap(self):
+    def subdivisionMap(self,tempSalle):
         salleDivise=list()
         tempLigne=list()        
-        for i in range(len(self.salle)):
-            for k in range(len(self.salle[i])):
+        for i in range(len(tempSalle)):
+            for k in range(len(tempSalle[i])):
                 for u in range(self.parent.parent.subDivision):
-                    tempLigne.append(self.salle[i][k])
+                    tempLigne.append(tempSalle[i][k])
             for r in range(self.parent.parent.subDivision):
                 salleDivise.append(tempLigne)
             tempLigne=list()
-        self.salle=salleDivise
+        tempSalle=salleDivise
+
+        return tempSalle
                     
     def liensCarte(self):
         self.dictionnaireLiens = dict()
@@ -124,7 +127,7 @@ class Salle():
         #On va ignorer le \n qui peut se retrouver dans les noms de map
         self.listeTempo = nomMap.split('\n')
         nomMap = self.listeTempo[0]
-        salle = self.dictMap[nomMap]
+        #salle = self.dictMap[nomMap]
         
         return nomMap
         

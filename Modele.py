@@ -27,6 +27,7 @@ class Jeu():
         self.artisanat = Artisanat.Artisanat(self)
         self.sourisX = 0
         self.sourisY = 0
+        self.ownPlayer = None
         
     def info(self, race):
         if race == "Humain":
@@ -40,8 +41,7 @@ class Jeu():
             
         return raceInfo.info()
     
-    def bougePersonnage(self):
-        ownPlayer = self.getPlayerById(self.parent.network.id)       
+    def bougePersonnage(self):     
         for joueur in self.listePersonnage:
             tempMatX, tempMatY = joueur.bouge()
         
@@ -49,10 +49,9 @@ class Jeu():
 
             if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
                 car=laMap[tempMatY][tempMatX]
-                #if joueur == ownPlayer:
                 joueur.nomMap=self.carte.s.changementCarte(car,joueur.nomMap)
                 self.coordProchaineZone(car, joueur)
-                self.parent.actualiserAffichageComplet(ownPlayer,self.listePersonnage)
+                self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
             else:
                 try:    
                     if laMap[tempMatY+self.subDivision][tempMatX]!='1':
@@ -126,9 +125,9 @@ class Jeu():
         '''
         if self.listeInterrupteur:
             for i in self.listeInterrupteur:
-                i.collision(self.joueur)
+                i.collision(self.ownPlayer)
                 if i.activer():
-                    self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
                     break
                     
                     
@@ -136,28 +135,21 @@ class Jeu():
         if self.listeRoche:
             for i in self.listeRoche:
                 if not i.aTerre:
-                    i.bouge(self.joueur)
+                    i.bouge(self.ownPlayer)
                     
         if self.listeDeclencheur:
             for i in self.listeDeclencheur:
-                i.collision(self.joueur)
+                i.collision(self.ownPlayer)
                 i.activer()
                 break
         '''
         pass
                 
     def gestionMort(self):
-        '''
-        if self.joueur.race.vie<=0:
-            self.joueur.mort()
-            self.carte.s.salle=self.carte.s.dictMap[self.joueur.nomMap]
-            self.parent.joueurMort(self.joueur,self.carte.s)
-        '''
-        ownPlayer = self.getPlayerById(self.parent.network.id)
-        if ownPlayer.race.vie <= 0:
-            ownPlayer.mort()
-            self.carte.s.salle = self.carte.s.dictMap[ownPlayer.nomMap]
-            self.parent.joueurMort(ownPlayer, self.carte.s)
+        for perso in self.listePersonnage:
+            if perso.race.vie <= 0:
+                perso.mort()
+                self.parent.joueurMort(joueur, self.getCurrentSalle())
 
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
@@ -168,8 +160,7 @@ class Jeu():
                 if i.energie != i.max_energie:
                     i.recharge()
         '''
-        ownPlayer = self.getPlayerById(self.parent.network.id)
-        ownPlayer.recharge()
+        self.ownPlayer.recharge()
                     
     def tire(self):
         '''
@@ -294,3 +285,6 @@ class Jeu():
     def updateQteClient(self, id):
         player = getPlayerById(id)
         self.listePersonnage.pop(player, None)
+
+    def getOwnPlayer(self):
+        return self.ownPlayer
