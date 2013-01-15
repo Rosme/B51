@@ -47,25 +47,27 @@ class Jeu():
             tempMatX, tempMatY = joueur.bouge()
         
             laMap = self.getSalleByName(joueur.nomMap)
-
-            if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
-                car=laMap[tempMatY][tempMatX]
-                joueur.nomMap=self.carte.s.changementCarte(car,joueur.nomMap)
-                self.coordProchaineZone(car, joueur)
-                self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
-            else:
-                try:    
-                    if laMap[tempMatY+self.subDivision][tempMatX]!='1':
-                        if laMap[tempMatY][tempMatX-4] == '1' or laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                            if laMap[tempMatY][tempMatX+26] != '1':
+            try:
+                if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
+                    car=laMap[tempMatY][tempMatX]
+                    joueur.nomMap=self.carte.s.changementCarte(car,joueur.nomMap)
+                    self.coordProchaineZone(car, joueur)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
+                else:
+                    try:    
+                        if laMap[tempMatY+self.subDivision][tempMatX]!='1':
+                            if laMap[tempMatY][tempMatX-4] == '1' or laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                                if laMap[tempMatY][tempMatX+26] != '1':
+                                    joueur.posMatX=tempMatX
+                                    joueur.posMatY=tempMatY
+                                    self.parent.actusliserPersonnage()
+                    except:
+                        if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                                 joueur.posMatX=tempMatX
                                 joueur.posMatY=tempMatY
                                 self.parent.actusliserPersonnage()
-                except:
-                    if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
-                            joueur.posMatX=tempMatX
-                            joueur.posMatY=tempMatY
-                            self.parent.actusliserPersonnage()
+            except:
+                pass
     
     def coordProchaineZone(self,char, joueur):
         laMap = self.getSalleByName(joueur.nomMap)
@@ -214,7 +216,10 @@ class Jeu():
         self.listeRoche.append(roche) 
            
     def nouveauInterrupt(self, posMat, nomMap):
-        interrupteur = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), False, nomMap)
+        if nomMap == "R_E1S1":
+            interrupteur = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), True, True, nomMap)
+        else:
+            interrupteur = Objet.Interrupteur(self, int(posMat[0]), int(posMat[1]), False, False, nomMap)
         self.listeInterrupteur.append(interrupteur)
     
     def nouveauDeclencheur(self, posMat, nomMap):
