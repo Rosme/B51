@@ -148,10 +148,15 @@ class Jeu():
         pass
                 
     def gestionMort(self):
+        '''
         for perso in self.listePersonnage:
             if perso.race.vie <= 0:
                 perso.mort()
-                self.parent.joueurMort(joueur, self.getCurrentSalle())
+                self.parent.joueurMort(perso, self.getCurrentSalle())
+        '''
+        if self.ownPlayer.race.vie <= 0:
+            #self.ownPlayer.mort()
+            self.parent.joueurMort(self.ownPlayer, self.getCurrentSalle())
 
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
@@ -284,6 +289,11 @@ class Jeu():
                     player.mouvement[3] = False
                 if event == "NO_FIRE":
                     player.mouvement[4] = False
+                if event == "MORT":
+                    player.mort()
+                    if player == self.ownPlayer:
+                        self.parent.actualiserAffichageComplet(player,self.listePersonnage)
+
 
 
     def getSalleByName(self, name):

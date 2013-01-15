@@ -96,9 +96,12 @@ class Controleur():
     
     #############################Gestion de la mort#############################    
     def joueurMort(self,perso,laSalle):
+        '''
         if perso.id == self.network.id:
-            self.app.frameJeu.debutDePartie(perso,lasalle)
+            self.app.frameJeu.debutDePartie(perso,laSalle)
         self.actualiserAffichageComplet(perso,self.jeu.listePersonnage)
+        '''
+        self.ownEventQueue.append("MORT")
     
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
     def raceInfo(self, race):
