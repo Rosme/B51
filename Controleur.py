@@ -136,7 +136,7 @@ class Controleur():
         #ecouteur lié à la souris
         self.app.frameJeu.map.bind("<Button-1>", self.peseTire)
         self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
-        #self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
+        self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
     
     ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):
@@ -254,5 +254,6 @@ class Controleur():
 
     def getPlayerLocal(self):
         return self.jeu.ownPlayer
+        
 if __name__ == '__main__':
     c = Controleur()
