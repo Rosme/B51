@@ -160,10 +160,10 @@ class FrameJeu():
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
         for i in listeBalle:
-            if self.parent.parent.getPlayerById(i.id).nomMap == self.parent.parent.getPlayerLocal.nomMap:
+            if i.nomMap == self.parent.parent.getPlayerLocal().nomMap:
                 x,y=self.coordMatriceAEcran(i)   
                 self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
-    
+
     def actualiserAffichage(self,perso,listePerso):
         self.map.delete(tkinter.ALL)
         self.affichageMap(perso,listePerso)

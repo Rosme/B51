@@ -67,8 +67,7 @@ class ClientId():
         self.id = id
 
 class ClientTireInfo():
-    def __init__(self,id,finX,finY):
-        self.id = id
+    def __init__(self,finX,finY):
         self.finX = finX
         self.finY = finY
             

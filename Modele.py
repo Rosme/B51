@@ -6,6 +6,7 @@ import Item
 import Carte
 import Artisanat
 import Objet
+import Netdata as nd
 
 class Jeu():
     def __init__(self, parent):
@@ -20,7 +21,7 @@ class Jeu():
         self.listeRoche = list()
         self.listeBalle = list()
         self.listeSac = list()
-        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4" , "R_S1", "R_E1S1", "S_S1" , "HELL"]
+        self.listeMap = ["MainRoom", "F_S1", "F_E1S1", "F_E1S2", "F_E1S3", "F_E1S4", "F_E1S5", "F_E1S6", "F_E2S1", "F_E2S2", "F_E2S3" , "F_E2S4", "F_E3S1", "I_S1" ,"I_E1S1", "I_E1S2", "I_E1S3", "I_E1S4" , "R_S1", "R_E1S1", "S_S1" , "HELL"]
         self.nbObjMap = len(self.listeMap)
         self.subDivision = 32
         self.carte = Carte.Carte(self)
@@ -161,24 +162,23 @@ class Jeu():
         self.ownPlayer.recharge()
                     
     def tire(self):
-        #for player in self.listePersonnage:
-            #if player.mouvement[4] and player.nomMap == self.ownPlayer.nomMap:
-                #if player.tire(self.listeBalle, self.sourisX, self.sourisY):
-                    #balle = self.listeBalle[len(self.listeBalle)-1]    
-        pass
+        for player in self.listePersonnage:
+            if player.mouvement[4] and player.nomMap == self.ownPlayer.nomMap:
+                if player.tire(self.listeBalle, player.posTireX, player.posTireY):
+                    balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
-        #self.collision(self.listePersonnage)
+        self.collision(self.listePersonnage)
         #self.collision(self.listeLogomate)
         
         self.parent.actualisationBalle(self.listeBalle)
    
     def collision(self, liste):  
         temp = self.listeBalle
-        '''
+        
         for i in self.listeBalle:
-            #i.bouge(self.joueur)
-            
+            i.bouge(self.getPlayerById(i.ownerId))
+            '''
             if i.veloY<0 and i.veloX<0:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
             elif i.veloY>0 and i.veloX>0:
@@ -187,10 +187,10 @@ class Jeu():
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
             else:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
-            
+            '''
             #if i.collision(liste, self.carte.s.salle):
                 #temp.remove(i)
-        '''  
+        
         self.listeBalle = temp
         
     
@@ -255,27 +255,31 @@ class Jeu():
     def treatEventsById(self, tickData):
         player = self.getPlayerById(tickData.id)
         for event in tickData.events:
-            #print(str(tickData.id) + " : " + event)
-            if event == "MOVE_UP":
-                player.mouvement[0] = True
-            if event == "MOVE_RIGHT":
-                player.mouvement[1] = True
-            if event == "MOVE_DOWN":
-                player.mouvement[2] = True
-            if event == "MOVE_LEFT":
-                player.mouvement[3] = True
-            if event == "FIRE":
+
+            if isinstance(event, nd.ClientTireInfo):
                 player.mouvement[4] = True
-            if event == "NO_UP":
-                player.mouvement[0] = False
-            if event == "NO_RIGHT":
-                player.mouvement[1] = False
-            if event == "NO_DOWN":
-                player.mouvement[2] = False
-            if event == "NO_LEFT":
-                player.mouvement[3] = False
-            if event == "NO_FIRE":
-                player.mouvement[4] = False
+                player.posTireX = event.finX
+                player.posTireY = event.finY
+            else:
+                if event == "MOVE_UP":
+                    player.mouvement[0] = True
+                if event == "MOVE_RIGHT":
+                    player.mouvement[1] = True
+                if event == "MOVE_DOWN":
+                    player.mouvement[2] = True
+                if event == "MOVE_LEFT":
+                    player.mouvement[3] = True
+                if event == "NO_UP":
+                    player.mouvement[0] = False
+                if event == "NO_RIGHT":
+                    player.mouvement[1] = False
+                if event == "NO_DOWN":
+                    player.mouvement[2] = False
+                if event == "NO_LEFT":
+                    player.mouvement[3] = False
+                if event == "NO_FIRE":
+                    player.mouvement[4] = False
+
 
     def getSalleByName(self, name):
         return self.carte.s.dictMap[name]

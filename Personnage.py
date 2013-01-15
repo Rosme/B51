@@ -13,6 +13,8 @@ class Personnage():
         #0-haut,1-droite,2-bas,3-gauche,4-tire
         for i in range(5):
             self.mouvement.append(False)
+        self.posTireX = None
+        self.posTireY = None
         
     def nouveauPersonnage(self, nom, race):
         #nom du joueur
@@ -149,7 +151,7 @@ class Personnage():
             if i.id == 7:
                 if i.energie - i.cout >= 0:
                     i.utiliser()
-                    listeBalle.append(Balle(self, x, y, i.force+self.race.attaque))
+                    listeBalle.append(Balle(self.id, self, x, y, i.force+self.race.attaque))
                     if listeBalle[len(listeBalle)-1].valide:
                         return True
                     else:
