@@ -228,25 +228,17 @@ class Controleur():
     def peseTire(self,event):
         if self.contexte == "enJeu":
             self.tireCoord(event)
-            self.ownEventQueue.append("FIRE")
-            ########################################### Envoie signal et de la destination#######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            '''
-            self.jeu.ownPlayer.mouvement[4] = True
-            self.jeu.sourisX = event.x
-            self.jeu.sourisY = event.y  
-            '''
+            self.ownEventQueue.append(nd.ClientTireInfo(self.jeu.ownPlayer.posTireX, self.jeu.ownPlayer.posTireY))
         
     def relacheTire(self,event):
-        #self.ownEventQueue.append("NO_FIRE")
-        #self.jeu.ownPlayer.mouvement[4] = False
-        pass
+        self.ownEventQueue.append("NO_FIRE")
     
     #prend a chaque deplacement de souris la nouvelle position en x,y de la souris
     def tireCoord(self,event):
         x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.ownPlayer)
         x-=self.app.largeurFrame/2
         y-=self.app.hauteurFrame/2
-        self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
+        self.jeu.ownPlayer.posTireY, self.jeu.ownPlayer.posTireX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
         '''
         if self.jeu.ownPlayer.mouvement[4]:
             x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.ownPlayer)
