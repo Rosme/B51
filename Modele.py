@@ -130,8 +130,6 @@ class Jeu():
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
                     break
                     
-                    
-                    
         if self.listeRoche:
             for i in self.listeRoche:
                 if not i.aTerre:
@@ -139,9 +137,10 @@ class Jeu():
                     
         if self.listeDeclencheur:
             for i in self.listeDeclencheur:
-                i.collision(self.ownPlayer)
-                i.activer()
-                break
+                i.collision(self.joueur)
+                if i.activer():
+                    self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                    break
         '''
         pass
                 

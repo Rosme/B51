@@ -263,6 +263,7 @@ break
 Roche
 break
 Interrupteur
+1:9
 break
 Declencheur
 22:10

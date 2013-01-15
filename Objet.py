@@ -13,7 +13,7 @@ class Objet():
         self.aTerre = True
         
     def obtenirLimite(self):
-        return [self.posMatX+(self.parent.subDivision-1)+self.padDroit, self.posMatY+(self.parent.subDivision-1)+self.padBas, self.posMatX+self.padGauche, self.posMatY+self.padHaut]
+        return [self.posMatX+self.padGauche+self.padHaut, self.posMatY+self.padGauche+self.padHaut, self.posMatX+(self.parent.subDivision-1)+self.padDroit+self.padBas, self.posMatY+(self.parent.subDivision-1)+self.padDroit+self.padBas]
 
 class Sac(Objet):
     def __init__(self, parent, matX, matY, nomMap):
@@ -154,10 +154,10 @@ class Roche(Objet):
                 i.aTerre = True
 
 class Interrupteur(Objet):
-    def __init__(self, parent, matX, matY, unique, nomMap):
+    def __init__(self, parent, matX, matY, unique, aTerre, nomMap):
         Objet.__init__(self, parent, matX, matY, -2, -2, 2, 2, nomMap)
         self.active = False
-        self.aTerre = False
+        self.aTerre = aTerre
         self.usageUnique = unique
         self.out = True
     
@@ -189,7 +189,8 @@ class Interrupteur(Objet):
                         else:
                             valide = False
                         if valide:
-                            
+                            if self.usageUnique:
+                                self.aTerre = True
                             self.active = True
                             return True
                         k+=2
@@ -217,6 +218,16 @@ class Interrupteur(Objet):
              
             self.parent.carte.s.salle = map
             return False
+        
+        if self.parent.joueur.nomMap == "R_E1S1":
+            if self.posMatX == 1*self.parent.subDivision and self.posMatY == 9*self.parent.subDivision:
+                if self.active:
+                    for i in self.parent.listeDeclencheur:
+                        if i.nomMap == "R_E1S1":
+                            if i.posMatX == 22*self.parent.subDivision and i.posMatY == 10*self.parent.subDivision:
+                                i.aTerre = True
+                                return False
+            return False
 
     def ouvrePorte(self, ligne, colonne, map, car, simple):
         temp=[]
@@ -243,12 +254,12 @@ class Declencheur(Objet):
         Objet.__init__(self, parent, matX, matY, 0, 0, 0, 4, nomMap)
         self.active = False
         self.aTerre = False
+        self.premierDeclenchement = False
         
     def collision(self, perso):
         if not self.aTerre:
             limitePerso = perso.obtenirLimite()
             limiteObjet = self.obtenirLimite()
-            #print(limiteObjet[0], limiteObjet[1],limiteObjet[2],limiteObjet[3])
             j=0
             while j < 4:
                 if limiteObjet[j] >= limitePerso[0] and limiteObjet[j] <= limitePerso[2]:
@@ -285,7 +296,44 @@ class Declencheur(Objet):
         if self.parent.joueur.nomMap == "R_E1S1":
             if self.posMatX == 22*self.parent.subDivision and self.posMatY == 10*self.parent.subDivision:
                 if self.active:
+                    #Téléporte le joueur à la case 18
                     self.parent.joueur.posMatX = 18*self.parent.subDivision
+                    
+                    #Si elle n'a jamais été déclenchée, on fait apparaitre une switch et rafraichie la map
+                    if not self.premierDeclenchement:
+                        
+                        for i in self.parent.listeInterrupteur:
+                            
+                            if i.nomMap == "R_E1S1":
+                                
+                                if i.posMatX == 1*self.parent.subDivision and i.posMatY == 9*self.parent.subDivision:
+                                    i.aTerre = False
+                                    self.placeObjet(10,1,self.parent.carte.s.salle,'w')
+                                    self.premierDeclenchement = True
+                                    return True
+                            
+            return False
+        
+    def placeObjet(self, ligne, colonne, map, car):
+        ligne *=self.parent.subDivision
+        colonne *=self.parent.subDivision
+        for j in range(self.parent.subDivision):
+            temp=[]
+            tempLigne = map.pop(ligne+j)
+            i = 0
+            while i < colonne:
+                temp.append(tempLigne[i])
+                i+=1
+                
+            for k in range(self.parent.subDivision):
+                temp.append(car)
+                i+=1
+        
+            while i < len(tempLigne):
+                temp.append(tempLigne[i])
+                i+=1    
+            
+            map.insert(ligne, temp)
         
 class Levier(Objet):
     def __init__(self, parent, matX, matY, force, energie, contreForce, nomMap):
@@ -343,7 +391,7 @@ class Levier(Objet):
             
         if self.parent.joueur.nomMap == "F_E1S3":
             map = self.parent.carte.s.dictMap["F_E1S1"]
-            if self.posMatX == 16 and self.posMatY == 2:
+            if self.posMatX == 16*self.parent.subDivision and self.posMatY == 2*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(1, 14, map, "m", False)
                     self.parent.carte.s.dictMap["F_E1S1"] = map
@@ -354,7 +402,7 @@ class Levier(Objet):
         
         if self.parent.joueur.nomMap == "F_E1S5":
             map = self.parent.carte.s.salle
-            if self.posMatX == 1 and self.posMatY == 24:
+            if self.posMatX == 1*self.parent.subDivision and self.posMatY == 24*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(13, 28, map, "0", False)
                     self.parent.carte.s.salle = map
@@ -364,7 +412,7 @@ class Levier(Objet):
             
         if self.parent.joueur.nomMap == "F_E2S3":
             map = self.parent.carte.s.salle
-            if self.posMatX == 42 and self.posMatY == 35:
+            if self.posMatX == 42*self.parent.subDivision and self.posMatY == 35*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(17, 21, map, "0", False)
                     self.parent.carte.s.salle = map
