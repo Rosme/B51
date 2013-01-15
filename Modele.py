@@ -189,8 +189,8 @@ class Jeu():
             else:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
             '''
-            #if i.collision(liste, self.carte.s.salle):
-                #temp.remove(i)
+            if i.collision(liste, self.getSalleByName(i.nomMap)):
+                temp.remove(i)
         
         self.listeBalle = temp
         

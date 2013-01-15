@@ -50,18 +50,19 @@ class Balle():
     def collision(self, liste, map):        
         if self.distanceParcouru < self.distanceMax:
             for i in liste:
-                rectPerso = i.obtenirLimite()
-                rectBalle = self.obtenirLimite()
-                j=0
-                while j < 4:
-                    if rectBalle[j] > rectPerso[0] and rectBalle[j] < rectPerso[2]:
-                        k=1
-                        while k < 4:
-                            if rectBalle[k] > rectPerso[1] and rectBalle[k] < rectPerso[3]:
-                                i.touche(self.force)
-                                return True
-                            k+=2
-                    j+=2
+                if i.id != self.ownerId:
+                    rectPerso = i.obtenirLimite()
+                    rectBalle = self.obtenirLimite()
+                    j=0
+                    while j < 4:
+                        if rectBalle[j] > rectPerso[0] and rectBalle[j] < rectPerso[2]:
+                            k=1
+                            while k < 4:
+                                if rectBalle[k] > rectPerso[1] and rectBalle[k] < rectPerso[3]:
+                                    i.touche(self.force)
+                                    return True
+                                k+=2
+                        j+=2
             try:
                 if map[self.posMatY][self.posMatX]=='1':    
                     return True
