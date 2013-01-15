@@ -239,13 +239,6 @@ class Controleur():
         x-=self.app.largeurFrame/2
         y-=self.app.hauteurFrame/2
         self.jeu.ownPlayer.posTireY, self.jeu.ownPlayer.posTireX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
-        '''
-        if self.jeu.ownPlayer.mouvement[4]:
-            x,y = self.app.frameJeu.coordMatriceAEcran(self.jeu.ownPlayer)
-            x-=self.app.largeurFrame/2
-            y-=self.app.hauteurFrame/2
-            self.jeu.sourisY, self.jeu.sourisX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
-        '''
 
     def getMap(self):
         return self.jeu.getCurrentSalle()

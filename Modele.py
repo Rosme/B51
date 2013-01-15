@@ -169,17 +169,17 @@ class Jeu():
                     balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
-        #self.collision(self.listePersonnage)
+        self.collision(self.listePersonnage)
         #self.collision(self.listeLogomate)
         
         self.parent.actualisationBalle(self.listeBalle)
    
     def collision(self, liste):  
         temp = self.listeBalle
-        '''
+        
         for i in self.listeBalle:
-            #i.bouge(self.joueur)
-            
+            i.bouge(self.getPlayerById(i.ownerId))
+            '''
             if i.veloY<0 and i.veloX<0:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
             elif i.veloY>0 and i.veloX>0:
@@ -188,10 +188,10 @@ class Jeu():
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
             else:
                 i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
-            
+            '''
             #if i.collision(liste, self.carte.s.salle):
                 #temp.remove(i)
-        '''  
+        
         self.listeBalle = temp
         
     
@@ -256,7 +256,7 @@ class Jeu():
     def treatEventsById(self, tickData):
         player = self.getPlayerById(tickData.id)
         for event in tickData.events:
-            
+
             if isinstance(event, nd.ClientTireInfo):
                 player.mouvement[4] = True
                 player.posTireX = event.finX
