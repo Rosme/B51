@@ -185,6 +185,8 @@ break
 Levier
 break
 ;
+F_E3S1
+;
 I_S1
 ;
 I_E1S1
@@ -263,6 +265,7 @@ break
 Roche
 break
 Interrupteur
+1:9
 break
 Declencheur
 22:10
