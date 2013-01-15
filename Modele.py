@@ -171,8 +171,8 @@ class Jeu():
     def tire(self):
         for player in self.listePersonnage:
             if player.mouvement[4] and player.nomMap == self.ownPlayer.nomMap:
-                if player.tire(self.listeBalle, player.posTireX, player.posTireY):
-                    balle = self.listeBalle[len(self.listeBalle)-1]    
+                player.tire(self.listeBalle, player.posTireX, player.posTireY)
+                #balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
         self.collision(self.listePersonnage)

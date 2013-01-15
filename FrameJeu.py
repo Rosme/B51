@@ -159,7 +159,7 @@ class FrameJeu():
         for i in listeBalle:
             if i.nomMap == self.parent.parent.getPlayerLocal().nomMap:
                 x,y=self.coordMatriceAEcran(i)   
-                self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
+                self.map.create_oval(x, y-28, x+5,y+5-28, fill='red', tags="balle")
 
     def actualiserAffichage(self,perso,listePerso):
         self.map.delete(tkinter.ALL)

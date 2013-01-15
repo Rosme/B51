@@ -149,13 +149,20 @@ class Personnage():
         for i in self.inventaire.items:
             #ID de l'arme = 7
             if i.id == 7:
-                if i.energie - i.cout >= 0:
-                    i.utiliser()
+                if self.id == self.parent.ownPlayer.id:
+                    if i.energie - i.cout >= 0:
+                        i.utiliser()
+                        listeBalle.append(Balle(self.id, self, x, y, i.force+self.race.attaque))
+                        if listeBalle[len(listeBalle)-1].valide:
+                            return True
+                        else:
+                            return False
+                else:
                     listeBalle.append(Balle(self.id, self, x, y, i.force+self.race.attaque))
                     if listeBalle[len(listeBalle)-1].valide:
                         return True
                     else:
-                        return False
+                        return False   
             
     def recharge(self):
         #Recharge l'arme
