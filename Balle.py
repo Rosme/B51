@@ -6,7 +6,6 @@ class Balle():
         self.ownerId = ownerId
         self.posMatX = perso.posMatX #sera initialisé au moment de la création dans le controleur.
         self.posMatY = perso.posMatY #sera initialisé au moment de la création dans le controleur.
-        self.nomMap = perso.nomMap
         self.force = force
         self.radius = 1
         self.velocite = 10

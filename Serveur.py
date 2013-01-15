@@ -215,6 +215,7 @@ class Serveur():
                     print(data.id, data.events)
             '''
             sleep(0.05)
+            #sleep(1)
 
             self.eventQueue = []
 

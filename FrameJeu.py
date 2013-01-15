@@ -160,7 +160,7 @@ class FrameJeu():
     def tire(self,listeBalle):
         #affichage de toutes les balles existantes 
         for i in listeBalle:
-            if i.nomMap == self.parent.parent.getPlayerLocal().nomMap:
+            if self.parent.parent.getPlayerById(i.ownerId).nomMap == self.parent.parent.getPlayerLocal().nomMap:
                 x,y=self.coordMatriceAEcran(i)   
                 self.map.create_oval(x, y, x+5,y+5, fill='red', tags="balle")
 
