@@ -1,7 +1,6 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
 import math
-import MenuInventaire
 
 class FrameJeu():
     #############################Initialisation de variables#############################
@@ -34,8 +33,6 @@ class FrameJeu():
         #création du frame principale du jeu
         #contient le haud du haut et l'affichage du jeu
         self.frameDuJeu=tkinter.Frame(self.parent.root)
-        
-        self.menuI= MenuInventaire.MenuInventaire(self)
         
         #création des canvas pour le jeu, la scrollbar invisible et le futur chat
         self.dispositionPrincipale()

@@ -218,15 +218,16 @@ class Controleur():
                     self.network.disconnect()
             
         
-        '''
         if key=='I':
             if self.contexte == "enJeu":
                 self.contexte="inventaire"
-                self.app.menuInventaire()
+                self.app.frameJeu.frameDuJeu.pack_forget()
+                self.app.menuInventaire(self.jeu.ownPlayer.inventaire)
+                
             elif self.contexte == "inventaire":
-                #faire disparaitre l'inventaire
-                pass
-        '''     
+                self.contexte = "enJeu"
+                self.app.menuI.effacemenu()
+                self.app.frameJeu.frameDuJeu.pack() 
         
     def peseTire(self,event):
         if self.contexte == "enJeu":

@@ -3,6 +3,7 @@ import tkinter
 import MenuPrincipal
 import MenuNouvellePartie
 import MenuChargerPartie
+import MenuInventaire
 import MenuConnexion
 import MenuLobby
 import HudHaut
@@ -19,8 +20,6 @@ class Application():
         self.largeurFrame=1024
         self.hauteurFrame=700
         
-        self.nomJoueur = "Marco"
-
         self.root=tkinter.Tk()
         self.root.protocol("WM_DELETE_WINDOW", self.quitter)
         self.root.config(bg="#000")
@@ -38,6 +37,7 @@ class Application():
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
         self.menuL = MenuLobby.MenuLobby(self)
+        self.menuI= MenuInventaire.MenuInventaire(self)
         #création du hud du haut placé dans frameDuJeu
         self.hudH=HudHaut.HudHaut(self,self.root)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
@@ -52,8 +52,8 @@ class Application():
         self.menuP.effaceMenuPrinc()
         self.menuN.menuNouvellePartie()
         
-    def menuInventaire(self):
-        self.frameJeu.menuI.menuInventaire()
+    def menuInventaire(self,invperso):
+        self.menuI.menuInventaire(invperso)
     
     def menuConnexion(self):
         self.menuC.menuConnexion()
