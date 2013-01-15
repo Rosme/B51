@@ -228,7 +228,7 @@ class Controleur():
     def peseTire(self,event):
         if self.contexte == "enJeu":
             self.tireCoord(event)
-            #self.ownEventQueue.append("FIRE")
+            self.ownEventQueue.append("FIRE")
             ########################################### Envoie signal et de la destination#######################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             '''
             self.jeu.ownPlayer.mouvement[4] = True
