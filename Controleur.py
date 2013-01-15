@@ -60,7 +60,6 @@ class Controleur():
             self.ownEventQueue = []
             
             self.compteur+=1
-            
             self.app.frameJeu.map.after(25,self.miseAJour)
 
 

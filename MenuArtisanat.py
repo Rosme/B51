@@ -36,7 +36,7 @@ class MenuArtisanat():
         self.canevabouton=tkinter.Canvas(self.lecadre, bg='#FFFFFF', width=500, height=500)
         self.canevabouton.pack()
         
-        self.canevabouton.create_text(100,15,text="Liste d'objet"  )
+        self.canevabouton.create_text(100,15,text="Liste d'objet" ,font=("Arial","20"))
         ley=1
         
         ''' creation de la liste des items pour mixer dans l'artisanat '''
@@ -44,7 +44,7 @@ class MenuArtisanat():
             if o.id==0 or o.id==1 or o.id==2:
                 self.rb= tkinter.Radiobutton(self.canevabouton, variable=self.v, value=o.id)
                 self.rb.place(x=0,y=30+40*ley)
-                self.labelItem = self.canevabouton.create_text(250,45+40*ley,text=o.nom+"  "+o.description,anchor="center",fill='red',font=("Arial","8"))       
+                self.labelItem = self.canevabouton.create_text(250,45+40*ley,text=o.nom+"  "+o.description,anchor="center",fill='blue',font=("Arial","8"))       
                 ley+=1         
           
         ''' creation des boutons pour le mix dans l'artisanats '''  
@@ -67,15 +67,14 @@ class MenuArtisanat():
         ''' creation de la liste des parchemin que le joueur possede'''
           
         # for pour les parchemin
-        self.choixparchemin=""
-        self.deuxcanevas.create_text(100,47+80*ley,text="Liste de parchemin"  )
+        self.deuxcanevas.create_text(100,47+80*ley,text="Liste de parchemins",font=("Arial","15"))
         ley+=1
         for i in self.parcheminEnPoche:
             if i.possede == True:
                 
                 self.rb= tkinter.Radiobutton(self.deuxcanevas,variable=self.p, value=i.parcheminId)
                 self.rb.place(x=0,y=29+60*ley)
-                self.labelItem = self.deuxcanevas.create_text(250,29+60*ley,text=i.description,anchor="center",fill='red',font=("Arial","8"))
+                self.labelItem = self.deuxcanevas.create_text(250,29+60*ley,text=i.description,anchor="center",fill='blue',font=("Arial","8"))
                 ley+=1 
         
         ''' creation du bouton parchemin et son emplacement et le bouton annuler '''
@@ -86,10 +85,10 @@ class MenuArtisanat():
         boutonannule.place(x=350,y=40)
 
     def interface(self):
-        self.cadreUn=tkinter.Frame(self.parent.root, bg='#152C5F')
+        self.cadreUn=tkinter.Frame(self.parent.root, bg='#FFFFFF')
         self.cadreUn.grid_rowconfigure(0, weight=0)
         self.cadreUn.grid_columnconfigure(0, weight=0)
-        self.lecanevas=tkinter.Canvas(self.cadreUn, width=490, height=695, scrollregion=(0,0,700,1000), bg='#152C5F')
+        self.lecanevas=tkinter.Canvas(self.cadreUn, width=490, height=695, scrollregion=(0,0,700,1000), bg='#FFFFFF')
         self.lecanevas.grid(row=0, column=0, sticky='ns')
         
         self.scrollY = tkinter.Scrollbar(self.cadreUn, orient='vertical',command=self.lecanevas.yview)
@@ -97,7 +96,7 @@ class MenuArtisanat():
         
         self.lecanevas.config(yscrollcommand=self.scrollY.set)
         
-        self.lecadre=tkinter.Frame(self.lecanevas, bg='#152C5F')
+        self.lecadre=tkinter.Frame(self.lecanevas, bg='#000000')
         self.lecanevas.create_window(0, 0, window=self.lecadre, anchor='nw')
         
     # selection du premiet item
