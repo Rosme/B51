@@ -193,8 +193,8 @@ class Jeu():
     def nouveauLogo(self, posMat,nomMap):
         pers = Personnage(self)
         pers.nouveauPersonnage("Logo", Race.Logomate())
-        pers.posMatX = int(posMat[0])
-        pers.posMatY = int(posMat[1])
+        pers.posMatX = int(posMat[0])*self.subDivision
+        pers.posMatY = int(posMat[1])*self.subDivision
         self.listeLogomate.append(pers)
         
     def nouveauSac(self,posMat, nomMap):

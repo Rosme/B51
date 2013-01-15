@@ -41,7 +41,7 @@ class Controleur():
             if self.compteur%1==0:
                 self.jeu.tire()
                 
-            if self.compteur%7 == 0:
+            if self.compteur%2 == 0:
                 self.jeu.actuLogo()
                 
             self.compteur+=1

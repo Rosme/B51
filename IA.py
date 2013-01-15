@@ -10,8 +10,8 @@ class IA():
         self.subDivision =self.parent.parent.subDivision
         self.posMatX = self.parent.posMatX
         self.posMatY = self.parent.posMatY
-        self.destMatX = 5*self.subDivision ##destination dans la matrice
-        self.destMatY = 5*self.subDivision ##destination dans la matrice 
+        self.destMatX =5*self.subDivision  ##destination dans la matrice
+        self.destMatY = 5*self.subDivision##destination dans la matrice 
         self.listeOuverte =[]  ## liste qui contient tout les noeud qui n'ont pas été analysé 
         self.listeFerme = []   ## liste qui contient tout les noeud qui ont été analysé    
         self.listeMouvement = []  ## liste des nouvement qui'il faut faire pour se rendre a destination
@@ -19,6 +19,7 @@ class IA():
         self.oldDestY =111111 #/j'ai mis des gros chiffres car j'ai pas trouver de facon de faire si il n'y a rien 
         self.i = 0
         self.first = True
+        self.premier= True 
     
     def choisitAction(self):
         pass
@@ -35,7 +36,6 @@ class IA():
                     ## si la destination n'à pas changer je ne recalcul pas tout comme un tarla 
                 self.chercheChemin(map)   
             self.calculDeplacement(self.listeMouvement[-1])
-            print(len(self.listeMouvement))
             self.listeMouvement.pop()
         
     def chercheChemin(self,map):
@@ -46,6 +46,7 @@ class IA():
         self.listeFerme.append(self.noeudCourant)
         self.oldDestX = self.destMatX
         self.oldDestY = self.destMatY
+        
         while (self.noeudCourant.posX != self.destMatX and self.noeudCourant.posY != self.destMatY):
             i = 1
             while i <10:
@@ -60,8 +61,12 @@ class IA():
                     
                     if not self.dansListeFerme(self.noeudTemp):  ## si le noeud n'a pas déjà été vérifié
                         self.dansListeOuverte(self.noeudTemp)  
+                     
                 i +=1
-
+            '''
+            for i in self.listeOuverte:
+                if self.noeudCourant.posX == i.posX and self.noeudCourant.posY == i.posY:
+                    print("NOOOOOOO")'''
             self.noeudCourant = self.choisirNoeudCourant()
         self.listeDeplacement(self.noeudCourant)  
  
@@ -90,26 +95,34 @@ class IA():
         print("destination",self.destMatX,self.destMatY)
         print("position",posX,posY)
         '''
+
+        #gauche bas 
         if direction == 1:
-            if map[posX+1][posY] == 1 and map[posX][posY-1] == 1 or map[posX-1][posY+1] == 1:
+            if map[posX+1][posY] == 1 and map[posX][posY-1] == 1 or map[posX-1][posY+1] == '1':
                 return 2,2
             else:
                 return -1, 1
-                
+        
+        # gauche haut 
         elif direction == 7:
-            if map[posX+1][posY] == 1 and map[posX][posY+1] == 1 or map[posX-1][posY-1] == 1:
+            if map[posX-1][posY-1] == '1':
+                if self.premier:
+                    self.premier=False
+                    print("position",posX,posY)
                 return 2,2
             else:
                 return -1, -1
                 
+        # droite haut
         elif direction == 9:
-            if map[posX-1][posY] == 1 and map[posX][posY+1] == 1 or map[posX+1][posY-1] == 1:
+            if map[posX-1][posY] == 1 and map[posX][posY+1] == 1 or map[posX+1][posY-1] == '1':
                 return 2,2
             else:
                 return 1, -1
                 
+        #droite bas
         elif direction == 3:
-            if map[posX-1][posY] == 1 and map[posX][posY-1] == 1 or map[posX+1][posY+1] == 1:
+            if map[posX-1][posY] == 1 and map[posX][posY-1] == 1 or map[posX+1][posY+1] == '1':
                 return 2,2
             else:
                 return 1, 1
@@ -117,20 +130,24 @@ class IA():
         else:
             return  2,2
     
+        #bas
         if direction ==2:
-            if map[posX][posY+1] == 1:
+            if map[posX][posY+1] == '1':
                 return 0,1
             
+        #droite
         elif direction == 6:
-            if map[posX+1][posY] == 1:
+            if map[posX+1][posY] == '1':
                 return 1,0
             
+        #haut
         elif direction == 8:
-            if map[posX][posY-1] == 1:
+            if map[posX][posY-1] == '1':
                 return 0,-1
             
+        #gauche
         elif direction == 4:
-            if map[posX-1][posY] == 1:
+            if map[posX-1][posY] == '1':
                 return -1,0
         
         else:
@@ -168,7 +185,10 @@ class IA():
             else:
                 if noeudTemp.f > i.f:
                     noeudTemp=i
-                    
+        if self.premier == False:
+            for i in self.listeOuverte:
+                if i.posX == 224 and i.posY== 224:
+                    print("la bonne case",i.f)
         self.listeFerme.append(noeudTemp)
         self.listeOuverte.remove(noeudTemp)
         return noeudTemp
@@ -176,26 +196,22 @@ class IA():
     def calculDeplacement(self,destination):
         ## on calcul la direction dans laquelle on doit se déplacer
         #0-haut,1-droite,2-bas,3-gauche
-        print("asjkxbdfl")
+        deplacement = 1
         if destination.posX > self.posMatX:
-            print(1)
-            self.posMatX +=1
-            self.parent.posMatX +=1
+            self.posMatX +=deplacement
+            self.parent.posMatX +=deplacement
             
         elif destination.posX < self.posMatX:
-            print(2)
-            self.posMatX -=1
-            self.parent.posMatX -=1
+            self.posMatX -=deplacement
+            self.parent.posMatX -=deplacement
             
         if destination.posY < self.posMatY:
-            print(3)
-            self.posMatY -=1
-            self.parent.posMatY -=1
+            self.posMatY -=deplacement
+            self.parent.posMatY -=deplacement
             
         elif destination.posY > self.posMatY:
-            print(4)
-            self.posMatY +=1  
-            self.parent.posMatY +=1 
+            self.posMatY +=deplacement
+            self.parent.posMatY +=deplacement
      
      ### Vérification si le logomate est arrivée a destination       
     def arriverFin(self):
