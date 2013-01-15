@@ -231,7 +231,6 @@ class Controleur():
     def peseTire(self,event):
         if self.contexte == "enJeu":
             self.tireCoord(event)
-            self.ownEventQueue.append(nd.ClientTireInfo(self.jeu.ownPlayer.posTireX, self.jeu.ownPlayer.posTireY))
         
     def relacheTire(self,event):
         self.ownEventQueue.append("NO_FIRE")
@@ -242,6 +241,7 @@ class Controleur():
         x-=self.app.largeurFrame/2
         y-=self.app.hauteurFrame/2
         self.jeu.ownPlayer.posTireY, self.jeu.ownPlayer.posTireX = self.app.frameJeu.coordEcranAMatrice(event.x+x,event.y+y)
+        self.ownEventQueue.append(nd.ClientTireInfo(self.jeu.ownPlayer.posTireX, self.jeu.ownPlayer.posTireY))
 
     def getMap(self):
         return self.jeu.getCurrentSalle()
