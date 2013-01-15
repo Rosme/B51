@@ -130,6 +130,9 @@ class Controleur():
         
     def fabricationDematerialisateur(self):
         self.jeu.artisanat.fabricationDematerialisateur()
+
+    def mixCle(self):
+        self.jeu.artisanat.mixeCle()
     
     #############################Ajout d'ecouteur#############################
     def ajoutEcouteur(self):
@@ -222,11 +225,13 @@ class Controleur():
             if self.contexte == "enJeu":
                 self.contexte="inventaire"
                 self.app.frameJeu.frameDuJeu.pack_forget()
+                self.app.menuArtisanat(self.jeu.artisanat.listeParchemin,self.jeu.ownPlayer.inventaire.items)
                 self.app.menuInventaire(self.jeu.ownPlayer.inventaire)
                 
             elif self.contexte == "inventaire":
                 self.contexte = "enJeu"
                 self.app.menuI.effacemenu()
+                self.app.menuA.effacemenu()
                 self.app.frameJeu.frameDuJeu.pack() 
         
     def peseTire(self,event):

@@ -89,7 +89,7 @@ class MenuInventaire():
         
         return self.objetsEnInventaire
                         
-    def selectionerObjet(self):    
+    def selectionerObjet(self):   
         return str(self.choisirItemInv.get())
         
     def utiliser(self):

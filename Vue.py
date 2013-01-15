@@ -4,6 +4,7 @@ import MenuPrincipal
 import MenuNouvellePartie
 import MenuChargerPartie
 import MenuInventaire
+import MenuArtisanat
 import MenuConnexion
 import MenuLobby
 import HudHaut
@@ -37,7 +38,8 @@ class Application():
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
         self.menuL = MenuLobby.MenuLobby(self)
-        self.menuI= MenuInventaire.MenuInventaire(self)
+        self.menuI = MenuInventaire.MenuInventaire(self)
+        self.menuA = MenuArtisanat.MenuArtisanat(self)
         #création du hud du haut placé dans frameDuJeu
         self.hudH=HudHaut.HudHaut(self,self.root)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
@@ -54,6 +56,9 @@ class Application():
         
     def menuInventaire(self,invperso):
         self.menuI.menuInventaire(invperso)
+
+    def menuArtisanat(self,listeParchemin,itemPerso):
+        self.menuA.menuArtisanat(listeParchemin,itemPerso)
     
     def menuConnexion(self):
         self.menuC.menuConnexion()
