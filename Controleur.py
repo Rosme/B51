@@ -95,11 +95,6 @@ class Controleur():
     
     #############################Gestion de la mort#############################    
     def joueurMort(self,perso,laSalle):
-        '''
-        if perso.id == self.network.id:
-            self.app.frameJeu.debutDePartie(perso,laSalle)
-        self.actualiserAffichageComplet(perso,self.jeu.listePersonnage)
-        '''
         self.ownEventQueue.append("MORT")
     
     ############################# Méthodes en lien avec la création et la suppression d'éléments du modèle #############################
@@ -160,31 +155,31 @@ class Controleur():
             if key == 'Q':
                 self.autoSoin()
                 
-            '''
+            
             if key == 'E':
                 if self.jeu.listeRoche:
                     for i in self.jeu.listeRoche:
-                        if i.nomMap == self.jeu.joueur.nomMap:
-                            if not i.prendre(self.jeu.joueur):
-                                i.bouge(self.jeu.joueur)
+                        if i.nomMap == self.jeu.ownPlayer.nomMap:
+                            if not i.prendre(self.jeu.ownPlayer):
+                                i.bouge(self.jeu.ownPlayer)
                             else:
                                 i.depose()
                 
                 if self.jeu.listeLevier and not self.press:
                     for i in self.jeu.listeLevier:
-                        if i.nomMap == self.jeu.joueur.nomMap:
-                            if i.collision(self.jeu.joueur):
+                        if i.nomMap == self.jeu.ownPlayer.nomMap:
+                            if i.collision(self.jeu.ownPlayer):
                                 if i.tire():
                                     if i.activer():
-                                        self.app.frameJeu.actualiserAffichage(self.jeu.joueur,self.jeu.carte.s)
+                                        self.app.frameJeu.actualiserAffichage(self.jeu.ownPlayer,self.jeu.listePersonnage)
                                     
                 if self.jeu.listeCoffre:
                     for i in self.jeu.listeCoffre:
-                        if i.nomMap == self.jeu.joueur.nomMap:
-                            i.ouvrir(self.jeu.joueur)
+                        if i.nomMap == self.jeu.ownPlayer.nomMap:
+                            i.ouvrir(self.jeu.ownPlayer)
                         
                 self.press = True
-            '''
+            
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()

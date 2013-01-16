@@ -200,26 +200,26 @@ class Interrupteur(Objet):
             return False
     
     def activer(self):
-        if self.parent.joueur.nomMap == "F_E1S1":
-            map = self.parent.carte.s.salle
+        if self.parent.ownPlayer.nomMap == "F_E1S1":
+            map = self.parent.getSalleByName("F_E1S1")
             if self.posMatX == 26*self.parent.subDivision and self.posMatY == 21*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(26, 14, map, "0", False)
                     if self.out:
                         self.out = not self.out
-                        self.parent.carte.s.salle = map
+                        self.parent.carte.s.dictMap["F_E1S1"] = map
                         return True
                 else:
                     self.ouvrePorte(26, 14, map, "2", False)
                     if not self.out:
                         self.out = not self.out
-                        self.parent.carte.s.salle = map
+                        self.parent.carte.s.dictMap["F_E1S1"] = map
                         return True
              
-            self.parent.carte.s.salle = map
+            self.parent.carte.s.dictMap["F_E1S1"] = map
             return False
         
-        if self.parent.joueur.nomMap == "R_E1S1":
+        if self.parent.ownPlayer.nomMap == "R_E1S1":
             if self.posMatX == 1*self.parent.subDivision and self.posMatY == 9*self.parent.subDivision:
                 if self.active:
                     for i in self.parent.listeDeclencheur:
@@ -293,11 +293,11 @@ class Declencheur(Objet):
             return False
         
     def activer(self):
-        if self.parent.joueur.nomMap == "R_E1S1":
+        if self.parent.ownPlayer.nomMap == "R_E1S1":
             if self.posMatX == 22*self.parent.subDivision and self.posMatY == 10*self.parent.subDivision:
                 if self.active:
                     #Téléporte le joueur à la case 18
-                    self.parent.joueur.posMatX = 18*self.parent.subDivision
+                    self.parent.ownPlayer.posMatX = 18*self.parent.subDivision
                     
                     #Si elle n'a jamais été déclenchée, on fait apparaitre une switch et rafraichie la map
                     if not self.premierDeclenchement:
@@ -308,7 +308,7 @@ class Declencheur(Objet):
                                 
                                 if i.posMatX == 1*self.parent.subDivision and i.posMatY == 9*self.parent.subDivision:
                                     i.aTerre = False
-                                    self.placeObjet(10,1,self.parent.carte.s.salle,'w')
+                                    self.placeObjet(10,1,self.parent.carte.s.dictMap["R_E1S1"],'w')
                                     self.premierDeclenchement = True
                                     return True
                             
@@ -380,43 +380,41 @@ class Levier(Objet):
             return False
     
     def activer(self):
-        if self.parent.joueur.nomMap == "F_E1S1":
-            map = self.parent.carte.s.salle
+        if self.parent.ownPlayer.nomMap == "F_E1S1":
+            map = self.parent.getSalleByName("F_E1S1")
             if self.posMatX == 17*self.parent.subDivision and self.posMatY == 16*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
-                    self.parent.carte.s.salle = map
-                    return True
-                return False
-            
-        if self.parent.joueur.nomMap == "F_E1S3":
-            map = self.parent.carte.s.dictMap["F_E1S1"]
-            if self.posMatX == 16*self.parent.subDivision and self.posMatY == 2*self.parent.subDivision:
-                if self.active:
-                    self.ouvrePorte(1, 14, map, "m", False)
                     self.parent.carte.s.dictMap["F_E1S1"] = map
                     return True
                 return False
+            
+        if self.parent.ownPlayer.nomMap == "F_E1S3":
+            map = self.parent.carte.s.dictMap["F_E1S3"]
+            if self.posMatX == 16*self.parent.subDivision and self.posMatY == 2*self.parent.subDivision:
+                if self.active:
+                    self.ouvrePorte(1, 14, map, "m", False)
+                    self.parent.carte.s.dictMap["F_E1S3"] = map
+                    return True
+                return False
                
-            self.parent.carte.s.dictMap["F_E1S1"] = map
+            self.parent.carte.s.dictMap["F_E1S3"] = map
         
-        if self.parent.joueur.nomMap == "F_E1S5":
-            map = self.parent.carte.s.salle
+        if self.parent.ownPlayer.nomMap == "F_E1S5":
+            map = self.parent.getSalleByName("F_E1S5")
             if self.posMatX == 1*self.parent.subDivision and self.posMatY == 24*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(13, 28, map, "0", False)
-                    self.parent.carte.s.salle = map
-                    print("win1")
+                    self.parent.carte.s.dictMap["F_E1S5"]= map
                     return True
                 return False
             
-        if self.parent.joueur.nomMap == "F_E2S3":
-            map = self.parent.carte.s.salle
+        if self.parent.ownPlayer.nomMap == "F_E2S3":
+            map = self.parent.getSalleByName("F_E2S3")
             if self.posMatX == 42*self.parent.subDivision and self.posMatY == 35*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(17, 21, map, "0", False)
-                    self.parent.carte.s.salle = map
-                    print("win2")
+                    self.parent.carte.s.dictMap["F_E2S3"] = map
                     return True
                 return False
         

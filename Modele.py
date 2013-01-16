@@ -125,7 +125,7 @@ class Jeu():
         joueur.posMatX=matx        
            
     def activationObjet(self):
-        '''
+        
         if self.listeInterrupteur:
             for i in self.listeInterrupteur:
                 i.collision(self.ownPlayer)
@@ -140,39 +140,28 @@ class Jeu():
                     
         if self.listeDeclencheur:
             for i in self.listeDeclencheur:
-                i.collision(self.joueur)
+                i.collision(self.ownPlayer)
                 if i.activer():
-                    self.parent.actualiserAffichageComplet(self.joueur,self.carte.s)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
                     break
-        '''
-        pass
                 
-    def gestionMort(self):
-        '''
-        for perso in self.listePersonnage:
-            if perso.race.vie <= 0:
-                perso.mort()
-                self.parent.joueurMort(perso, self.getCurrentSalle())
-        '''
+    def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
             #self.ownPlayer.mort()
             self.parent.joueurMort(self.ownPlayer, self.getCurrentSalle())
 
     ############################# Méthode en lien avec les balles et le tire du joueur #############################
     def rechargement(self):
-        '''
         if self.listeLevier:
             for i in self.listeLevier:
                 if i.energie != i.max_energie:
                     i.recharge()
-        '''
         self.ownPlayer.recharge()
                     
     def tire(self):
         for player in self.listePersonnage:
             if player.mouvement[4] and player.nomMap == self.ownPlayer.nomMap:
                 player.tire(self.listeBalle, player.posTireX, player.posTireY)
-                #balle = self.listeBalle[len(self.listeBalle)-1]    
 
     def balle(self):
         self.collision(self.listePersonnage)
@@ -185,16 +174,7 @@ class Jeu():
         
         for i in self.listeBalle:
             i.bouge(self.getPlayerById(i.ownerId))
-            '''
-            if i.veloY<0 and i.veloX<0:
-                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice(i.posMapX+(i.veloX)*2,(i.posMapY+(i.veloY)*2)+30)
-            elif i.veloY>0 and i.veloX>0:
-                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+10,(i.posMapY+(i.veloY)*2)+10)
-            elif i.veloY<0 and i.veloX>0:
-                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+40,(i.posMapY+(i.veloY)*2)+40)                
-            else:
-                i.posMatX,i.posMatY=self.parent.app.frameJeu.coordEcranAMatrice((i.posMapX+(i.veloX)*2)+25,(i.posMapY+(i.veloY)*2)+25)
-            '''
+            
             if i.collision(liste, self.getSalleByName(i.nomMap)):
                 temp.remove(i)
         

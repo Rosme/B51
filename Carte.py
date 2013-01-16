@@ -70,7 +70,6 @@ class Carte():
 class Salle():
     def __init__(self, parent):
         self.parent = parent
-        #self.salle = list()
         self.dimensionCarte = int()
         self.dictSauvegarde = dict()
         self.dictMap = dict()
