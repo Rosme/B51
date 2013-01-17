@@ -294,12 +294,12 @@ class Declencheur(Objet):
             self.active = False
             return False
         
-    def activer(self):
-        if self.parent.ownPlayer.nomMap == "R_E1S1":
+    def activer(self, player):
+        if player.nomMap == "R_E1S1":
             if self.posMatX == 22*self.parent.subDivision and self.posMatY == 10*self.parent.subDivision:
                 if self.active:
                     #Téléporte le joueur à la case 18
-                    self.parent.ownPlayer.posMatX = 18*self.parent.subDivision
+                    player.posMatX = 18*self.parent.subDivision
                     
                     #Si elle n'a jamais été déclenchée, on fait apparaitre une switch et rafraichie la map
                     if not self.premierDeclenchement:

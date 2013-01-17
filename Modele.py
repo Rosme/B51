@@ -140,10 +140,11 @@ class Jeu():
                     
         if self.listeDeclencheur:
             for i in self.listeDeclencheur:
-                i.collision(self.ownPlayer)
-                if i.activer():
-                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
-                    break
+                for joueur in self.listePersonnage:
+                    i.collision(joueur)
+                    if i.activer(joueur):
+                        self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
+                        
 
         if self.listeLevier:
             for i in self.listeLevier:
@@ -251,7 +252,6 @@ class Jeu():
     def treatEventsById(self, tickData):
         player = self.getPlayerById(tickData.id)
         for event in tickData.events:
-
             if isinstance(event, nd.ClientTireInfo):
                 player.mouvement[4] = True
                 player.posTireX = event.finX
@@ -260,8 +260,6 @@ class Jeu():
                 levier = self.findLeverByXYMap(event.x, event.y, event.nomMap)
                 if levier != None:
                     levier.activatedBy(player)
-                    if levier.nomMap == self.ownPlayer.nomMap:
-                        self.parent.actualiserAffichageComplet(player, self.listePersonnage)
             else:
                 if event == "MOVE_UP":
                     player.mouvement[0] = True
