@@ -254,6 +254,8 @@ class Jeu():
                 levier = self.findLeverByXYMap(event.x, event.y, event.nomMap)
                 if levier != None:
                     levier.activatedBy(player)
+                    if levier.nomMap == self.ownPlayer.nomMap:
+                        self.parent.actualiserAffichageComplet(player, self.listePersonnage)
             else:
                 if event == "MOVE_UP":
                     player.mouvement[0] = True

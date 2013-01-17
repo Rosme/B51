@@ -170,8 +170,7 @@ class Controleur():
                         if i.nomMap == self.jeu.ownPlayer.nomMap:
                             if i.collision(self.jeu.ownPlayer):
                                 if i.tire():
-                                    if i.activer():
-                                        self.app.frameJeu.actualiserAffichage(self.jeu.ownPlayer,self.jeu.listePersonnage)
+                                    self.ownEventQueue(nd.LeverModifier(i.posMatX, i.posMatY, i.nomMap))
                                     
                 if self.jeu.listeCoffre:
                     for i in self.jeu.listeCoffre:
@@ -260,6 +259,6 @@ class Controleur():
 
     def addEvent(self, event):
         self.ownEventQueue.append(event)
-        
+
 if __name__ == '__main__':
     c = Controleur()

@@ -449,7 +449,6 @@ class Levier(Objet):
         if self.energie - self.force <= 0:
             self.energie=0
             #self.active = True
-            self.parent.parent.addEvent(nd.LeverModifier(self.posMatX, self.posMatY, self.nomMap))
             return True
         else:
             self.energie-=self.force
