@@ -130,7 +130,7 @@ class Jeu():
             for i in self.listeInterrupteur:
                 i.collision(self.ownPlayer)
                 if i.activer():
-                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                     break
                     
         if self.listeRoche:
@@ -142,14 +142,14 @@ class Jeu():
             for i in self.listeDeclencheur:
                 i.collision(self.ownPlayer)
                 if i.activer():
-                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                     break
 
         if self.listeLevier:
             for i in self.listeLevier:
                 if i.active:
                     i.activer()
-                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                 
     def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
