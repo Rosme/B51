@@ -79,6 +79,7 @@ class Controleur():
         self.miseAJour()
     
     def actualiserAffichageComplet(self,perso,listePerso):
+        print(perso.nomMap)
         self.app.frameJeu.actualiserAffichage(perso,listePerso)
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     

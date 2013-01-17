@@ -50,7 +50,7 @@ class Jeu():
             try:
                 if laMap[tempMatY][tempMatX]== 'm' or laMap[tempMatY][tempMatX] == 'v' or laMap[tempMatY][tempMatX]== 'b' or laMap[tempMatY][tempMatX] == 'n' or laMap[tempMatY][tempMatX]== 'M' or laMap[tempMatY][tempMatX] == 'V' or laMap[tempMatY][tempMatX]== 'B' or laMap[tempMatY][tempMatX] == 'N':
                     car=laMap[tempMatY][tempMatX]
-                    joueur.nomMap=self.carte.s.changementCarte(car,joueur.nomMap)
+                    joueur.nomMap = self.carte.s.changementCarte(car,joueur.nomMap)
                     self.coordProchaineZone(car, joueur)
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                 else:
@@ -87,7 +87,7 @@ class Jeu():
                                     self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 18
                                     trouver=True
                                     break
-                                elif laMap[i+self.subDivision][j] == ' ':
+                                elif laMap[i+self.subDivision][j] != '0':
                                     raise IndexError
                             except IndexError:
                                 if laMap[i-self.subDivision][j]=='0':#porte en bas
@@ -101,7 +101,6 @@ class Jeu():
                     except IndexError: 
                         #sil'autre char est en dessous
                         if laMap[i+self.subDivision][j]==char:
-                            print("3")
                             try:
                                 if laMap[i][j+self.subDivision]=='0':#porte à droite
                                     matx = j+self.subDivision
@@ -109,7 +108,7 @@ class Jeu():
                                     self.getPlayerById(self.parent.getIdUsagerLocal()).animationId = 9
                                     trouver=True
                                     break
-                                elif laMap[i+self.subDivision][j] == ' ':
+                                elif laMap[i+self.subDivision][j] != '0':
                                     raise IndexError
                             except IndexError:
                                 if laMap[i][j-self.subDivision]=='0':#porte à gauche
