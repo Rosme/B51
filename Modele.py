@@ -250,6 +250,10 @@ class Jeu():
                 player.mouvement[4] = True
                 player.posTireX = event.finX
                 player.posTireY = event.finY
+            elif isinstance(event, nd.LeverModifier):
+                levier = self.findLeverByXYMap(event.x, event.y, event.nomMap)
+                if levier != None:
+                    levier.active = True
             else:
                 if event == "MOVE_UP":
                     player.mouvement[0] = True
@@ -274,6 +278,11 @@ class Jeu():
                     if player == self.ownPlayer:
                         self.parent.actualiserAffichageComplet(player,self.listePersonnage)
 
+    def findLeverByXYMap(self, x, y, nomMap):
+        for levier in self.listeLevier:
+            if levier.posMatX == x and levier.posMatY == y and levier.nomMap == nomMap:
+                return levier
+        return None
 
 
     def getSalleByName(self, name):

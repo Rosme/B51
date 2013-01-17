@@ -1,5 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 
+import Netdata as nd
+
 class Objet():
     def __init__(self, parent, matX, matY, padGauche, padHaut, padDroit, padBas, nomMap):
         self.parent = parent
@@ -445,7 +447,8 @@ class Levier(Objet):
     def tire(self):
         if self.energie - self.force <= 0:
             self.energie=0
-            self.active = True
+            #self.active = True
+            self.parent.parent.addEvent(nd.LeverModifier(self.posMatX, self.posMatY, self.nomMap))
             return True
         else:
             self.energie-=self.force

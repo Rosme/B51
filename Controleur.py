@@ -257,5 +257,9 @@ class Controleur():
 
     def getPlayerLocal(self):
         return self.jeu.ownPlayer
+
+    def addEvent(self, event):
+        self.ownEventQueue.append(event)
+        
 if __name__ == '__main__':
     c = Controleur()

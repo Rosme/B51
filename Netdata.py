@@ -5,6 +5,7 @@ Par Jean-Sebastien Fauteux
 netdata.py
 '''
 
+
 class ListClientInfo():
     def __init__(self):
         self.list = list()
@@ -28,12 +29,6 @@ class ClientDisconnect():
     def __init__(self, listId):
         self.listId = listId
 
-class ClientInitPosition():
-    #id du joueur, position
-    def __init__(self, id, position):
-        self.id = id
-        self.position = position
-
 class ClientTickInfo():
     #Id du joueur, frame, list des events
     def __init__(self, id, tick, events):
@@ -46,7 +41,7 @@ class ClientTickData():
     def __init__(self, id, events):
         self.id = id
         self.events = events;
-
+'''
 class ClientListTick():
     def __init__(self, list):
         self.list = list
@@ -60,7 +55,7 @@ class TotalTickInfo():
 class NoConnect():
     def __init__(self):
         self.msg = "Aucune connection disponible"
-
+'''
 class ClientId():
     #ID du joueur
     def __init__(self, id):
@@ -70,4 +65,9 @@ class ClientTireInfo():
     def __init__(self,finX,finY):
         self.finX = finX
         self.finY = finY
-            
+
+class LeverModifier():
+    def __init__(self, matX, matY, nomMap):
+        self.x = matX
+        self.y = matY
+        self.nomMap = nomMap
