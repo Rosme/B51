@@ -41,9 +41,11 @@ class Controleur():
             if self.compteur%1==0:
                 self.jeu.tire()
                 
-            if self.compteur%2 == 0:
+            if self.compteur%100 == 0:
                 self.jeu.actuLogo()
-                
+            
+            self.jeu.deplaceLogo()
+            
             self.compteur+=1
             if self.partieCommencer:
                 self.app.frameJeu.map.after(50,self.miseAJour)

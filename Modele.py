@@ -133,17 +133,23 @@ class Jeu():
             for i in self.listeRoche:
                 if not i.aTerre:
                     i.bouge(self.joueur)
+                    
     def actuLogo(self):
         if self.listeLogomate:
             for i in self.listeLogomate:
-                i.ia.choisitDeplacement(self.carte.s.salle)
+                i.ia.choisitDeplacement()
                     
         if self.listeDeclencheur:
             for i in self.listeDeclencheur:
                 i.collision(self.joueur)
                 i.activer()
                 break
-                
+    
+    def deplaceLogo(self):
+        if self.listeLogomate:
+            for i in self.listeLogomate:
+                i.ia.deplacement(self.carte.s.salle) 
+    
     def gestionMort(self):
         if self.joueur.race.vie<=0:
             self.joueur.mort()
