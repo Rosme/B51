@@ -346,6 +346,7 @@ class Levier(Objet):
         self.contreForce = contreForce
         self.active = False
         self.player = None
+        self.hasBeenActivated = False
         
     def collision(self, perso):
         
@@ -389,7 +390,7 @@ class Levier(Objet):
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.dictMap["F_E1S1"] = map
-                    self.active = False
+                    self.hasBeenActivated = True
                     return True
                 return False
             
@@ -399,6 +400,7 @@ class Levier(Objet):
                 if self.active:
                     self.ouvrePorte(1, 14, map, "m", False)
                     self.parent.carte.s.dictMap["F_E1S3"] = map
+                    self.hasBeenActivated = True
                     return True
                 return False
                
@@ -410,6 +412,7 @@ class Levier(Objet):
                 if self.active:
                     self.ouvrePorte(13, 28, map, "0", False)
                     self.parent.carte.s.dictMap["F_E1S5"]= map
+                    self.hasBeenActivated = True
                     return True
                 return False
             
@@ -419,6 +422,7 @@ class Levier(Objet):
                 if self.active:
                     self.ouvrePorte(17, 21, map, "0", False)
                     self.parent.carte.s.dictMap["F_E2S3"] = map
+                    self.hasBeenActivated = True
                     return True
                 return False
         
@@ -464,7 +468,6 @@ class Levier(Objet):
     def activatedBy(self, player):
         self.player = player
         self.active = True
-        print(player.nom)
         
         
         

@@ -147,7 +147,7 @@ class Jeu():
 
         if self.listeLevier:
             for i in self.listeLevier:
-                if i.active:
+                if i.active and i.hasBeenActivated == False:
                     i.activer()
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                 
