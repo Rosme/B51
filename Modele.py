@@ -129,9 +129,14 @@ class Jeu():
         if self.listeInterrupteur:
             for i in self.listeInterrupteur:
                 i.collision(self.ownPlayer)
+                '''
                 if i.activer():
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                     break
+                '''
+                if i.active:
+                    if i.activer():
+                        self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
                     
         if self.listeRoche:
             for i in self.listeRoche:
@@ -260,6 +265,10 @@ class Jeu():
                 levier = self.findLeverByXYMap(event.x, event.y, event.nomMap)
                 if levier != None:
                     levier.activatedBy(player)
+            elif isinstance(event, nd.SwitchModifier):
+                switch = self.findSwitchByXYMap(event.x, event.y, event.nomMap)
+                if switch != None:
+                    switch.activatedBy(player)
             else:
                 if event == "MOVE_UP":
                     player.mouvement[0] = True
@@ -290,6 +299,11 @@ class Jeu():
                 return levier
         return None
 
+    def findSwitchByXYMap(self, x, y, nomMap):
+        for switch in self.listeInterrupteur:
+            if switch.posMatX == x and switch.posMatY == y and switch.nomMap == nomMap:
+                return switch
+        return None
 
     def getSalleByName(self, name):
         return self.carte.s.dictMap[name]

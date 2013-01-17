@@ -71,3 +71,9 @@ class LeverModifier():
         self.x = matX
         self.y = matY
         self.nomMap = nomMap
+
+class SwitchModifier():
+    def __init__(self, matX, matY, nomMap):
+        self.x = matX
+        self.y = matY
+        self.nomMap = nomMap

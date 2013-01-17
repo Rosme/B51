@@ -162,6 +162,7 @@ class Interrupteur(Objet):
         self.aTerre = aTerre
         self.usageUnique = unique
         self.out = True
+        self.player = None
     
     def collision(self, perso):
         if not self.aTerre:
@@ -193,7 +194,8 @@ class Interrupteur(Objet):
                         if valide:
                             if self.usageUnique:
                                 self.aTerre = True
-                            self.active = True
+                            #self.active = True
+                            self.parent.parent.addEvent(nd.SwitchModifier(self.posMatX, self.posMatY, self.nomMap))
                             return True
                         k+=2
                 j+=2
@@ -202,7 +204,7 @@ class Interrupteur(Objet):
             return False
     
     def activer(self):
-        if self.parent.ownPlayer.nomMap == "F_E1S1":
+        if self.player.nomMap == "F_E1S1":
             map = self.parent.getSalleByName("F_E1S1")
             if self.posMatX == 26*self.parent.subDivision and self.posMatY == 21*self.parent.subDivision:
                 if self.active:
@@ -221,7 +223,7 @@ class Interrupteur(Objet):
             self.parent.carte.s.dictMap["F_E1S1"] = map
             return False
         
-        if self.parent.ownPlayer.nomMap == "R_E1S1":
+        if self.player.nomMap == "R_E1S1":
             if self.posMatX == 1*self.parent.subDivision and self.posMatY == 9*self.parent.subDivision:
                 if self.active:
                     for i in self.parent.listeDeclencheur:
@@ -250,6 +252,10 @@ class Interrupteur(Objet):
             i+=1    
         
         map.insert(ligne, temp)
+
+    def activatedBy(self, player):
+        self.player = player
+        self.active = True
     
 class Declencheur(Objet):
     def __init__(self, parent, matX, matY, nomMap):
