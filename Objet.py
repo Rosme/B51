@@ -389,6 +389,7 @@ class Levier(Objet):
                 if self.active:
                     self.ouvrePorte(16, 14, map, "0", False)
                     self.parent.carte.s.dictMap["F_E1S1"] = map
+                    self.active = False
                     return True
                 return False
             
