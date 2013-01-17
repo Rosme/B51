@@ -345,6 +345,7 @@ class Levier(Objet):
         self.energie = energie
         self.contreForce = contreForce
         self.active = False
+        self.player = None
         
     def collision(self, perso):
         
@@ -382,7 +383,7 @@ class Levier(Objet):
             return False
     
     def activer(self):
-        if self.parent.ownPlayer.nomMap == "F_E1S1":
+        if self.player.nomMap == "F_E1S1":
             map = self.parent.getSalleByName("F_E1S1")
             if self.posMatX == 17*self.parent.subDivision and self.posMatY == 16*self.parent.subDivision:
                 if self.active:
@@ -391,7 +392,7 @@ class Levier(Objet):
                     return True
                 return False
             
-        if self.parent.ownPlayer.nomMap == "F_E1S3":
+        if self.player.nomMap == "F_E1S3":
             map = self.parent.carte.s.dictMap["F_E1S3"]
             if self.posMatX == 16*self.parent.subDivision and self.posMatY == 2*self.parent.subDivision:
                 if self.active:
@@ -402,7 +403,7 @@ class Levier(Objet):
                
             self.parent.carte.s.dictMap["F_E1S3"] = map
         
-        if self.parent.ownPlayer.nomMap == "F_E1S5":
+        if self.player.nomMap == "F_E1S5":
             map = self.parent.getSalleByName("F_E1S5")
             if self.posMatX == 1*self.parent.subDivision and self.posMatY == 24*self.parent.subDivision:
                 if self.active:
@@ -411,7 +412,7 @@ class Levier(Objet):
                     return True
                 return False
             
-        if self.parent.ownPlayer.nomMap == "F_E2S3":
+        if self.player.nomMap == "F_E2S3":
             map = self.parent.getSalleByName("F_E2S3")
             if self.posMatX == 42*self.parent.subDivision and self.posMatY == 35*self.parent.subDivision:
                 if self.active:
@@ -449,7 +450,6 @@ class Levier(Objet):
             self.energie=0
             #self.active = True
             self.parent.parent.addEvent(nd.LeverModifier(self.posMatX, self.posMatY, self.nomMap))
-            print("Trigger activated")
             return True
         else:
             self.energie-=self.force
@@ -460,7 +460,10 @@ class Levier(Objet):
             self.energie = self.max_energie
         else:
             self.energie+=self.contreForce     
-        
+    
+    def activatedBy(self, player):
+        self.player = player
+        self.active = True
         
         
         
