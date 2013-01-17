@@ -449,6 +449,7 @@ class Levier(Objet):
             self.energie=0
             #self.active = True
             self.parent.parent.addEvent(nd.LeverModifier(self.posMatX, self.posMatY, self.nomMap))
+            print("Trigger activated")
             return True
         else:
             self.energie-=self.force

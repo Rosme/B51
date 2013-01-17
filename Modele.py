@@ -251,8 +251,10 @@ class Jeu():
                 player.posTireX = event.finX
                 player.posTireY = event.finY
             elif isinstance(event, nd.LeverModifier):
+                print("Received Lever Modifier")
                 levier = self.findLeverByXYMap(event.x, event.y, event.nomMap)
                 if levier != None:
+                    print("Levier activer")
                     levier.active = True
             else:
                 if event == "MOVE_UP":
