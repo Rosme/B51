@@ -56,13 +56,13 @@ class Jeu():
                 else:
                     try:    
                         if laMap[tempMatY+self.subDivision][tempMatX]!='1':
-                            if laMap[tempMatY][tempMatX-4] == '1' or laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                            if laMap[tempMatY][tempMatX-4] == '1' or laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                                 if laMap[tempMatY][tempMatX+26] != '1':
                                     joueur.posMatX=tempMatX
                                     joueur.posMatY=tempMatY
                                     self.parent.actusliserPersonnage()
                     except:
-                        if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='2'  or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
+                        if laMap[tempMatY][tempMatX]=='0' or laMap[tempMatY][tempMatX]=='q' or laMap[tempMatY][tempMatX]=='w':
                                 joueur.posMatX=tempMatX
                                 joueur.posMatY=tempMatY
                                 self.parent.actusliserPersonnage()
