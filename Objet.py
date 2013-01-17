@@ -463,6 +463,7 @@ class Levier(Objet):
     def activatedBy(self, player):
         self.player = player
         self.active = True
+        print(player.nom)
         
         
         

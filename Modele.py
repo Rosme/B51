@@ -144,6 +144,12 @@ class Jeu():
                 if i.activer():
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
                     break
+
+        if self.listeLevier:
+            for i in self.listeLevier:
+                if i.active:
+                    i.activer()
+                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.carte.s)
                 
     def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
