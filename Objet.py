@@ -401,16 +401,16 @@ class Levier(Objet):
                 return False
             
         if self.player.nomMap == "F_E1S3":
-            map = self.parent.carte.s.dictMap["F_E1S3"]
+            map = self.parent.carte.s.dictMap["F_E1S1"]
             if self.posMatX == 16*self.parent.subDivision and self.posMatY == 2*self.parent.subDivision:
                 if self.active:
                     self.ouvrePorte(1, 14, map, "m", False)
-                    self.parent.carte.s.dictMap["F_E1S3"] = map
+                    self.parent.carte.s.dictMap["F_E1S1"] = map
                     self.hasBeenActivated = True
                     return True
                 return False
                
-            self.parent.carte.s.dictMap["F_E1S3"] = map
+            self.parent.carte.s.dictMap["F_E1S1"] = map
         
         if self.player.nomMap == "F_E1S5":
             map = self.parent.getSalleByName("F_E1S5")
