@@ -11,7 +11,7 @@ class MenuConnexion():
         self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         self.fondEcran.create_text(100,60,text="Adresse IP :",font=("Arial","15"),fill="white",tags="textIP")
         self.ipentry = tkinter.Entry(self.frameMenuConnexion, width="14" )
-        self.ipentry.insert(0, "127.0.0.1:43225") #Temporary
+        self.ipentry.insert(0, "") 
         self.boutonNouveauServeur = tkinter.Button(self.frameMenuConnexion, text='Nouveau serveur', command=self.nouveauServeur)
         self.boutonRejoindre= tkinter.Button(self.frameMenuConnexion, text='Rejoindre une partie', command=self.validerIPort)
         self.boutonRetour= tkinter.Button(self.frameMenuConnexion, text='Retour',command=self.retour)
