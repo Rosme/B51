@@ -11,5 +11,7 @@ def parseCommande(commande):
 		return True, "client-deconnection", []
 	elif commande == "/shutdown":
 		return True, "fermer-serveur", []
+	elif commande == "/startgame":
+		return True, "demarrer-partie", []
 	else:
 		return False, commande, []

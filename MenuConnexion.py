@@ -11,6 +11,7 @@ class MenuConnexion():
         self.fondEcran.create_image(512,384, image= self.parent.getImage("backgroundImage"),tags="fondEcran")
         self.fondEcran.create_text(100,60,text="Adresse IP :",font=("Arial","15"),fill="white",tags="textIP")
         self.ipentry = tkinter.Entry(self.frameMenuConnexion, width="14" )
+        self.ipentry.insert(0, "127.0.0.1:43225") #Temporary
         self.boutonNouveauServeur = tkinter.Button(self.frameMenuConnexion, text='Nouveau serveur', command=self.nouveauServeur)
         self.boutonRejoindre= tkinter.Button(self.frameMenuConnexion, text='Rejoindre une partie', command=self.validerIPort)
         self.boutonRetour= tkinter.Button(self.frameMenuConnexion, text='Retour',command=self.retour)
@@ -42,15 +43,24 @@ class MenuConnexion():
         
     def validerIPort(self):
         #validation non implanté, mais prete à l'être voir le commentaire ci-bas
-        self.rejoindreUnePartie()
-       
-    '''
-    def validerIPort(self):
+        #self.rejoindreUnePartie()
+
+        
         adresse = self.ipentry.get()
 
         temp = adresse.split(':')
         adresse = temp[0]
         port = temp[1]
+        port = int(port)
+
+        network = self.parent.parent.network
+        network.connecter(adresse, port)
+        if network.recevoirDonnees() == True:
+            self.parent.menuL.updateClientList()
+            self.rejoindreUnePartie()
+
+
+        '''
         temp = adresse.split('.')
         
         if len(temp) != 4:
@@ -77,4 +87,4 @@ class MenuConnexion():
         except ValueError:
             return False
         # sinon on redemande de rentrer les info de reseau encore
-    '''
+        '''

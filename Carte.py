@@ -14,7 +14,7 @@ class Carte():
             print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
-        self.s.salle = self.s.dictMap["MainRoom"]
+        #self.s.salle = self.s.dictMap["MainRoom"]
         ligne = list()
         ligne = liens.read()
 
@@ -70,13 +70,13 @@ class Carte():
 class Salle():
     def __init__(self, parent):
         self.parent = parent
-        self.salle = list()
         self.dimensionCarte = int()
         self.dictSauvegarde = dict()
         self.dictMap = dict()
         self.nomMap = "MainRoom"
 
     def chargeCartes(self):
+        tempSalle = list()
         for j in self.parent.parent.listeMap:
             self.ouvertureMap(j)
             self.dimensionsMap(j)
@@ -86,14 +86,29 @@ class Salle():
             ligne = self.fichier.read()
             for i in ligne.splitlines():
                 i.split('\n')
-                self.salle.append(i)
-            self.dictMap[j] = self.salle
+                tempSalle.append(i)
+            tempSalle = self.subdivisionMap(tempSalle)
+            self.dictMap[j] = tempSalle
             #print(j)
             #print(self.salle)
-            self.salle = list()
+            tempSalle = list()
         
         self.fichier.close()
-    
+        
+    def subdivisionMap(self,tempSalle):
+        salleDivise=list()
+        tempLigne=list()        
+        for i in range(len(tempSalle)):
+            for k in range(len(tempSalle[i])):
+                for u in range(self.parent.parent.subDivision):
+                    tempLigne.append(tempSalle[i][k])
+            for r in range(self.parent.parent.subDivision):
+                salleDivise.append(tempLigne)
+            tempLigne=list()
+        tempSalle=salleDivise
+
+        return tempSalle
+                    
     def liensCarte(self):
         self.dictionnaireLiens = dict()
         self.assoCarte = self.fichier.readline()
@@ -105,16 +120,15 @@ class Salle():
             self.dictionnaireLiens[self.listeValeur[0]] = self.listeValeur[1]
             i += 1
     
-    def changementCarte(self, caractere):
-        self.liensCarte = self.dictMap[self.nomMap + " liens"]
-        self.nomMap = self.liensCarte[caractere]
+    def changementCarte(self, caractere,nomMap):
+        self.liensCarte = self.dictMap[nomMap + " liens"]
+        nomMap = self.liensCarte[caractere]
         #On va ignorer le \n qui peut se retrouver dans les noms de map
-        self.listeTempo = self.nomMap.split('\n')
-        self.nomMap = self.listeTempo[0]
+        self.listeTempo = nomMap.split('\n')
+        nomMap = self.listeTempo[0]
+        #salle = self.dictMap[nomMap]
         
-        self.salle = self.dictMap[self.nomMap]
-        
-        return self.nomMap
+        return nomMap
         
     def sauvegarderMap(self, nomMap, contenuMap): #Prend le nom de la Map et son contenu modifié
         self.dictSauvegarde[nomMap] = contenuMap
@@ -138,4 +152,4 @@ class Salle():
         #0-colonne 1-ligne
         self.dimensions.append(int(tempo[0]))
         self.dimensions.append(int(tempo[1]))
-        self.dictMap[nomMap + " dimensions"] = self.dimensions 
+        self.dictMap[nomMap + " dimensions"] = self.dimensions

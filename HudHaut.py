@@ -18,7 +18,10 @@ class HudHaut():
     def calcul(self,perso):
         self.nbSeringue=0
         self.poidsJoueur=0
-        self.grandeurVie=(perso.race.vie*120)/perso.race.max_vie
+        if (perso.race.vie*120)/perso.race.max_vie <0:
+            self.grandeurVie = 0
+        else:
+            self.grandeurVie=(perso.race.vie*120)/perso.race.max_vie
         for i in perso.inventaire.items:
             if i.id==8:
                 self.grandeurShield=(i.energie*120)/i.max_energie
