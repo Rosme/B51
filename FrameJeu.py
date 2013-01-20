@@ -102,21 +102,6 @@ class FrameJeu():
                 x,y=self.coordMatriceAEcran(logo)
                 self.map.create_image(x,y-16,image=self.parent.getImage("logo"),tag="logo")
 
-
-        #on apelle la méthode affichageLogomate pour afficher le logomate
-        self.affichageLogomate(perso,map)
-
-    ### Affichage Logomate ### 
-    def affichageLogomate(self, perso,map):
-        self.map.delete("logo")
-        for i in range(len(map)):
-            for k in range(len(map[i])):
-                for p in self.parent.parent.jeu.listeLogomate:
-                    if p.posMatX<k and p.posMatY<i:
-                        x,y=self.coordMatriceAEcran(p)
-                        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="logo")
-
-
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"

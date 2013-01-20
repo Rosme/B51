@@ -23,7 +23,7 @@ class Controleur():
         
         self.ownEventQueue = []
         self.totalEventQueue = []
-
+        
     
     ############################# Méthode (boucle) d'actualisation du Jeu #############################
     def miseAJour(self):
@@ -147,16 +147,6 @@ class Controleur():
         self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
         self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
     
-    #############################Ajout d'ecouteur#############################
-    def ajoutEcouteur(self):
-        #ecouteur lié au clavier       
-        self.app.root.bind("<KeyPress>",self.peseKeyGestion)
-        self.app.root.bind("<KeyRelease>",self.relacheKeyGestion)
-        #ecouteur lié à la souris
-        self.app.frameJeu.map.bind("<Button-1>", self.peseTire)
-        self.app.frameJeu.map.bind("<ButtonRelease-1>", self.relacheTire)
-        self.app.frameJeu.map.bind("<B1-Motion>", self.tireCoord)
-    
     ############################# Méthodes en lien avec les events de l'utilisateur #############################
     def peseKeyGestion(self, event):
         key = event.char.upper()
@@ -197,6 +187,7 @@ class Controleur():
                             i.ouvrir(self.jeu.ownPlayer)
                         
                 self.press = True
+            
     
     def relacheKeyGestion(self, event):
         key = event.char.upper()

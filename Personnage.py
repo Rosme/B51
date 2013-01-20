@@ -5,7 +5,6 @@ import Objet
 import random
 import IA
 from Balle import *
-import IA
         
 class Personnage():
     def __init__(self,parent, id):
