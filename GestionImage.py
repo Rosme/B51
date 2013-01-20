@@ -15,7 +15,7 @@ class GestionImage():
         #map
         self.dictImage["roche"]=tkinter.PhotoImage(file="assets/image/mur_haut_bas2.gif")
         self.dictImage["gazon"]=tkinter.PhotoImage(file="assets/image/plancher_roche1.gif")
-        '''self.dictImage["pers"]=tkinter.PhotoImage(file="assets/image/f1.gif")'''
+        self.dictImage["logo"]=tkinter.PhotoImage(file="assets/image/f1.gif")
         self.dictImage["coffre"]=tkinter.PhotoImage(file="assets/image/vie.gif")
         self.dictImage["simonJaune"]=tkinter.PhotoImage(file="assets/image/Simon/SimonJaune.gif")
         self.dictImage["simonBleu"]=tkinter.PhotoImage(file="assets/image/Simon/SimonBleu.gif")

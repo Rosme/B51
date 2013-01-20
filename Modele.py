@@ -155,7 +155,17 @@ class Jeu():
                 if i.active and i.hasBeenActivated == False:
                     i.activer()
                     self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
-                
+    
+    def actuLogo(self):
+        if self.listeLogomate:
+            for logo in self.listeLogomate:
+                logo.ia.choisitDeplacement()
+
+    def deplaceLogo(self):
+        if self.listeLogomate:
+            for logo in self.listeLogomate:
+                logo.ia.deplacement(self.getCurrentSalle().dictMap[self.ownPlayer.nomMap])
+
     def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
             #self.ownPlayer.mort()
@@ -193,10 +203,10 @@ class Jeu():
         
     
     def nouveauLogo(self, posMat,nomMap):
-        pers = Personnage(self)
+        pers = Personnage(self,0)
         pers.nouveauPersonnage("Logo", Race.Logomate())
-        pers.posMatX = int(posMat[0])
-        pers.posMatY = int(posMat[1])
+        pers.posMatX = int(posMat[0])*self.subDivision
+        pers.posMatY = int(posMat[1])*self.subDivision
         self.listeLogomate.append(pers)
         
     def nouveauSac(self,posMat, nomMap):

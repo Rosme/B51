@@ -31,6 +31,9 @@ class Controleur():
         if self.partieCommencer:
             #on bouge le personnage
             self.jeu.bougePersonnage()
+            #on bouge les logomates
+            if self.compteur%100 == 0:
+                self.jeu.actuLogo()
             #on active les switchs,leviers,etc
             self.jeu.activationObjet()
             #on actualise le hud du haut
@@ -46,7 +49,10 @@ class Controleur():
                 self.jeu.balle() 
             if self.compteur%1==0:
                 self.jeu.tire()
-
+            
+            self.jeu.deplaceLogo()
+            self.actualiserLogomate()
+            
             self.network.sendData(nd.ClientTickInfo(self.network.id, self.compteur, self.ownEventQueue))
 
             self.network.recevoirDonnees()
@@ -90,6 +96,9 @@ class Controleur():
                 self.app.frameJeu.affichagePerso(joueur)
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
+    def actualiserLogomate(self):
+        self.app.frameJeu.affichageLogomate(self.getMap().dictMap[self.jeu.ownPlayer.nomMap])
+        
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")
         self.app.frameJeu.tire(listeBalle)    

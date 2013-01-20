@@ -67,6 +67,7 @@ class FrameJeu():
     def affichageMap(self,perso,listePerso): 
         map = self.parent.parent.getMapByName(perso.nomMap)
         
+        #calcul de la position de la scrollbar pour voir le personnage
         x,y=self.coordMatriceAEcran(perso) 
         self.calculOffSet(x,y)
         self.effaceLesPersos()
@@ -88,16 +89,18 @@ class FrameJeu():
                         #affiche un ligne plus loin pour ne pas être imprimé sous le plancher
                         if pers.posMatX==k and pers.posMatY==i:
                             self.affichagePerso(pers)
-                '''
-                #affichage des logomates
-                for p in self.parent.parent.jeu.listeLogomate:
-                    if p.posMatX<k and p.posMatY<i:
-                        x,y=self.coordMatriceAEcran(perso)
-                        self.map.create_image(x,y-16,image=self.parent.getImage("pers"),tags="perso")
-                '''   
+                
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
+      
+        self.affichageLogomate(map)     
         
+    def affichageLogomate(self,map):
+        self.map.delete("logo")
+        for logo in self.parent.parent.jeu.listeLogomate:
+            x,y=self.coordMatriceAEcran(logo)
+            self.map.create_image(x,y-16,image=self.parent.getImage("logo"),tag="logo")
+
     def affichageImage(self,car,posX,posY):
         nomImage=None
         tag="image"
@@ -135,6 +138,7 @@ class FrameJeu():
             self.map.create_image(posX,posY,image=self.parent.getImage(nomImage),tags=tag)
         if texte:
             self.map.create_text(posX, posY, text=texte, fill='white', tags=tag)
+    
     
     def affichagePerso(self,perso):
         #affichage du personnage
