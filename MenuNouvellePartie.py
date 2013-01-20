@@ -71,7 +71,6 @@ class MenuNouvellePartie():
         if newvalue is None:
             print("nom vide")  
         else:
-            #self.parent.parent.nouveauJoueur(self.valRace.get(), self.nomJoueur.get())
             self.parent.parent.network.nom = self.nomJoueur.get()
             self.parent.parent.network.race = self.valRace.get()
             self.connexion()

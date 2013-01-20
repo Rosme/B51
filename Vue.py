@@ -67,7 +67,6 @@ class Application():
         self.menuL.menuLobby()
         
     def jeu(self,perso,listePerso):
-        #self.gestionnaireSon.startTest("inGame")
         self.hudHaut(perso)
         self.frameJeu.initMap(perso,listePerso)
         
@@ -84,5 +83,4 @@ class Application():
     
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
-        #self.gestionnaireSon.stopAll()
         self.root.quit()

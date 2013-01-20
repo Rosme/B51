@@ -23,11 +23,7 @@ class IA():
     def calculRandom(self):
         return random.randint(0, 7)
         
-    def deplacement(self,map):
-    #    0self.subDivision2
-    #    3#4
-    #    567
-    
+    def deplacement(self,map):    
         self.mouvement = 4
     
         #gauche Bas

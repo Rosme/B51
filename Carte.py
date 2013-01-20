@@ -14,7 +14,6 @@ class Carte():
             print ("Le fichier liens.txt n'a pas été retrouvé (liens/liens.txt)")
             os._exit(1)
             
-        #self.s.salle = self.s.dictMap["MainRoom"]
         ligne = list()
         ligne = liens.read()
 
@@ -89,8 +88,6 @@ class Salle():
                 tempSalle.append(i)
             tempSalle = self.subdivisionMap(tempSalle)
             self.dictMap[j] = tempSalle
-            #print(j)
-            #print(self.salle)
             tempSalle = list()
         
         self.fichier.close()
@@ -126,7 +123,6 @@ class Salle():
         #On va ignorer le \n qui peut se retrouver dans les noms de map
         self.listeTempo = nomMap.split('\n')
         nomMap = self.listeTempo[0]
-        #salle = self.dictMap[nomMap]
         
         return nomMap
         

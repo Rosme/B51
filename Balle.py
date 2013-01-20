@@ -43,7 +43,7 @@ class Balle():
             self.valide = False
         
     def bouge(self, perso):
-        self.distanceParcouru +=1 #math.sqrt(abs((self.veloX)**2)+abs((self.veloY)**2))
+        self.distanceParcouru +=1 
         self.posMatX += int(self.veloX)
         self.posMatY += int(self.veloY)
         

@@ -166,7 +166,6 @@ class MenuArtisanat():
     
     ''' faire disparaitre la fenetre en jeu'''
     def effacemenu(self):
-        #self.cadreUn.destroy()
         self.deuxcanevas.destroy()
         self.canevabouton.destroy()
         self.cadreUn.pack_forget()

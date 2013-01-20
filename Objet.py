@@ -194,7 +194,6 @@ class Interrupteur(Objet):
                         if valide:
                             if self.usageUnique:
                                 self.aTerre = True
-                            #self.active = True
                             self.parent.parent.addEvent(nd.SwitchModifier(self.posMatX, self.posMatY, self.nomMap))
                             return True
                         k+=2
@@ -459,7 +458,6 @@ class Levier(Objet):
     def tire(self):
         if self.energie - self.force <= 0:
             self.energie=0
-            #self.active = True
             return True
         else:
             self.energie-=self.force

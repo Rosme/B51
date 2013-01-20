@@ -127,11 +127,6 @@ class Jeu():
         if self.listeInterrupteur:
             for i in self.listeInterrupteur:
                 i.collision(self.ownPlayer)
-                '''
-                if i.activer():
-                    self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
-                    break
-                '''
                 if i.active:
                     if i.activer():
                         self.parent.actualiserAffichageComplet(self.ownPlayer,self.listePersonnage)
@@ -167,7 +162,6 @@ class Jeu():
 
     def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
-            #self.ownPlayer.mort()
             self.parent.joueurMort(self.ownPlayer, self.getCurrentSalle())
 
     ############################# Méthode en lien avec les balles et le tire du joueur #############################

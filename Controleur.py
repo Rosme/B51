@@ -214,7 +214,6 @@ class Controleur():
                 self.contexte="menu"
                 self.compteur=0
                 self.partieCommencer=False
-                #self.jeu.listePersonnage = list()
 
 
                 self.app.initialisationInterfaces()

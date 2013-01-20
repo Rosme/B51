@@ -46,7 +46,6 @@ class MenuInventaire():
         self.cadreUn=tkinter.Frame(self.parent.root, bg='#FFFFFF')
         self.cadreUn.grid_rowconfigure(0, weight=0)
         self.cadreUn.grid_columnconfigure(0, weight=0)
-        #self.cadreUn.place(x=512,y=80)
         self.lecanevas=tkinter.Canvas(self.cadreUn, width=490, height=695, scrollregion=(0,0,512,700),bg='#FFFFFF')
         self.lecanevas.grid(row=0, column=0, sticky='nsew')
         
@@ -72,7 +71,6 @@ class MenuInventaire():
         self.objetsEnInventaire={}#3:[0nom, 1desc,2poids,3image',4qte]
         nomImage=''
         for it in inv:
-            #print(it.nom, it.description)
             if it.id==3 or it.id==5:
                 nomImage='seringue'
             elif it.id==4:
