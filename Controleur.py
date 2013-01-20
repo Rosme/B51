@@ -20,7 +20,7 @@ class Controleur():
         self.compteur=0
         self.partieCommencer=False
         self.app.menuPrincipal()
-
+        
         self.ownEventQueue = []
         self.totalEventQueue = []
         
@@ -85,7 +85,6 @@ class Controleur():
         self.miseAJour()
     
     def actualiserAffichageComplet(self,perso,listePerso):
-        print(perso.nomMap)
         self.app.frameJeu.actualiserAffichage(perso,listePerso)
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
     
@@ -97,7 +96,7 @@ class Controleur():
         #self.app.frameJeu.affichageRoche(perso,self.jeu.listeRoche)
 
     def actualiserLogomate(self):
-        self.app.frameJeu.affichageLogomate(self.getMap().dictMap[self.jeu.ownPlayer.nomMap])
+        self.app.frameJeu.affichageLogomate(self.getMap().dictMap[self.jeu.ownPlayer.nomMap],self.jeu.ownPlayer.nomMap)
         
     def actualisationBalle(self,listeBalle):
         self.app.frameJeu.map.delete("balle")

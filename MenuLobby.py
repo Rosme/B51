@@ -3,13 +3,12 @@ import tkinter
 import Netdata as nd
 
 class MenuLobby():
-    
     def __init__(self,parent):
         self.parent = parent
         self.network = self.parent.parent.network
         self.frameMenuLobby = tkinter.Frame(self.parent.root)
         self.inLobby = True
-        
+
         #Image de fond
         self.fondEcran= tkinter.Canvas(self.frameMenuLobby,width=1024,height=768)
         self.fondEcran.pack()
@@ -31,6 +30,7 @@ class MenuLobby():
         self.boutonRetour.place(x=400,y=650)
         
     def menuLobby(self):
+        self.inLobby = True
         self.frameMenuLobby.pack()
         
     def lancerSignal(self):

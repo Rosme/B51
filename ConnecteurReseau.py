@@ -1,9 +1,9 @@
 # -*- coding: ISO-8859-1 -*-
 import socket
 import pickle
-import random
 import Netdata as nd
 from time import sleep
+import random
 
 class ConnecteurReseau():
     def __init__(self, parent):
@@ -15,7 +15,7 @@ class ConnecteurReseau():
         self.nom = None
         self.race = None
         self.playerList = None
-
+        
     def connecter(self, adresse, port):
         #Mise à jour des informations du client
         self.adresse = adresse
@@ -45,6 +45,8 @@ class ConnecteurReseau():
                     for msg in data.msg:
                         if isinstance(msg, nd.StartGameMsg):
                             self.parent.app.menuL.debuterPartie(self.playerList)
+                elif isinstance(data,nd.Seed):
+                    random.seed(data.seed)
                 elif isinstance(data, nd.ClientDisconnect):
                     '''
                     for id in data.listId:

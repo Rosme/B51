@@ -32,7 +32,7 @@ class IA():
     
         #gauche Bas
         if self.direction == 5:
-            if (map[self.posY-self.subDivision][self.posX] == '1' and map[self.posY][self.posX+self.subDivision] == '1') or map[self.posY-self.subDivision][self.posX+self.subDivision] == '1':
+            if (map[self.posY-self.subDivision][self.posX] != '0' and map[self.posY][self.posX+self.subDivision] != '0') or map[self.posY-self.subDivision][self.posX+self.subDivision] != '0':
                 self.choisitDeplacement()
             else:
                 self.posY -= self.mouvement
@@ -40,7 +40,7 @@ class IA():
          
         #gauche haut
         elif self.direction == 0:
-            if (map[self.posY-self.subDivision][self.posX] == '1' and map[self.posY][self.posX-self.subDivision] == '1') or map[self.posY-self.subDivision][self.posX-self.subDivision] == '1':
+            if (map[self.posY-self.subDivision][self.posX] != '0' and map[self.posY][self.posX-self.subDivision] != '0') or map[self.posY-self.subDivision][self.posX-self.subDivision] != '0':
                 self.choisitDeplacement()
             else:
                 self.posY -= self.mouvement
@@ -48,7 +48,7 @@ class IA():
 
         # droite Haut         
         elif self.direction == 2:
-            if (map[self.posY+self.subDivision][self.posX] == '1' and map[self.posY][self.posX-self.subDivision] == '1') or map[self.posY+self.subDivision][self.posX-self.subDivision] == '1':
+            if (map[self.posY+self.subDivision][self.posX] != '0' and map[self.posY][self.posX-self.subDivision] != '0') or map[self.posY+self.subDivision][self.posX-self.subDivision] != '0':
                 self.choisitDeplacement()
             else:
                 self.posY +=self.mouvement
@@ -56,7 +56,7 @@ class IA():
          
         #droite bas
         elif self.direction == 7:
-            if (map[self.posY+self.subDivision][self.posX] == '1' and map[self.posY][self.posX+self.subDivision] == '1') or map[self.posY+self.subDivision][self.posX+self.subDivision] == '1':
+            if (map[self.posY+self.subDivision][self.posX] != '0' and map[self.posY][self.posX+self.subDivision] != '0') or map[self.posY+self.subDivision][self.posX+self.subDivision] != '0':
                 self.choisitDeplacement()
             else:
                 self.posY +=self.mouvement
@@ -64,28 +64,28 @@ class IA():
            
         # droite 
         elif self.direction == 4:
-            if map[self.posY+self.subDivision][self.posX]=='1':
+            if map[self.posY+self.subDivision][self.posX]!= '0':
                 self.choisitDeplacement()
             else:
                 self.posY += self.mouvement
         
         #bas
         elif self.direction == 6:
-            if map[self.posY][self.posX+self.subDivision] == '1':
+            if map[self.posY][self.posX+self.subDivision] != '0':
                 self.choisitDeplacement()
             else:
                 self.posX += self.mouvement
         
         # gauche 
         elif self.direction == 3:
-            if map[self.posY-self.subDivision][self.posX] == '1':
+            if map[self.posY-self.subDivision][self.posX] != '0':
                 self.choisitDeplacement()
             else:
                 self.posY -=self.mouvement
             
         #haut
         elif self.direction == self.subDivision:
-            if map[self.posY][self.posX-self.subDivision]== '1':
+            if map[self.posY][self.posX-self.subDivision]!= '0':
                 self.choisitDeplacement()
             else:
                 self.posX -=self.mouvement

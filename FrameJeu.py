@@ -93,13 +93,14 @@ class FrameJeu():
                 posTempX+=(self.largeurTuile)
             posInitY+=(self.hauteurTuile)
       
-        self.affichageLogomate(map)     
+        self.affichageLogomate(map,perso.nomMap)     
         
-    def affichageLogomate(self,map):
+    def affichageLogomate(self,map,mapOwnPlayer):
         self.map.delete("logo")
         for logo in self.parent.parent.jeu.listeLogomate:
-            x,y=self.coordMatriceAEcran(logo)
-            self.map.create_image(x,y-16,image=self.parent.getImage("logo"),tag="logo")
+            if logo.nomMap == mapOwnPlayer:
+                x,y=self.coordMatriceAEcran(logo)
+                self.map.create_image(x,y-16,image=self.parent.getImage("logo"),tag="logo")
 
     def affichageImage(self,car,posX,posY):
         nomImage=None

@@ -10,6 +10,7 @@ import select
 import pickle
 import Netdata as nd
 from time import sleep
+import random
 
 #Classe Wrapper pour les connexions clientes
 class Client():
@@ -29,6 +30,7 @@ class Joueur():
 #Classe Serveur
 class Serveur():
     def __init__(self, port = 43225):
+        self.seed = random.randint(0,99999)
         self.port = port
         self.restart()
         self.listClientGone = []
@@ -52,6 +54,7 @@ class Serveur():
                 clientId = nd.ClientId(client.id)
                 bClientId = pickle.dumps(clientId)
                 client.conn.send(bClientId)
+                
         if self.statut == "jeu":
             if self.qteConnect == 0:
                 print("REDEMARRAGE DU SERVEUR")
@@ -97,15 +100,20 @@ class Serveur():
         #On est pas encore dans le jeu, la seule chose qu'on envoie c'est la liste des clients
         if self.statut == "demarrer":
             if self.newClient == True:
+                seedClient = nd.Seed(self.seed)
+                bSeedClient = pickle.dumps(seedClient)
                 bListClient = pickle.dumps(self.listIdClient)
                 for client in self.clients:
                     client.conn.send(bListClient)
+                    client.conn.send(bSeedClient)
             self.newClient = False
+  
         elif self.statut == "starting":
             bListMsg = pickle.dumps(self.msgQueue)
             for client in self.clients:
                 client.conn.send(bListMsg)
             self.msgQueue.msg = []
+            
             self.statut = "jeu"
             print("****** DEMARRAGE D'UNE PARTIE ******")
         elif self.statut == "jeu":
@@ -218,7 +226,7 @@ class Serveur():
             #sleep(1)
 
             self.eventQueue = []
-
+    
 
 serveur = Serveur()
 while True:

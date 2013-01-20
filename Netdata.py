@@ -77,3 +77,7 @@ class SwitchModifier():
         self.x = matX
         self.y = matY
         self.nomMap = nomMap
+
+class Seed():
+    def __init__(self,seed):
+        self.seed=seed
