@@ -3,6 +3,8 @@ import tkinter
 import MenuPrincipal
 import MenuNouvellePartie
 import MenuChargerPartie
+import MenuInventaire
+import MenuArtisanat
 import MenuConnexion
 import MenuLobby
 import HudHaut
@@ -11,8 +13,9 @@ import GestionImage
 import GestionSon
 
 class Application():
-    def __init__(self, parent):
+    def __init__(self, parent,subDivision):
         self.parent = parent
+        self.subDivision=subDivision
         
         #dimensions de la fenêtre
         self.largeurFrame=1024
@@ -35,10 +38,12 @@ class Application():
         self.menuN = MenuNouvellePartie.MenuNouvellePartie(self)
         self.menuC = MenuConnexion.MenuConnexion(self)
         self.menuL = MenuLobby.MenuLobby(self)
+        self.menuI = MenuInventaire.MenuInventaire(self)
+        self.menuA = MenuArtisanat.MenuArtisanat(self)
         #création du hud du haut placé dans frameDuJeu
         self.hudH=HudHaut.HudHaut(self,self.root)
         #création de l'interface du jeu (seuls certaines variables sont initialisés et les images importés)
-        self.frameJeu=FrameJeu.FrameJeu(self)
+        self.frameJeu=FrameJeu.FrameJeu(self,self.subDivision)
     
     #############################Appel pour afficher les interfaces#############################
     def menuPrincipal(self):
@@ -49,8 +54,11 @@ class Application():
         self.menuP.effaceMenuPrinc()
         self.menuN.menuNouvellePartie()
         
-    def menuInventaire(self):
-        self.frameJeu.menuI.menuInventaire()
+    def menuInventaire(self,invperso):
+        self.menuI.menuInventaire(invperso)
+
+    def menuArtisanat(self,listeParchemin,itemPerso):
+        self.menuA.menuArtisanat(listeParchemin,itemPerso)
     
     def menuConnexion(self):
         self.menuC.menuConnexion()
@@ -58,10 +66,10 @@ class Application():
     def menuLobby(self):
         self.menuL.menuLobby()
         
-    def jeu(self,perso,laSalle):
-        self.gestionnaireSon.startTest("inGame")
+    def jeu(self,perso,listePerso):
+        #self.gestionnaireSon.startTest("inGame")
         self.hudHaut(perso)
-        self.frameJeu.initMap(perso,laSalle)
+        self.frameJeu.initMap(perso,listePerso)
         
     def hudHaut(self,perso):
         self.hudH.hudHaut(perso)
@@ -76,5 +84,5 @@ class Application():
     
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
-        self.gestionnaireSon.stopAll()
+        #self.gestionnaireSon.stopAll()
         self.root.quit()

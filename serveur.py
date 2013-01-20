@@ -5,147 +5,232 @@ Classe Serveur pour faire tourner le serveur du jeu
 serveur.py
 '''
 
-import select 
 import socket
+import select
 import pickle
-import netdata as nd
-import commande as cm
+import Netdata as nd
+from time import sleep
+import random
 
-class ClientInfo():
-	def __init__(self, conn, address, id):
-		self.conn = conn
-		self.address = address
-		self.id = id
+#Classe Wrapper pour les connexions clientes
+class Client():
+    def __init__(self, conn, address, id):
+        self.conn = conn
+        self.address = address
+        self.id = id
+        self.nom = ""
+        self.race = ""
 
+#Classe Wrapper pour les Joueurs
+class Joueur():
+    def __init__(self, client = Client(None, None, None), events = list()):
+        self.client = client
+        self.events = events
+
+#Classe Serveur
 class Serveur():
-	def __init__(self, port = 43225):
-		self.port = port
-		self.statut = "arreter"
-		self.listeCommande = {"fermer-serveur":self.arreter, "demarrer-serveur":self.demarrer, "redemarrer-serveur":self.redemarrer, "client-deconnection":self.clientDeconnection}
-		self.maxConnect = 10
-		self.idConnect = []
-		for i in range(self.maxConnect):
-			self.idConnect.append(False)
+    def __init__(self, port = 43225):
+        self.seed = random.randint(0,99999)
+        self.port = port
+        self.restart()
+        self.listClientGone = []
 
-	def demarrer(self, client = None, donnees = None):
-		self.statut = "demarrer"
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#création du socket
-		s.bind(('', self.port))
-		s.listen(5)
-		self.socket = s
-		self.clients = []		
-		self.deconnected = []
-		print("Demarrage du serveur")
+        #Cr?ation du socket pour les connexions, ainsi que son param?trage
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.bind(('', self.port))
+        s.listen(5)
+        self.socket = s
 
-	def arreter(self, client = None, donnees = None):
-		self.statut = "arreter"
-	
-	def deconnecterClients(self):
-		for client in self.clients:
-			client.conn.close()			#déconnecte le client à partir de la liste
+    def recevoirConnexion(self):
+        #On va accepter les connexions uniquement si on est en-dessous du nombre de joueur maximal ou la partie n'est pas commenc?
+        if self.qteConnect < self.maxConnect and self.statut == "demarrer":
+            incoming, wlist, xlist = select.select([self.socket], [], [], 0.05) #Obtention de connexion
+            for connection in incoming:
+                conn, address = self.socket.accept()
+                client = Client(conn, address, self.generateId())
+                self.clients.append(client)
 
-	def clientDeconnection(self, client, donnees = None):
-		print("Client Deconnecte")
-		msg = nd.Message("ok-deconnection")
-		bMsg = pickle.dumps(msg)			
-		client.conn.send(bMsg)					#envoi un message au client pour l'informer que le client c'est bien déconnecté
-		self.clients.remove(client)			
-		client.conn.close()						#fermeture de sa connexion
-	
-	def retirerClient(self, client):
-		client.conn.close()
-		self.clients.remove(client)
-		self.idConnect[client.id] = False
+                #Envoi du Id au joueur
+                clientId = nd.ClientId(client.id)
+                bClientId = pickle.dumps(clientId)
+                client.conn.send(bClientId)
+                
+        if self.statut == "jeu":
+            if self.qteConnect == 0:
+                print("REDEMARRAGE DU SERVEUR")
+                self.restart()
 
-	def redemarrer(self, client = None, donnees = None):
-		pass
+    def restart(self):
+        self.statut = "demarrer" #Le statut repr?sente l'?tat du serveur. demarrer(attend les connexions des joueurs), jeu(refuse les connexions)
+        self.maxConnect = 8
+        self.clients = [] #Maximum de 8, contient chaque client connect? au serveur
+        self.qteConnect = len(self.clients)
+        self.newClient = False
+        self.listIdClient = nd.ListClientInfo()
+        self.msgQueue = nd.MsgQueue()
+        self.eventQueue = []
+        self.treatedQueue = {}
 
-	def updateClients(self):
-		incomingConnection, wlist, xlist = select.select([self.socket], [], [], 0.05)
+        #Liste de bool?en pour les id des joueurs
+        #Mis ? False par d?faut pour pouvoir les attribuer
+        self.boolIdConnect = []
+        for i in range(self.maxConnect):
+            self.boolIdConnect.append(False)
 
-		if len(self.clients) < self.maxConnect:
-			for connection in incomingConnection:			#Accepte les connexions et ajoutes les clients dans la liste
-				conn, address = self.socket.accept()
-				client = ClientInfo(conn, address, len(self.clients)+100)
-				self.clients.append(client)
+        print("****** DEMARRAGE DU SERVEUR ******")
+        print("******     PORT: " + str(self.port) + "      ******")
+        print("******   MAX JOUEUR : " + str(self.maxConnect) + "     ******")
 
-	def update(self):
-		pass
+    def generateId(self):
+        for i in range(self.maxConnect):
+            if self.boolIdConnect[i] == False:
+                self.boolIdConnect[i] = True
+                return i
+        return -1 #Aucun ID Disponible
 
-	def recevoirMessage(self):
-		if self.statut == "demarrer" and self.clients:
-			toRead = []
-			try:
-				listConn = []
-				for co in self.clients:
-					listConn.append(co.conn)
-				toRead, wlist, xlist = select.select(listConn, [], [], 0.05)
-			except select.error as serror:
-				print("Select error: ", serror)
-			else:
+    #Met ? jour le nombre de clients et les id dans la liste
+    def updateQteClients(self):
+        self.qteConnect = self.boolIdConnect.count(True)
+        self.newClient = True
+        self.listIdClient = nd.ListClientInfo()
+        for client in self.clients:
+            self.listIdClient.list.append(nd.ClientInfo(client.id, client.nom, client.race))
 
-				for client in toRead:
-					try:
-						data = pickle.loads(client.recv(4096))				#desérialise les données reçu
-						if isinstance(data, nd.PersoInfo):
-							info = self.genererId(data)
-							cl = self.obtenirInfoClient(client)
-							cl.id = info.id
-							bData = pickle.dumps(info)
-							client.send(bData)
-							print("Nouveau client: " + info.nom + "(" + str(info.id) + ")")
-						elif isinstance(data, nd.Message):					#retourne vrai si l'objet est une instance de nd.message
-							estCommande, message, donnees = cm.parseCommande(data.message)  #permet de lire si c'est une commande valide envoyé du client au serveur à partir de la méthode parseCommande dans commande.py
-							if estCommande == True:											
-								self.appliquerCommande(message, client, donnees)			
-							else:
-								print(message)
-						else:
-							print("Type de donnees inconnu")
-					except EOFError as eof:
-						print("Erreur sur le serveur: ", eof)
-						self.clients = []
-					except Exception as ex:
-						print("Erreur sur lecture de client. Deconnection: ", ex)
-						client.close()
-						self.retirerClient(self.obtenirInfoClient(client))
+    def sendData(self):
+        #On est pas encore dans le jeu, la seule chose qu'on envoie c'est la liste des clients
+        if self.statut == "demarrer":
+            if self.newClient == True:
+                seedClient = nd.Seed(self.seed)
+                bSeedClient = pickle.dumps(seedClient)
+                bListClient = pickle.dumps(self.listIdClient)
+                for client in self.clients:
+                    client.conn.send(bListClient)
+                    client.conn.send(bSeedClient)
+            self.newClient = False
+  
+        elif self.statut == "starting":
+            bListMsg = pickle.dumps(self.msgQueue)
+            for client in self.clients:
+                client.conn.send(bListMsg)
+            self.msgQueue.msg = []
+            
+            self.statut = "jeu"
+            print("****** DEMARRAGE D'UNE PARTIE ******")
+        elif self.statut == "jeu":
+            '''
+            if len(self.listClientGone) == 0:
+                clientsGone = nd.ClientDisconnect(self.listClientGone)
+                bList = pickle.dumps(clientsGone)
+                for client in self.clients:
+                    client.conn.send(bList)
+                self.listClientGone = []
+            '''
+            bEvents = pickle.dumps(self.treatedQueue)
+            '''
+            for frame in self.treatedQueue:
+                item = self.treatedQueue[frame]
+                print(item)
+                sleep(1)
+            '''
+            for client in self.clients:
+                '''
+                for event in self.treatedQueue:
+                    bEvent = pickle.dumps(event)
+                    client.conn.send(bEvent)
+                '''
+                try:
+                    client.conn.send(bEvents)
+                except:
+                    print("Erreur sur Envoie de client. Deconnection: ")
+                    self.removeClient(client.conn)
+                '''
+                for event in self.treatedQueue:
+                    for cl in self.treatedQueue[event]:
+                        print(cl.events)
+                '''
+
+            self.treatedQueue = {}
 
 
-	def obtenirInfoClient(self, conn):
-		for client in self.clients:
-			if client.conn == conn:
-				return client
-		return False
+    def getListConn(self):
+        listConn = []
+        for client in self.clients:
+            listConn.append(client.conn)
+        return listConn
 
-	def envoyerMessage(self):
-		message = nd.Message("NO_MESSAGE")
-		if self.statut == "arreter":
-			message.message = "serveur-shutdown"
+    def findClientByConnection(self, conn):
+        for client in self.clients:
+            if client.conn == conn:
+                return client
+        return None
 
-		if message.message != "NO_MESSAGE":
-			bMessage = pickle.dumps(message) #Serialisation du message/données
-			for client in self.clients:
-				client.conn.send(bMessage)		#envoi message/données
-		
-	def appliquerCommande(self, action, client, donnees):
-		if action in self.listeCommande:
-			self.listeCommande[action](client, donnees)
+    def removeClient(self, conn):
+        client = self.findClientByConnection(conn)
+        self.boolIdConnect[client.id] = False
+        self.listClientGone.append(client.id)
+        self.clients.remove(client)
+        self.updateQteClients()
 
+    def recvData(self):
+        if self.clients:
+            toRead = []
+            try:
+                listConn = self.getListConn()
+                toRead, wlist, xlist = select.select(listConn, [], [], 0.05)
+            except select.error as serror:
+                print("Select error: ", serror)
+            else:
+                for conn in toRead:
+                    try:
+                        bData = conn.recv(4096)
+                        if bData:
+                            data = pickle.loads(bData)
+                            if isinstance(data, nd.ClientInfo): #R?cup?ration des infos du joueur
+                                print("New client: " + str(data.nom) + " / " + str(data.race))
+                                client = self.findClientByConnection(conn)
+                                client.nom = data.nom
+                                client.race = data.race
+                                self.updateQteClients()
+                            elif isinstance(data, nd.ClientDisconnect):
+                                print("Client disconnected")
+                                bDisco = pickle.dumps(nd.ClientDisconnect(data.id))
+                                conn.send(bDisco)
+                                self.removeClient(conn)
+                            elif isinstance(data, nd.StartGameMsg):
+                                self.statut = "starting"
+                                self.msgQueue.msg.append(data)
+                            elif isinstance(data, nd.ClientTickInfo):
+                                self.eventQueue.append(data)
+                            elif isinstance(data, nd.ClientTireInfo):
+                                print("works")
+                                pass
+                    except Exception as ex:
+                        print("Erreur sur lecture de client. Deconnection: ")
+                        self.removeClient(conn)
 
-	def genererId(self, info):
-		for i in range(len(self.idConnect)):
-			if self.idConnect[i] == False:
-				info.id = i
-				self.idConnect[i] = True
-				return info
+    def updateFrames(self):
+        if self.statut == "jeu":
+            for event in self.eventQueue:
+                self.treatedQueue[event.tick+5] = []
+
+            for event in self.eventQueue:
+                self.treatedQueue[event.tick+5].append(nd.ClientTickData(event.id, event.events))
+            
+            '''
+            for frame in self.treatedQueue:
+                events = self.treatedQueue[frame]
+                for data in events:
+                    print(data.id, data.events)
+            '''
+            sleep(0.05)
+            #sleep(1)
+
+            self.eventQueue = []
+    
 
 serveur = Serveur()
-serveur.demarrer()
-
-while serveur.statut == "demarrer":
-	serveur.updateClients()
-	serveur.recevoirMessage()
-	serveur.updateClients()
-	serveur.envoyerMessage()
-
-serveur.deconnecterClients()
+while True:
+    serveur.recevoirConnexion()
+    serveur.sendData()
+    serveur.recvData()
+    serveur.updateFrames()

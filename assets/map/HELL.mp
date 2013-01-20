@@ -3,7 +3,7 @@ b:MainRoom
 
 ffffffffffffffffffffffffffffff                        
 ffffffffffffffffffffffffffffff    
-ff11111111111bb1111111111111ff 
+ff11111111111MM1111111111111ff 
 ff10000000000000000000000001ff  
 ff10000000000000000000000001ff  
 ff10000000000000000000000001ff  
