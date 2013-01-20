@@ -47,6 +47,8 @@ class MenuConnexion():
 
         
         adresse = self.ipentry.get()
+        if adresse == "":
+            adresse = "127.0.0.1:43225"
 
         temp = adresse.split(':')
         adresse = temp[0]
