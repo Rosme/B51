@@ -15,7 +15,6 @@ class ConnecteurReseau():
         self.nom = None
         self.race = None
         self.playerList = None
-        random.seed(9)
         
     def connecter(self, adresse, port):
         #Mise à jour des informations du client
