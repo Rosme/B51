@@ -158,7 +158,7 @@ class Jeu():
     def deplaceLogo(self):
         if self.listeLogomate:
             for logo in self.listeLogomate:
-                logo.ia.deplacement(self.getCurrentSalle().dictMap[self.ownPlayer.nomMap])
+                logo.ia.deplacement(self.getCurrentSalle().dictMap[logo.nomMap])
 
     def gestionMort(self):        
         if self.ownPlayer.race.vie <= 0:
