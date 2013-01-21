@@ -1,5 +1,7 @@
 # -*- coding: ISO-8859-1 -*-
 import tkinter
+import os
+import threading
 
 class MenuConnexion():
     def __init__(self, parent):
@@ -37,10 +39,16 @@ class MenuConnexion():
         self.parent.menuLobby()
         
     def nouveauServeur(self):
+        self.t = threading.Thread(target=self.startServeur)
+        self.t.start()
+        self.validerIPort()        
         #demande du joueur de créer un nouveau serveur/une nouvelle partie
         self.frameMenuConnexion.pack_forget()
         self.parent.menuLobby()
         
+    def startServeur(self):
+        os.system('Serveur.py')
+  
     def validerIPort(self):
         #validation non implanté, mais prete à l'être voir le commentaire ci-bas
         #self.rejoindreUnePartie()
