@@ -11,6 +11,7 @@ import HudHaut
 import FrameJeu
 import GestionImage
 import GestionSon
+import os
 
 class Application():
     def __init__(self, parent,subDivision):
@@ -84,3 +85,4 @@ class Application():
     #############################Appelé à la fermeture du jeu#############################
     def quitter(self):
         self.root.quit()
+        os._exit(0)
